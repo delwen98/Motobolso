@@ -347,8 +347,8 @@
 (function() {
   // ⚠️ CONFIGURE AQUI antes de usar: cole a URL e a anon key do seu projeto Supabase
   // (Settings → API no painel do Supabase)
-  const SUPABASE_URL = https://lrsuuxgufmgowrstqubs.supabase.co;
-  const SUPABASE_ANON_KEY = sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh;
+  const SUPABASE_URL = 'https://lrsuuxgufmgowrstqubs.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
 
   const STORAGE_KEY = 'controle_motoboy_v2';
   const SETTINGS_KEY = 'controle_motoboy_settings_v2';
@@ -370,16 +370,28 @@
       showLogin();
       return;
     }
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    try {
+      if (!window.supabase || !window.supabase.createClient) {
+        throw new Error('Biblioteca do Supabase não carregou (sem internet ou CDN bloqueado)');
+      }
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) { await onAuthed(session.user); }
-    else { loadLocal(); showLogin(); }
-
-    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) throw error;
+      const session = data.session;
       if (session) { await onAuthed(session.user); }
-      else { cloudReady = false; currentUser = null; loadLocal(); showLogin(); renderAll(); }
-    });
+      else { loadLocal(); showLogin(); }
+
+      supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+        if (session) { await onAuthed(session.user); }
+        else { cloudReady = false; currentUser = null; loadLocal(); showLogin(); renderAll(); }
+      });
+    } catch (e) {
+      console.error(e);
+      loadLocal();
+      showLogin();
+      statusEl.textContent = '❌ Erro ao conectar: ' + (e && e.message ? e.message : e);
+    }
   }
 
   function showLogin() {
