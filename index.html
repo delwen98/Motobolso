@@ -347,8 +347,8 @@
 (function() {
   // ⚠️ CONFIGURE AQUI antes de usar: cole a URL e a anon key do seu projeto Supabase
   // (Settings → API no painel do Supabase)
-  const SUPABASE_URL = 'https://lrsuuxgufmgowrstqubs.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
+  const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
+  const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
 
   const STORAGE_KEY = 'controle_motoboy_v2';
   const SETTINGS_KEY = 'controle_motoboy_settings_v2';
@@ -405,13 +405,21 @@
     document.getElementById('loginCard').style.display = 'none';
     document.getElementById('appContent').style.display = '';
     document.getElementById('syncStatus').textContent = 'Carregando…';
-    await loadFromSupabase();
-    cloudReady = true;
-    document.getElementById('syncStatus').textContent = '☁️ Conectado como ' + user.email;
+    const ok = await loadFromSupabase();
+    if (ok) {
+      cloudReady = true;
+      document.getElementById('syncStatus').innerHTML = '☁️ Conectado como ' + user.email;
+    } else {
+      cloudReady = false;
+      document.getElementById('syncStatus').innerHTML =
+        '⚠️ Não consegui carregar seus dados agora. <a id="retryLoad" style="text-decoration:underline;cursor:pointer;">Tentar de novo</a>';
+      const retryLink = document.getElementById('retryLoad');
+      if (retryLink) retryLink.addEventListener('click', () => onAuthed(currentUser));
+    }
     renderAll();
   }
 
-  async function loadFromSupabase() {
+  async function loadFromSupabase(isRetry) {
     try {
       const { data: entries, error } = await supabaseClient
         .from('entries').select('*')
@@ -433,7 +441,17 @@
         settings.invest = Number(settingsRow.invest) || 20;
         settings.reserva = Number(settingsRow.reserva) || 20;
       }
-    } catch (e) { console.error(e); }
+      return true;
+    } catch (e) {
+      console.error(e);
+      if (!isRetry) {
+        try {
+          const { error: refreshError } = await supabaseClient.auth.refreshSession();
+          if (!refreshError) return await loadFromSupabase(true);
+        } catch (e2) { console.error(e2); }
+      }
+      return false;
+    }
   }
 
   function loadLocal() {
