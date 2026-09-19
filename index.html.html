@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Bolso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #f4f2ee;
+    --card-bg: #ffffff;
+    --text: #201f1c;
+    --text-muted: #736f66;
+    --border: #e6e2d9;
+    --accent: #3d7a5c;
+    --accent-soft: #e6f0ea;
+    --ganho: #3d7a5c;
+    --ganho-soft: #e6f0ea;
+    --gasolina: #bc5333;
+    --gasolina-soft: #f6e6dd;
+    --manutencao: #a9762c;
+    --manutencao-soft: #f2ead9;
+    --outros: #736f66;
+    --outros-soft: #eceae4;
+    --reserva: #a9762c;
+    --reserva-soft: #f2ead9;
+    --invest: #3d7a5c;
+    --invest-soft: #e6f0ea;
+    --danger: #bc5333;
+    --shadow: 0 1px 2px rgba(32,31,28,0.05);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-display: 'Space Grotesk', 'Manrope', sans-serif;
+    --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #17181a;
+      --card-bg: #1f2022;
+      --text: #f1efe9;
+      --text-muted: #9c9890;
+      --border: #313230;
+      --accent: #6bbb92;
+      --accent-soft: #20302a;
+      --ganho: #6bbb92;
+      --ganho-soft: #20302a;
+      --gasolina: #e08a63;
+      --gasolina-soft: #302620;
+      --manutencao: #dcb872;
+      --manutencao-soft: #302a1c;
+      --outros: #9c9890;
+      --outros-soft: #27282a;
+      --reserva: #dcb872;
+      --reserva-soft: #302a1c;
+      --invest: #6bbb92;
+      --invest-soft: #20302a;
+      --danger: #e08a63;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17181a;
+    --card-bg: #1f2022;
+    --text: #f1efe9;
+    --text-muted: #9c9890;
+    --border: #313230;
+    --accent: #6bbb92;
+    --accent-soft: #20302a;
+    --ganho: #6bbb92;
+    --ganho-soft: #20302a;
+    --gasolina: #e08a63;
+    --gasolina-soft: #302620;
+    --manutencao: #dcb872;
+    --manutencao-soft: #302a1c;
+    --outros: #9c9890;
+    --outros-soft: #27282a;
+    --reserva: #dcb872;
+    --reserva-soft: #302a1c;
+    --invest: #6bbb92;
+    --invest-soft: #20302a;
+    --danger: #e08a63;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    padding: 28px 18px 64px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+  .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 4px; line-height: 1.4; }
+  #syncStatus { font-size: 0.78rem; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+
+  label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+
+  input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 11px 13px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    margin-bottom: 14px;
+    transition: border-color 0.15s;
+  }
+  input[type="number"]:focus, input[type="date"]:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 11px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .tab.active.ganho { background: var(--ganho-soft); color: var(--ganho); border-color: var(--ganho); }
+  .tab.active.despesa { background: var(--gasolina-soft); color: var(--gasolina); border-color: var(--gasolina); }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  button.despesa-btn { background: var(--gasolina); }
+  button:active { opacity: 0.85; }
+
+  .goal-projection {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+    font-size: 0.92rem;
+    margin-top: 2px;
+  }
+  .goal-projection b { font-family: var(--font-display); font-size: 1.15rem; }
+
+  .progress-wrap { margin-top: 2px; margin-bottom: 6px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; }
+  .progress-bar { height: 8px; border-radius: 6px; background: var(--bg); overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 6px; transition: width 0.3s; }
+
+  .totals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+  .total-box { border-radius: var(--radius-sm); padding: 13px 8px; text-align: center; }
+  .total-box .label { font-size: 0.72rem; opacity: 0.85; margin-bottom: 5px; }
+  .total-box .value { font-family: var(--font-display); font-size: 1.02rem; font-weight: 700; }
+
+  .box-ganho { background: var(--ganho-soft); color: var(--ganho); }
+  .box-gasolina { background: var(--gasolina-soft); color: var(--gasolina); }
+  .box-manutencao { background: var(--manutencao-soft); color: var(--manutencao); }
+  .box-outros { background: var(--outros-soft); color: var(--outros); }
+  .box-reserva { background: var(--reserva-soft); color: var(--reserva); }
+  .box-invest { background: var(--invest-soft); color: var(--invest); }
+
+  .liquido-box {
+    text-align: center;
+    padding: 18px;
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .liquido-box .label { font-size: 0.8rem; color: var(--text-muted); }
+  .liquido-box .value { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; margin-top: 4px; }
+  .liquido-box .value.pos { color: var(--ganho); }
+  .liquido-box .value.neg { color: var(--danger); }
+
+  .slider-group { margin-bottom: 16px; }
+  .slider-label { display: flex; justify-content: space-between; font-size: 0.86rem; margin-bottom: 6px; }
+  input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+  .entry-list { display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto; }
+  .entry { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--bg); border: 1px solid var(--border); font-size: 0.88rem; }
+  .entry .tag { font-size: 0.68rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; margin-right: 8px; letter-spacing: 0.02em; }
+  .tag-ganho { background: var(--ganho-soft); color: var(--ganho); }
+  .tag-gasolina { background: var(--gasolina-soft); color: var(--gasolina); }
+  .tag-manutencao { background: var(--manutencao-soft); color: var(--manutencao); }
+  .tag-outros { background: var(--outros-soft); color: var(--outros); }
+  .entry .date { color: var(--text-muted); font-size: 0.76rem; margin-top: 4px; }
+  .entry .amt { font-family: var(--font-display); font-weight: 700; }
+  .entry .del { background: none; border: none; color: var(--danger); font-size: 0.82rem; width: auto; padding: 4px 6px; font-weight: 500; }
+
+  .empty { color: var(--text-muted); font-size: 0.86rem; text-align: center; padding: 24px 0; }
+  .reset-link { text-align: center; margin-top: 12px; }
+  .reset-link a { color: var(--text-muted); font-size: 0.78rem; text-decoration: underline; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🏍️ Moto Bolso</h1>
+  <div class="sub">Ganhos, gasolina, manutenção e o que sobra de verdade.</div>
+  <div class="sub" id="syncStatus" style="margin-bottom:16px;">Conectando…</div>
+
+  <div class="card" id="loginCard" style="display:none;">
+    <h2>Entrar</h2>
+    <label for="loginEmail">Seu e-mail</label>
+    <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" inputmode="email">
+    <button id="btnLogin">Enviar link de acesso</button>
+    <div class="sub" id="loginMsg" style="margin-top:10px;"></div>
+  </div>
+
+  <div id="appContent" style="display:none;">
+  <div class="card">
+    <h2>Meta diária</h2>
+    <label for="metaDiaria">Quanto você quer ganhar líquido por dia (R$)</label>
+    <input type="number" id="metaDiaria" placeholder="Ex: 120" inputmode="decimal" step="1">
+    <label for="diasTrabalhados">Dias que trabalha por mês</label>
+    <input type="number" id="diasTrabalhados" placeholder="Ex: 26" inputmode="numeric" step="1">
+    <div class="goal-projection">
+      Nesse ritmo, sua projeção mensal é <b id="metaMensalTxt">R$ 0</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Registrar</h2>
+    <div class="tabs">
+      <div class="tab active ganho" id="tabGanho">💰 Ganho</div>
+      <div class="tab despesa" id="tabDespesa">⛽ Despesa</div>
+    </div>
+
+    <div id="formGanho">
+      <label for="valorGanho">Valor ganho hoje (R$)</label>
+      <input type="number" id="valorGanho" placeholder="Ex: 150" inputmode="decimal" step="0.01">
+      <label for="dataGanho">Data</label>
+      <input type="date" id="dataGanho">
+      <button id="btnAddGanho">Adicionar ganho</button>
+    </div>
+
+    <div id="formDespesa" style="display:none;">
+      <label for="categoriaDespesa">Categoria</label>
+      <select id="categoriaDespesa">
+        <option value="gasolina">⛽ Gasolina</option>
+        <option value="manutencao">🔧 Manutenção</option>
+        <option value="outros">📦 Outros gastos</option>
+      </select>
+      <label for="valorDespesa">Valor (R$)</label>
+      <input type="number" id="valorDespesa" placeholder="Ex: 30" inputmode="decimal" step="0.01">
+      <label for="dataDespesa">Data</label>
+      <input type="date" id="dataDespesa">
+      <button class="despesa-btn" id="btnAddDespesa">Adicionar despesa</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Este mês</h2>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Progresso da meta mensal</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="liquido-box">
+      <div class="label">Lucro líquido do mês (ganho − despesas)</div>
+      <div class="value pos" id="liquidoMes">R$ 0</div>
+    </div>
+
+    <div class="totals-grid">
+      <div class="total-box box-ganho"><div class="label">Ganho total</div><div class="value" id="totGanho">R$ 0</div></div>
+      <div class="total-box box-gasolina"><div class="label">Gasolina</div><div class="value" id="totGasolina">R$ 0</div></div>
+      <div class="total-box box-manutencao"><div class="label">Manutenção</div><div class="value" id="totManutencao">R$ 0</div></div>
+    </div>
+    <div class="totals-grid" style="grid-template-columns: 1fr;">
+      <div class="total-box box-outros"><div class="label">Outros gastos</div><div class="value" id="totOutros">R$ 0</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Dividir o que sobrou (lucro líquido)</h2>
+    <div class="slider-group">
+      <div class="slider-label"><span>Investimento</span><span id="lblInvest">20%</span></div>
+      <input type="range" id="sliderInvest" min="0" max="100" value="20">
+    </div>
+    <div class="slider-group" style="margin-bottom:6px;">
+      <div class="slider-label"><span>Reserva</span><span id="lblReserva">20%</span></div>
+      <input type="range" id="sliderReserva" min="0" max="100" value="20">
+    </div>
+    <div class="totals-grid" style="margin-top:10px;">
+      <div class="total-box box-invest"><div class="label">Investir</div><div class="value" id="valInvest">R$ 0</div></div>
+      <div class="total-box box-reserva"><div class="label">Reservar</div><div class="value" id="valReserva">R$ 0</div></div>
+      <div class="total-box box-outros"><div class="label">Livre</div><div class="value" id="valLivre">R$ 0</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Histórico</h2>
+    <div class="entry-list" id="entryList"><div class="empty">Nenhum registro ainda.</div></div>
+  </div>
+
+  <div class="reset-link"><a id="resetBtn">Limpar todos os dados</a> · <a id="logoutBtn">Sair da conta</a></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ⚠️ CONFIGURE AQUI antes de usar: cole a URL e a anon key do seu projeto Supabase
+  // (Settings → API no painel do Supabase)
+  const SUPABASE_URL = https://lrsuuxgufmgowrstqubs.supabase.co;
+  const SUPABASE_ANON_KEY = sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh;
+
+  const STORAGE_KEY = 'controle_motoboy_v2';
+  const SETTINGS_KEY = 'controle_motoboy_settings_v2';
+
+  let state = { entries: [] };
+  let settings = { invest: 20, reserva: 20, metaDiaria: 120, diasTrabalhados: 26 };
+
+  let supabaseClient = null, currentUser = null, cloudReady = false;
+
+  function configured() {
+    return SUPABASE_URL && !SUPABASE_URL.includes('SUA_') && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes('SUA_');
+  }
+
+  async function initCloud() {
+    const statusEl = document.getElementById('syncStatus');
+    if (!configured()) {
+      statusEl.textContent = '⚠️ Configure suas chaves do Supabase no código';
+      loadLocal();
+      showLogin();
+      return;
+    }
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) { await onAuthed(session.user); }
+    else { loadLocal(); showLogin(); }
+
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      if (session) { await onAuthed(session.user); }
+      else { cloudReady = false; currentUser = null; loadLocal(); showLogin(); renderAll(); }
+    });
+  }
+
+  function showLogin() {
+    document.getElementById('loginCard').style.display = '';
+    document.getElementById('appContent').style.display = 'none';
+    document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
+  }
+
+  async function onAuthed(user) {
+    currentUser = user;
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('appContent').style.display = '';
+    document.getElementById('syncStatus').textContent = 'Carregando…';
+    await loadFromSupabase();
+    cloudReady = true;
+    document.getElementById('syncStatus').textContent = '☁️ Conectado como ' + user.email;
+    renderAll();
+  }
+
+  async function loadFromSupabase() {
+    try {
+      const { data: entries, error } = await supabaseClient
+        .from('entries').select('*')
+        .eq('user_id', currentUser.id)
+        .order('date', { ascending: false })
+        .limit(500);
+      if (error) throw error;
+      state.entries = (entries || []).map(e => ({
+        id: e.id, type: e.type, category: e.category, total: Number(e.total), date: e.date
+      }));
+
+      const { data: settingsRow } = await supabaseClient
+        .from('settings').select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+      if (settingsRow) {
+        settings.metaDiaria = Number(settingsRow.meta_diaria) || 0;
+        settings.diasTrabalhados = Number(settingsRow.dias_trabalhados) || 0;
+        settings.invest = Number(settingsRow.invest) || 20;
+        settings.reserva = Number(settingsRow.reserva) || 20;
+      }
+    } catch (e) { console.error(e); }
+  }
+
+  function loadLocal() {
+    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) state = JSON.parse(raw); } catch (e) {}
+    try { const rawS = localStorage.getItem(SETTINGS_KEY); if (rawS) Object.assign(settings, JSON.parse(rawS)); } catch (e) {}
+  }
+  function saveLocal() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
+  function saveSettingsLocal() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) {} }
+
+  async function addEntry(entry) {
+    if (cloudReady) {
+      try {
+        const row = { user_id: currentUser.id, type: entry.type, category: entry.category || null, total: entry.total, date: entry.date };
+        const { data, error } = await supabaseClient.from('entries').insert(row).select().single();
+        if (error) throw error;
+        entry.id = data.id;
+        state.entries.unshift(entry);
+        return;
+      } catch (e) { console.error(e); }
+    }
+    entry.id = String(Date.now()) + Math.random().toString(36).slice(2, 6);
+    state.entries.unshift(entry);
+    saveLocal();
+  }
+
+  async function removeEntry(id) {
+    if (cloudReady) {
+      try { const { error } = await supabaseClient.from('entries').delete().eq('id', id); if (error) throw error; }
+      catch (e) { console.error(e); }
+    }
+    state.entries = state.entries.filter(e => e.id !== id);
+    if (!cloudReady) saveLocal();
+  }
+
+  async function persistSettings() {
+    if (cloudReady) {
+      try {
+        const { error } = await supabaseClient.from('settings').upsert({
+          user_id: currentUser.id,
+          meta_diaria: settings.metaDiaria,
+          dias_trabalhados: settings.diasTrabalhados,
+          invest: settings.invest,
+          reserva: settings.reserva
+        });
+        if (error) throw error;
+        return;
+      } catch (e) { console.error(e); }
+    }
+    saveSettingsLocal();
+  }
+
+  function fmt(n) { return 'R$ ' + (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function formatDate(iso) { const [y,m,d] = iso.split('-'); return `${d}/${m}/${y}`; }
+  function todayISO() { const d = new Date(); const tz = d.getTimezoneOffset()*60000; return new Date(d-tz).toISOString().slice(0,10); }
+  function currentMonthKey() { return todayISO().slice(0,7); }
+
+  function isThisMonth(dateStr) { return dateStr && dateStr.slice(0,7) === currentMonthKey(); }
+
+  function computeTotals() {
+    let ganho=0, gasolina=0, manutencao=0, outros=0;
+    state.entries.forEach(e => {
+      if (!isThisMonth(e.date)) return;
+      if (e.type === 'ganho') ganho += e.total;
+      else if (e.type === 'despesa') {
+        if (e.category === 'gasolina') gasolina += e.total;
+        else if (e.category === 'manutencao') manutencao += e.total;
+        else outros += e.total;
+      }
+    });
+    const liquido = ganho - gasolina - manutencao - outros;
+    return { ganho, gasolina, manutencao, outros, liquido };
+  }
+
+  function renderGoal() {
+    const meta = Number(settings.metaDiaria) || 0;
+    const dias = Number(settings.diasTrabalhados) || 0;
+    document.getElementById('metaDiaria').value = meta || '';
+    document.getElementById('diasTrabalhados').value = dias || '';
+    document.getElementById('metaMensalTxt').textContent = fmt(meta * dias);
+  }
+
+  function renderSliders() {
+    document.getElementById('sliderInvest').value = settings.invest;
+    document.getElementById('sliderReserva').value = settings.reserva;
+    document.getElementById('lblInvest').textContent = settings.invest + '%';
+    document.getElementById('lblReserva').textContent = settings.reserva + '%';
+  }
+
+  function renderTotals() {
+    const t = computeTotals();
+    document.getElementById('totGanho').textContent = fmt(t.ganho);
+    document.getElementById('totGasolina').textContent = fmt(t.gasolina);
+    document.getElementById('totManutencao').textContent = fmt(t.manutencao);
+    document.getElementById('totOutros').textContent = fmt(t.outros);
+
+    const liquidoEl = document.getElementById('liquidoMes');
+    liquidoEl.textContent = fmt(t.liquido);
+    liquidoEl.className = 'value ' + (t.liquido >= 0 ? 'pos' : 'neg');
+
+    const metaMensal = (Number(settings.metaDiaria)||0) * (Number(settings.diasTrabalhados)||0);
+    const pct = metaMensal > 0 ? Math.min(100, Math.round((t.liquido / metaMensal) * 100)) : 0;
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressFill').style.width = Math.max(pct,0) + '%';
+
+    const liquidoPositivo = Math.max(t.liquido, 0);
+    const investVal = liquidoPositivo * settings.invest / 100;
+    const reservaVal = liquidoPositivo * settings.reserva / 100;
+    const livreVal = Math.max(liquidoPositivo - investVal - reservaVal, 0);
+    document.getElementById('valInvest').textContent = fmt(investVal);
+    document.getElementById('valReserva').textContent = fmt(reservaVal);
+    document.getElementById('valLivre').textContent = fmt(livreVal);
+  }
+
+  function renderAll() {
+    renderGoal();
+    renderSliders();
+    renderEntries();
+    renderTotals();
+  }
+
+  function renderEntries() {
+    const list = document.getElementById('entryList');
+    if (state.entries.length === 0) { list.innerHTML = '<div class="empty">Nenhum registro ainda.</div>'; return; }
+    const sorted = [...state.entries].sort((a,b) => b.date.localeCompare(a.date));
+    list.innerHTML = sorted.map(e => {
+      const isGanho = e.type === 'ganho';
+      const tagClass = isGanho ? 'tag-ganho' : ('tag-' + e.category);
+      const tagText = isGanho ? 'GANHO' : (e.category === 'gasolina' ? 'GASOLINA' : e.category === 'manutencao' ? 'MANUTENÇÃO' : 'OUTROS');
+      const sign = isGanho ? '+' : '−';
+      return `
+        <div class="entry">
+          <div>
+            <span class="tag ${tagClass}">${tagText}</span>
+            <span class="amt">${sign} ${fmt(e.total)}</span>
+            <div class="date">${formatDate(e.date)}</div>
+          </div>
+          <button class="del" data-id="${e.id}">remover</button>
+        </div>
+      `;
+    }).join('');
+
+    list.querySelectorAll('.del').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        await removeEntry(btn.getAttribute('data-id'));
+        renderEntries();
+        renderTotals();
+      });
+    });
+  }
+
+  async function init() {
+    document.getElementById('dataGanho').value = todayISO();
+    document.getElementById('dataDespesa').value = todayISO();
+
+    document.getElementById('tabGanho').addEventListener('click', () => {
+      document.getElementById('tabGanho').classList.add('active');
+      document.getElementById('tabDespesa').classList.remove('active');
+      document.getElementById('formGanho').style.display = '';
+      document.getElementById('formDespesa').style.display = 'none';
+    });
+    document.getElementById('tabDespesa').addEventListener('click', () => {
+      document.getElementById('tabDespesa').classList.add('active');
+      document.getElementById('tabGanho').classList.remove('active');
+      document.getElementById('formDespesa').style.display = '';
+      document.getElementById('formGanho').style.display = 'none';
+    });
+
+    let goalTimeout;
+    function scheduleGoalSave() {
+      clearTimeout(goalTimeout);
+      goalTimeout = setTimeout(() => {
+        settings.metaDiaria = Number(document.getElementById('metaDiaria').value) || 0;
+        settings.diasTrabalhados = Number(document.getElementById('diasTrabalhados').value) || 0;
+        renderGoal();
+        renderTotals();
+        persistSettings();
+      }, 400);
+    }
+    document.getElementById('metaDiaria').addEventListener('input', scheduleGoalSave);
+    document.getElementById('diasTrabalhados').addEventListener('input', scheduleGoalSave);
+
+    const sliderInvest = document.getElementById('sliderInvest');
+    const sliderReserva = document.getElementById('sliderReserva');
+    function clampSliders(changed) {
+      let invest = Number(sliderInvest.value);
+      let reserva = Number(sliderReserva.value);
+      if (invest + reserva > 100) {
+        if (changed === 'invest') { reserva = 100 - invest; sliderReserva.value = reserva; }
+        else { invest = 100 - reserva; sliderInvest.value = invest; }
+      }
+      settings.invest = invest;
+      settings.reserva = reserva;
+      renderSliders();
+      renderTotals();
+      persistSettings();
+    }
+    sliderInvest.addEventListener('input', () => clampSliders('invest'));
+    sliderReserva.addEventListener('input', () => clampSliders('reserva'));
+
+    document.getElementById('btnAddGanho').addEventListener('click', async () => {
+      const valorInput = document.getElementById('valorGanho');
+      const dataInput = document.getElementById('dataGanho');
+      const total = parseFloat(valorInput.value);
+      if (!total || total <= 0) { valorInput.focus(); return; }
+      await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
+      renderEntries(); renderTotals();
+      valorInput.value = ''; valorInput.focus();
+    });
+
+    document.getElementById('btnAddDespesa').addEventListener('click', async () => {
+      const valorInput = document.getElementById('valorDespesa');
+      const dataInput = document.getElementById('dataDespesa');
+      const categoria = document.getElementById('categoriaDespesa').value;
+      const total = parseFloat(valorInput.value);
+      if (!total || total <= 0) { valorInput.focus(); return; }
+      await addEntry({ type: 'despesa', category: categoria, total, date: dataInput.value || todayISO() });
+      renderEntries(); renderTotals();
+      valorInput.value = ''; valorInput.focus();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', async () => {
+      if (confirm('Tem certeza que quer apagar todos os registros?')) {
+        if (cloudReady) {
+          try { await supabaseClient.from('entries').delete().eq('user_id', currentUser.id); }
+          catch (e) { console.error(e); }
+        } else {
+          saveLocal();
+        }
+        state.entries = [];
+        renderEntries(); renderTotals();
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      if (supabaseClient) await supabaseClient.auth.signOut();
+    });
+
+    document.getElementById('btnLogin').addEventListener('click', async () => {
+      const emailInput = document.getElementById('loginEmail');
+      const msgEl = document.getElementById('loginMsg');
+      const email = emailInput.value.trim();
+      if (!email) { emailInput.focus(); return; }
+      msgEl.textContent = 'Enviando link…';
+      try {
+        const { error } = await supabaseClient.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.href }
+        });
+        msgEl.textContent = error ? ('Erro: ' + error.message) : 'Link enviado! Confira seu e-mail e clique nele para entrar.';
+      } catch (e) {
+        msgEl.textContent = 'Erro ao enviar o link. Verifique as chaves do Supabase.';
+      }
+    });
+
+    await initCloud();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
