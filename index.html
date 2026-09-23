@@ -931,8 +931,8 @@
 
               if (error) throw error;
 
-              if (data && data.session) {
-                await onAuthed(data.session.user);
+              if (!data || !data.session) {
+                throw new Error('O Google autenticou, mas o Supabase não criou uma sessão.');
               }
             } catch (e) {
               console.error('Google login error:', e);
