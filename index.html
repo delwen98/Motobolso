@@ -433,13 +433,24 @@
 
   async function loadFromSupabase(isRetry) {
     try {
-      const { data: entries, error } = await supabaseClient
-        .from('entries').select('*')
-        .eq('user_id', currentUser.id)
-        .order('date', { ascending: false })
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      state.entries = (entries || []).map(e => ({
+      const pageSize = 500;
+      let entries = [];
+      let from = 0;
+
+      while (true) {
+        const { data: page, error } = await supabaseClient
+          .from('entries').select('*')
+          .eq('user_id', currentUser.id)
+          .order('date', { ascending: false })
+          .order('created_at', { ascending: false })
+          .range(from, from + pageSize - 1);
+        if (error) throw error;
+        entries = entries.concat(page || []);
+        if (!page || page.length < pageSize) break;
+        from += pageSize;
+      }
+
+      state.entries = entries.map(e => ({
         id: e.id,
         type: e.type,
         category: e.category,
