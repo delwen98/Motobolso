@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
     --bg: #f4f2ee;
@@ -110,7 +109,7 @@
   .auth-brand-sub { color:rgba(245,247,246,.62); font-size:.72rem; margin-top:2px; }
   .auth-title { font-family:var(--font-display); font-size:1.8rem; line-height:1.08; letter-spacing:-.045em; margin:0 0 9px; color:#fff; }
   .auth-copy { color:rgba(245,247,246,.68); font-size:.88rem; line-height:1.55; margin:0 0 24px; }
-  .google-btn { background:#fff!important; color:#202124!important; border:1px solid rgba(255,255,255,.8)!important; display:block!important; width:100%!important; min-height:48px; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.2); }
+  .google-btn { background:#fff!important; color:#202124!important; border:1px solid rgba(255,255,255,.8)!important; display:flex!important; width:100%!important; min-height:52px; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.2); font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }\n  .google-btn .google-icon { width:20px; height:20px; display:grid; place-items:center; font:700 18px Arial,sans-serif; color:#4285f4; }
   .google-btn:hover { background:#f7f7f7!important; border-color:#fff!important; }
   .auth-divider { display:flex; align-items:center; gap:10px; margin:20px 0 16px; color:rgba(245,247,246,.5); font-size:.7rem; }
   .auth-divider::before,.auth-divider::after { content:""; height:1px; background:rgba(255,255,255,.13); flex:1; }
@@ -885,19 +884,10 @@
       if (supabaseClient) await supabaseClient.auth.signOut();
     });
 
-    const GOOGLE_CLIENT_ID = '452346422399-68fbe4qgdetu8rjjbb16bjtuja7foq8s.apps.googleusercontent.com';
-    let googleInitialized = false;
-    let googleNonce = null;
-
-    async function createGoogleNonce() {
-      const raw = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
-      const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-      const hashed = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-      return { raw, hashed };
-    }
+    let googleButtonInitialized = false;
 
     function initGoogleSignIn() {
-      if (googleInitialized) return;
+      if (googleButtonInitialized) return;
       const msgEl = document.getElementById('loginMsg');
       const button = document.getElementById('btnGoogleLogin');
       const loginCard = document.getElementById('loginCard');
@@ -907,63 +897,48 @@
         setTimeout(initGoogleSignIn, 300);
         return;
       }
-      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-        setTimeout(initGoogleSignIn, 300);
-        return;
-      }
 
-      createGoogleNonce().then(({ raw, hashed }) => {
-        if (googleInitialized) return;
-        googleNonce = raw;
+      button.innerHTML = '<span class="google-icon" aria-hidden="true">G</span><span>Continuar com Google</span>';
+      button.style.display = 'flex';
+      button.style.visibility = 'visible';
+      button.style.alignItems = 'center';
+      button.style.justifyContent = 'center';
+      button.style.gap = '10px';
+      button.style.cursor = 'pointer';
+      button.setAttribute('role', 'button');
+      button.setAttribute('tabindex', '0');
 
-        google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: async (response) => {
-            msgEl.textContent = '';
-            try {
-              if (!response || !response.credential) throw new Error('O Google não retornou uma credencial válida.');
-
-              const { data, error } = await supabaseClient.auth.signInWithIdToken({
-                provider: 'google',
-                token: response.credential,
-                nonce: googleNonce
-              });
-
-              if (error) throw error;
-
-              if (!data || !data.session) {
-                throw new Error('O Google autenticou, mas o Supabase não criou uma sessão.');
+      const startGoogleLogin = async () => {
+        if (!supabaseClient) {
+          msgEl.textContent = 'Serviço de login ainda não carregou. Tente novamente.';
+          return;
+        }
+        msgEl.textContent = '';
+        try {
+          const { error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: 'https://delwen98.github.io/Motobolso/',
+              queryParams: {
+                prompt: 'select_account'
               }
-            } catch (e) {
-              console.error('Google login error:', e);
-              msgEl.textContent = 'Erro no login: ' + (e && e.message ? e.message : 'não foi possível autenticar.');
             }
-          },
-          ux_mode: 'popup',
-          auto_select: false,
-          nonce: hashed
-        });
+          });
+          if (error) throw error;
+        } catch (e) {
+          console.error('Google OAuth error:', e);
+          msgEl.textContent = 'Erro no login: ' + (e && e.message ? e.message : 'não foi possível autenticar.');
+        }
+      };
 
-        button.innerHTML = '';
-        button.style.display = 'block';
-        button.style.visibility = 'visible';
-        google.accounts.id.renderButton(button, {
-          type: 'standard',
-          theme: 'outline',
-          size: 'large',
-          text: 'continue_with',
-          shape: 'rectangular',
-          width: Math.max(240, Math.min(400, button.clientWidth || 360)),
-          logo_alignment: 'left'
-        });
-        googleInitialized = true;
-      }).catch((e) => {
-        console.error('Google initialization error:', e);
-        msgEl.textContent = 'Não foi possível carregar o login do Google.';
-        button.textContent = 'Continuar com Google';
-        button.style.display = 'block';
-        button.style.visibility = 'visible';
+      button.addEventListener('click', startGoogleLogin);
+      button.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          startGoogleLogin();
+        }
       });
+      googleButtonInitialized = true;
     }
 
     await initCloud();
