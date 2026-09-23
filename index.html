@@ -110,7 +110,7 @@
   .auth-brand-sub { color:rgba(245,247,246,.62); font-size:.72rem; margin-top:2px; }
   .auth-title { font-family:var(--font-display); font-size:1.8rem; line-height:1.08; letter-spacing:-.045em; margin:0 0 9px; color:#fff; }
   .auth-copy { color:rgba(245,247,246,.68); font-size:.88rem; line-height:1.55; margin:0 0 24px; }
-  .google-btn { background:#fff!important; color:#202124!important; border:1px solid rgba(255,255,255,.8)!important; display:flex!important; align-items:center; justify-content:center; gap:10px; box-shadow:0 8px 24px rgba(0,0,0,.2); }
+  .google-btn { background:#fff!important; color:#202124!important; border:1px solid rgba(255,255,255,.8)!important; display:block!important; width:100%!important; min-height:48px; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.2); }
   .google-btn:hover { background:#f7f7f7!important; border-color:#fff!important; }
   .auth-divider { display:flex; align-items:center; gap:10px; margin:20px 0 16px; color:rgba(245,247,246,.5); font-size:.7rem; }
   .auth-divider::before,.auth-divider::after { content:""; height:1px; background:rgba(255,255,255,.13); flex:1; }
@@ -945,20 +945,24 @@
         });
 
         button.innerHTML = '';
+        button.style.display = 'block';
+        button.style.visibility = 'visible';
         google.accounts.id.renderButton(button, {
           type: 'standard',
           theme: 'outline',
           size: 'large',
           text: 'continue_with',
           shape: 'rectangular',
-          width: Math.min(360, Math.max(240, button.clientWidth || 360)),
+          width: Math.max(240, Math.min(400, button.clientWidth || 360)),
           logo_alignment: 'left'
         });
-
         googleInitialized = true;
       }).catch((e) => {
         console.error('Google initialization error:', e);
         msgEl.textContent = 'Não foi possível carregar o login do Google.';
+        button.textContent = 'Continuar com Google';
+        button.style.display = 'block';
+        button.style.visibility = 'visible';
       });
     }
 
