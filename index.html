@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
     --bg: #f4f2ee;
@@ -461,6 +462,7 @@
         throw new Error('Biblioteca do Supabase não carregou (sem internet ou CDN bloqueado)');
       }
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      initGoogleSignIn();
 
       const { data, error } = await supabaseClient.auth.getSession();
       if (error) throw error;
@@ -882,19 +884,51 @@
       if (supabaseClient) await supabaseClient.auth.signOut();
     });
 
-    document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
+    const GOOGLE_CLIENT_ID = '452346422399-68fbe4qgdetu8rjjbb16bjtuja7foq8s.apps.googleusercontent.com';
+
+    function initGoogleSignIn() {
       const msgEl = document.getElementById('loginMsg');
-      msgEl.textContent = '';
-      try {
-        const { error } = await supabaseClient.auth.signInWithOAuth({
-          provider: 'google',
-          options: { redirectTo: 'https://delwen98.github.io/Motobolso/' }
-        });
-        if (error) msgEl.textContent = 'Erro: ' + error.message;
-      } catch (e) {
-        msgEl.textContent = 'Erro ao iniciar login com Google. Verifique as chaves do Supabase.';
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+        setTimeout(initGoogleSignIn, 300);
+        return;
       }
-    });
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: async (response) => {
+          msgEl.textContent = '';
+          try {
+            if (!response || !response.credential) throw new Error('O Google não retornou uma credencial válida.');
+            const { error } = await supabaseClient.auth.signInWithIdToken({
+              provider: 'google',
+              token: response.credential
+            });
+            if (error) throw error;
+          } catch (e) {
+            console.error(e);
+            msgEl.textContent = 'Erro ao entrar com Google. Tente novamente.';
+          }
+        },
+        ux_mode: 'popup',
+        auto_select: false
+      });
+
+      const button = document.getElementById('btnGoogleLogin');
+      const holder = document.createElement('div');
+      holder.id = 'googleSignInButton';
+      holder.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;';
+      button.style.position = 'relative';
+      button.appendChild(holder);
+
+      google.accounts.id.renderButton(holder, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width: 360,
+        logo_alignment: 'left'
+      });
+    }
 
     await initCloud();
   }
