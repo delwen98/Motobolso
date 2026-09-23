@@ -383,9 +383,17 @@
       if (session) { await onAuthed(session.user); }
       else { loadLocal(); showLogin(); }
 
-      supabaseClient.auth.onAuthStateChange(async (_event, session) => {
-        if (session) { await onAuthed(session.user); }
-        else { cloudReady = false; currentUser = null; loadLocal(); showLogin(); renderAll(); }
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          onAuthed(session.user).catch(e => console.error(e));
+        } else {
+          cloudReady = false;
+          currentUser = null;
+          state = { entries: [] };
+          settings = { invest: 20, reserva: 20, metaDiaria: 120, diasTrabalhados: 26 };
+          showLogin();
+          renderAll();
+        }
       });
     } catch (e) {
       console.error(e);
@@ -403,6 +411,9 @@
 
   async function onAuthed(user) {
     currentUser = user;
+    cloudReady = false;
+    state = { entries: [] };
+    settings = { invest: 20, reserva: 20, metaDiaria: 120, diasTrabalhados: 26 };
     document.getElementById('loginCard').style.display = 'none';
     document.getElementById('appContent').style.display = '';
     document.getElementById('syncStatus').textContent = 'Carregando…';
@@ -710,7 +721,7 @@
       const valorInput = document.getElementById('valorGanho');
       const dataInput = document.getElementById('dataGanho');
       const total = parseFloat(valorInput.value);
-      if (!total || total <= 0) { valorInput.focus(); return; }
+      if (!Number.isFinite(total) || total <= 0) { valorInput.focus(); return; }
       const saved = await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
       if (!saved) return;
       renderEntries(); renderTotals();
