@@ -484,6 +484,7 @@
   }
 
   function showLogin() {
+    document.querySelector('.auth-shell').style.display = '';
     document.querySelector('.topbar').style.display = 'none';
     document.getElementById('syncStatus').style.display = 'none';
     document.getElementById('loginCard').style.display = '';
@@ -492,6 +493,7 @@
   }
 
   async function onAuthed(user) {
+    document.querySelector('.auth-shell').style.display = 'none';
     currentUser = user;
     cloudReady = false;
     state = { entries: [] };
