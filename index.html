@@ -96,6 +96,8 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 620px; margin: 0 auto; }
+  #appContent.app-visible { display: block !important; }
+  .auth-shell.auth-hidden { display: none !important; }
   .auth-shell { min-height: calc(100vh - 60px); display:flex; align-items:center; justify-content:center; padding:24px 0 40px; }
   .auth-card { width:100%; max-width:430px; padding:30px; border-radius:24px; background:var(--card-bg); border:1px solid var(--border); box-shadow:0 18px 55px rgba(20,20,18,.08); }
   .auth-brand { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
@@ -484,6 +486,8 @@
   }
 
   function showLogin() {
+    document.getElementById('appContent').classList.remove('app-visible');
+    document.querySelector('.auth-shell').classList.remove('auth-hidden');
     document.querySelector('.auth-shell').style.display = '';
     document.querySelector('.topbar').style.display = 'none';
     document.getElementById('syncStatus').style.display = 'none';
@@ -493,7 +497,9 @@
   }
 
   async function onAuthed(user) {
+    document.querySelector('.auth-shell').classList.add('auth-hidden');
     document.querySelector('.auth-shell').style.display = 'none';
+    document.getElementById('appContent').classList.add('app-visible');
     currentUser = user;
     cloudReady = false;
     state = { entries: [] };
