@@ -233,12 +233,16 @@
   .empty { color: var(--text-muted); font-size: 0.86rem; text-align: center; padding: 24px 0; }
   .reset-link { text-align: center; margin-top: 12px; }
   .reset-link a { color: var(--text-muted); font-size: 0.78rem; text-decoration: underline; cursor: pointer; }
+  .topbar { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px; }
+  .brand { min-width:0; }
+  .theme-toggle { width:auto; min-width:44px; height:44px; padding:0 12px; display:inline-flex; align-items:center; justify-content:center; gap:6px; border:1px solid var(--border); background:var(--card-bg); color:var(--text); box-shadow:var(--shadow); }
+  .theme-toggle span { font-size:1rem; }
+  @media (max-width:600px) { body { padding:16px 12px 40px; } .wrap { width:100%; } .card { padding:16px; margin-bottom:10px; border-radius:14px; } .topbar { margin-bottom:12px; } h1 { font-size:1.35rem; } .sub { font-size:.82rem; } .totals-grid { gap:7px; } .total-box { padding:11px 5px; } .total-box .value { font-size:.92rem; } button, .tab, input[type="number"], input[type="date"], select { min-height:46px; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>🏍️ Moto Bolso</h1>
-  <div class="sub">Ganhos, gasolina, manutenção e o que sobra de verdade.</div>
+  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1><div class="sub">Ganhos, gasolina, manutenção e o que sobra de verdade.</div></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div>
   <div class="sub" id="syncStatus" style="margin-bottom:16px;">Conectando…</div>
 
   <div class="card" id="loginCard" style="display:none;">
@@ -358,6 +362,10 @@
   let settings = { invest: 20, reserva: 20, metaDiaria: 120, diasTrabalhados: 26 };
 
   let supabaseClient = null, currentUser = null, cloudReady = false;
+
+  function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); const dark = theme === 'dark'; document.getElementById('themeIcon').textContent = dark ? '☀️' : '🌙'; document.getElementById('themeText').textContent = dark ? 'Claro' : 'Escuro'; document.getElementById('themeToggle').setAttribute('aria-label', dark ? 'Ativar modo claro' : 'Ativar modo escuro'); document.getElementById('themeToggle').title = dark ? 'Modo claro' : 'Modo escuro'; }
+
+  function initTheme() { const saved = localStorage.getItem('motobolso_theme'); applyTheme(saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')); }
 
   function configured() {
     return SUPABASE_URL && !SUPABASE_URL.includes('SUA_') && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes('SUA_');
@@ -680,6 +688,8 @@
   }
 
   async function init() {
+    initTheme();
+    document.getElementById('themeToggle').addEventListener('click', () => { const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('motobolso_theme', next); applyTheme(next); });
     document.getElementById('dataGanho').value = todayISO();
     document.getElementById('dataDespesa').value = todayISO();
 
