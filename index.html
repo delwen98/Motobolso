@@ -426,10 +426,15 @@
         .from('entries').select('*')
         .eq('user_id', currentUser.id)
         .order('date', { ascending: false })
-        .limit(500);
+        .order('created_at', { ascending: false });
       if (error) throw error;
       state.entries = (entries || []).map(e => ({
-        id: e.id, type: e.type, category: e.category, total: Number(e.total), date: e.date
+        id: e.id,
+        type: e.type,
+        category: e.category,
+        total: Number(e.total),
+        date: e.date,
+        createdAt: e.created_at || null
       }));
 
       const { data: settingsRow, error: settingsError } = await supabaseClient
@@ -460,12 +465,26 @@
     }
   }
 
-  function loadLocal() {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) state = JSON.parse(raw); } catch (e) {}
-    try { const rawS = localStorage.getItem(SETTINGS_KEY); if (rawS) Object.assign(settings, JSON.parse(rawS)); } catch (e) {}
+  function localKey(base) {
+    return currentUser ? base + '_' + currentUser.id : base;
   }
-  function saveLocal() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
-  function saveSettingsLocal() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) {} }
+
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(localKey(STORAGE_KEY));
+      if (raw) state = JSON.parse(raw);
+    } catch (e) {}
+    try {
+      const rawS = localStorage.getItem(localKey(SETTINGS_KEY));
+      if (rawS) Object.assign(settings, JSON.parse(rawS));
+    } catch (e) {}
+  }
+  function saveLocal() {
+    try { localStorage.setItem(localKey(STORAGE_KEY), JSON.stringify(state)); } catch (e) {}
+  }
+  function saveSettingsLocal() {
+    try { localStorage.setItem(localKey(SETTINGS_KEY), JSON.stringify(settings)); } catch (e) {}
+  }
 
   async function addEntry(entry) {
     if (currentUser && !cloudReady) {
@@ -478,6 +497,7 @@
         const { data, error } = await supabaseClient.from('entries').insert(row).select().single();
         if (error) throw error;
         entry.id = data.id;
+        entry.createdAt = data.created_at || new Date().toISOString();
         state.entries.unshift(entry);
         return true;
       } catch (e) {
@@ -606,7 +626,11 @@
   function renderEntries() {
     const list = document.getElementById('entryList');
     if (state.entries.length === 0) { list.innerHTML = '<div class="empty">Nenhum registro ainda.</div>'; return; }
-    const sorted = [...state.entries].sort((a,b) => b.date.localeCompare(a.date));
+    const sorted = [...state.entries].sort((a,b) => {
+      const dateCompare = (b.date || '').localeCompare(a.date || '');
+      if (dateCompare !== 0) return dateCompare;
+      return (b.createdAt || '').localeCompare(a.createdAt || '');
+    });
     list.innerHTML = sorted.map(e => {
       const isGanho = e.type === 'ganho';
       const tagClass = isGanho ? 'tag-ganho' : ('tag-' + e.category);
