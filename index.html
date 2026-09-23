@@ -877,7 +877,7 @@
       try {
         const { error } = await supabaseClient.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo: window.location.href }
+          options: { redirectTo: 'https://delwen98.github.io/Motobolso/' }
         });
         if (error) msgEl.textContent = 'Erro: ' + error.message;
       } catch (e) {
