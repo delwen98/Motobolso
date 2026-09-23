@@ -459,13 +459,17 @@
         throw new Error('Biblioteca do Supabase não carregou (sem internet ou CDN bloqueado)');
       }
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      initGoogleSignIn();
 
       const { data, error } = await supabaseClient.auth.getSession();
       if (error) throw error;
       const session = data.session;
-      if (session) { await onAuthed(session.user); }
-      else { loadLocal(); showLogin(); }
+      if (session) {
+        await onAuthed(session.user);
+      } else {
+        loadLocal();
+        showLogin();
+        initGoogleSignIn();
+      }
 
       supabaseClient.auth.onAuthStateChange((_event, session) => {
         if (session) {
@@ -882,13 +886,25 @@
     });
 
     const GOOGLE_CLIENT_ID = '452346422399-68fbe4qgdetu8rjjbb16bjtuja7foq8s.apps.googleusercontent.com';
+    let googleInitialized = false;
 
     function initGoogleSignIn() {
+      if (googleInitialized) return;
       const msgEl = document.getElementById('loginMsg');
+      const button = document.getElementById('btnGoogleLogin');
+
+      if (!button) return;
+
       if (!window.google || !window.google.accounts || !window.google.accounts.id) {
         setTimeout(initGoogleSignIn, 300);
         return;
       }
+
+      if (document.getElementById('loginCard').style.display === 'none') {
+        setTimeout(initGoogleSignIn, 300);
+        return;
+      }
+
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: async (response) => {
@@ -909,8 +925,6 @@
         auto_select: false
       });
 
-      const button = document.getElementById('btnGoogleLogin');
-      if (!button) return;
       button.innerHTML = '';
       google.accounts.id.renderButton(button, {
         type: 'standard',
@@ -918,9 +932,11 @@
         size: 'large',
         text: 'continue_with',
         shape: 'rectangular',
-        width: Math.min(360, Math.max(240, button.clientWidth || 360)),
+        width: 360,
         logo_alignment: 'left'
       });
+
+      googleInitialized = true;
     }
 
     await initCloud();
