@@ -432,15 +432,20 @@
         id: e.id, type: e.type, category: e.category, total: Number(e.total), date: e.date
       }));
 
-      const { data: settingsRow } = await supabaseClient
+      const { data: settingsRow, error: settingsError } = await supabaseClient
         .from('settings').select('*')
         .eq('user_id', currentUser.id)
         .maybeSingle();
+      if (settingsError) throw settingsError;
       if (settingsRow) {
-        settings.metaDiaria = Number(settingsRow.meta_diaria) || 0;
-        settings.diasTrabalhados = Number(settingsRow.dias_trabalhados) || 0;
-        settings.invest = Number(settingsRow.invest) || 20;
-        settings.reserva = Number(settingsRow.reserva) || 20;
+        const metaDiaria = Number(settingsRow.meta_diaria);
+        const diasTrabalhados = Number(settingsRow.dias_trabalhados);
+        const invest = Number(settingsRow.invest);
+        const reserva = Number(settingsRow.reserva);
+        settings.metaDiaria = Number.isFinite(metaDiaria) ? metaDiaria : 0;
+        settings.diasTrabalhados = Number.isFinite(diasTrabalhados) ? diasTrabalhados : 0;
+        settings.invest = Number.isFinite(invest) ? Math.max(0, Math.min(100, invest)) : 20;
+        settings.reserva = Number.isFinite(reserva) ? Math.max(0, Math.min(100, reserva)) : 20;
       }
       return true;
     } catch (e) {
@@ -463,6 +468,10 @@
   function saveSettingsLocal() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) {} }
 
   async function addEntry(entry) {
+    if (currentUser && !cloudReady) {
+      document.getElementById('syncStatus').textContent = '⚠️ Sem conexão com a nuvem. Tente novamente.';
+      return false;
+    }
     if (cloudReady) {
       try {
         const row = { user_id: currentUser.id, type: entry.type, category: entry.category || null, total: entry.total, date: entry.date };
@@ -470,21 +479,36 @@
         if (error) throw error;
         entry.id = data.id;
         state.entries.unshift(entry);
-        return;
-      } catch (e) { console.error(e); }
+        return true;
+      } catch (e) {
+        console.error(e);
+        document.getElementById('syncStatus').textContent = '❌ Não foi possível salvar. Verifique sua conexão e tente novamente.';
+        return false;
+      }
     }
     entry.id = String(Date.now()) + Math.random().toString(36).slice(2, 6);
     state.entries.unshift(entry);
     saveLocal();
+    return true;
   }
 
   async function removeEntry(id) {
     if (cloudReady) {
-      try { const { error } = await supabaseClient.from('entries').delete().eq('id', id); if (error) throw error; }
-      catch (e) { console.error(e); }
+      try {
+        const { error } = await supabaseClient.from('entries').delete().eq('id', id);
+        if (error) throw error;
+      } catch (e) {
+        console.error(e);
+        document.getElementById('syncStatus').textContent = '❌ Não foi possível remover este registro.';
+        return false;
+      }
+    } else if (currentUser) {
+      document.getElementById('syncStatus').textContent = '⚠️ Sem conexão com a nuvem. Tente novamente.';
+      return false;
     }
     state.entries = state.entries.filter(e => e.id !== id);
     if (!cloudReady) saveLocal();
+    return true;
   }
 
   async function persistSettings() {
@@ -498,10 +522,16 @@
           reserva: settings.reserva
         });
         if (error) throw error;
-        return;
-      } catch (e) { console.error(e); }
+        return true;
+      } catch (e) {
+        console.error(e);
+        saveSettingsLocal();
+        document.getElementById('syncStatus').textContent = '⚠️ Configuração salva localmente; a nuvem não respondeu.';
+        return false;
+      }
     }
     saveSettingsLocal();
+    return true;
   }
 
   function fmt(n) { return 'R$ ' + (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -657,7 +687,8 @@
       const dataInput = document.getElementById('dataGanho');
       const total = parseFloat(valorInput.value);
       if (!total || total <= 0) { valorInput.focus(); return; }
-      await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
+      const saved = await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
+      if (!saved) return;
       renderEntries(); renderTotals();
       valorInput.value = ''; valorInput.focus();
     });
@@ -668,22 +699,33 @@
       const categoria = document.getElementById('categoriaDespesa').value;
       const total = parseFloat(valorInput.value);
       if (!total || total <= 0) { valorInput.focus(); return; }
-      await addEntry({ type: 'despesa', category: categoria, total, date: dataInput.value || todayISO() });
+      const saved = await addEntry({ type: 'despesa', category: categoria, total, date: dataInput.value || todayISO() });
+      if (!saved) return;
       renderEntries(); renderTotals();
       valorInput.value = ''; valorInput.focus();
     });
 
     document.getElementById('resetBtn').addEventListener('click', async () => {
-      if (confirm('Tem certeza que quer apagar todos os registros?')) {
-        if (cloudReady) {
-          try { await supabaseClient.from('entries').delete().eq('user_id', currentUser.id); }
-          catch (e) { console.error(e); }
-        } else {
-          saveLocal();
+      if (!confirm('Tem certeza que quer apagar todos os registros?')) return;
+
+      if (cloudReady) {
+        try {
+          const { error } = await supabaseClient.from('entries').delete().eq('user_id', currentUser.id);
+          if (error) throw error;
+        } catch (e) {
+          console.error(e);
+          document.getElementById('syncStatus').textContent = '❌ Não foi possível apagar os registros na nuvem.';
+          return;
         }
-        state.entries = [];
-        renderEntries(); renderTotals();
+      } else if (currentUser) {
+        document.getElementById('syncStatus').textContent = '⚠️ Sem conexão com a nuvem. Tente novamente.';
+        return;
       }
+
+      state.entries = [];
+      saveLocal();
+      renderEntries();
+      renderTotals();
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
