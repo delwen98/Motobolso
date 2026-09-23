@@ -96,6 +96,23 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 620px; margin: 0 auto; }
+  .auth-shell { min-height: calc(100vh - 60px); display:flex; align-items:center; justify-content:center; padding:24px 0 40px; }
+  .auth-card { width:100%; max-width:430px; padding:30px; border-radius:24px; background:var(--card-bg); border:1px solid var(--border); box-shadow:0 18px 55px rgba(20,20,18,.08); }
+  .auth-brand { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+  .auth-logo { width:48px; height:48px; border-radius:15px; display:grid; place-items:center; background:var(--accent); color:#fff; font-size:23px; box-shadow:0 8px 22px rgba(61,122,92,.22); }
+  .auth-brand-name { font-family:var(--font-display); font-size:1.22rem; font-weight:700; letter-spacing:-.03em; }
+  .auth-brand-sub { color:var(--text-muted); font-size:.72rem; margin-top:2px; }
+  .auth-title { font-family:var(--font-display); font-size:1.8rem; line-height:1.08; letter-spacing:-.045em; margin:0 0 9px; }
+  .auth-copy { color:var(--text-muted); font-size:.88rem; line-height:1.55; margin:0 0 24px; }
+  .google-btn { background:var(--card-bg)!important; color:var(--text)!important; border:1px solid var(--border)!important; display:flex!important; align-items:center; justify-content:center; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+  .google-btn:hover { border-color:var(--text-muted)!important; }
+  .auth-divider { display:flex; align-items:center; gap:10px; margin:20px 0 16px; color:var(--text-muted); font-size:.7rem; }
+  .auth-divider::before,.auth-divider::after { content:""; height:1px; background:var(--border); flex:1; }
+  .auth-benefits { display:grid; gap:10px; margin-top:20px; }
+  .auth-benefit { display:flex; gap:10px; align-items:flex-start; color:var(--text-muted); font-size:.78rem; line-height:1.4; }
+  .auth-benefit-icon { flex:0 0 28px; width:28px; height:28px; border-radius:9px; background:var(--accent-soft); display:grid; place-items:center; color:var(--accent); font-size:.85rem; }
+  .auth-foot { text-align:center; color:var(--text-muted); font-size:.68rem; margin-top:22px; line-height:1.5; }
+  .auth-foot strong { color:var(--text); }
 
   h1 {
     font-family: var(--font-display);
@@ -265,6 +282,11 @@
   @media (min-width:601px) {
     .hero-card { padding:24px; }
   }
+  @media (max-width:600px) {
+    .auth-shell { min-height:calc(100vh - 20px); padding:10px 0 24px; }
+    .auth-card { padding:24px 20px; border-radius:20px; }
+    .auth-title { font-size:1.7rem; }
+  }
 </style>
 </head>
 <body>
@@ -278,13 +300,30 @@
     <div class="hero-meta"><span><strong id="heroPct">0%</strong> da meta mensal</span><span>Meta <strong id="heroMeta">R$ 0,00</strong></span></div>
   </div>
 
-  <div class="card" id="loginCard" style="display:none;">
-    <h2>Entrar</h2>
-    <button id="btnGoogleLogin" style="background:#fff;color:#20211F;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:10px;">
-      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.83.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.68 9c0-.59.1-1.16.27-1.7V4.97H.96A9 9 0 0 0 0 9c0 1.45.35 2.83.96 4.03l2.99-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.46 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.97l2.99 2.33C4.66 5.17 6.65 3.58 9 3.58z"/></svg>
-      Entrar com Google
-    </button>
-    <div class="sub" id="loginMsg" style="margin-top:10px;"></div>
+  <div class="auth-shell">
+    <div class="auth-card" id="loginCard" style="display:none;">
+      <div class="auth-brand">
+        <div class="auth-logo">🏍️</div>
+        <div>
+          <div class="auth-brand-name">Moto Bolso</div>
+          <div class="auth-brand-sub">Controle financeiro para quem roda</div>
+        </div>
+      </div>
+      <h2 class="auth-title">Seu dinheiro,<br>sob controle.</h2>
+      <p class="auth-copy">Registre seus ganhos, acompanhe seus gastos e veja quanto realmente sobra no fim do mês.</p>
+      <button id="btnGoogleLogin" class="google-btn">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.83.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.68 9c0-.59.1-1.16.27-1.7V4.97H.96A9 9 0 0 0 0 9c0 1.45.35 2.83.96 4.03l2.99-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.46 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.97l2.99 2.33C4.66 5.17 6.65 3.58 9 3.58z"/></svg>
+        Continuar com Google
+      </button>
+      <div class="auth-divider"><span>ACESSO SEGURO</span></div>
+      <div class="auth-benefits">
+        <div class="auth-benefit"><span class="auth-benefit-icon">✓</span><span>Seus registros ficam sincronizados na nuvem.</span></div>
+        <div class="auth-benefit"><span class="auth-benefit-icon">↗</span><span>Acompanhe ganhos, gasolina e despesas em um só lugar.</span></div>
+        <div class="auth-benefit"><span class="auth-benefit-icon">◷</span><span>Feito para registrar tudo rapidamente pelo celular.</span></div>
+      </div>
+      <div class="sub" id="loginMsg" style="margin-top:14px;"></div>
+      <div class="auth-foot">Ao continuar, você entra na sua conta do <strong>Moto Bolso</strong>.</div>
+    </div>
   </div>
 
   <div id="appContent" style="display:none;">
@@ -445,6 +484,8 @@
   }
 
   function showLogin() {
+    document.querySelector('.topbar').style.display = 'none';
+    document.getElementById('syncStatus').style.display = 'none';
     document.getElementById('loginCard').style.display = '';
     document.getElementById('appContent').style.display = 'none'; document.getElementById('heroCard').style.display = 'none';
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
@@ -456,6 +497,8 @@
     state = { entries: [] };
     settings = { invest: 20, reserva: 20, metaDiaria: 120, diasTrabalhados: 26 };
     document.getElementById('loginCard').style.display = 'none';
+    document.querySelector('.topbar').style.display = '';
+    document.getElementById('syncStatus').style.display = '';
     document.getElementById('appContent').style.display = ''; document.getElementById('heroCard').style.display = '';
     document.getElementById('syncStatus').textContent = 'Carregando…';
     const ok = await loadFromSupabase();
