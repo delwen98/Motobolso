@@ -326,6 +326,8 @@
   .expense-chip.active { color:var(--gasolina); border-color:color-mix(in srgb,var(--gasolina) 35%,var(--border)); background:var(--gasolina-soft); }
   .category-select { display:none; }
   .today-hint { display:flex; gap:8px; align-items:flex-start; color:var(--text-muted); font-size:.7rem; line-height:1.45; padding:4px 4px 0; }
+  .data-status { display:flex; align-items:center; justify-content:center; gap:6px; margin:8px 2px 2px; padding:8px 10px; border-radius:10px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 16%,var(--border)); font-size:.68rem; font-weight:700; }
+  .data-status::before { content:'✓'; font-weight:800; }
   .full-box { width:100%; margin-top:7px; }
   .secondary-btn { background:var(--bg); color:var(--text); border:1px solid var(--border); }
   .settings-card { margin-bottom:10px; }
@@ -397,6 +399,7 @@
           <button class="despesa-btn" id="btnAddDespesa">+ Registrar despesa</button>
         </div>
       </div>
+      <div class="data-status" id="dataLoadStatus" style="display:none;">Dados carregados com sucesso</div>
       <div class="today-hint">💡 <span>Registre durante o dia. O Moto Bolso calcula seu líquido automaticamente.</span></div>
     </main>
 
@@ -565,6 +568,8 @@
     document.querySelector('.auth-shell').classList.add('auth-hidden');
     document.querySelector('.auth-shell').style.display = 'none';
     document.getElementById('appContent').classList.add('app-visible');
+    const dataLoadStatus = document.getElementById('dataLoadStatus');
+    if (dataLoadStatus) dataLoadStatus.style.display = 'none';
     currentUser = user;
     cloudReady = false;
     state = { entries: [] };
@@ -582,6 +587,8 @@
       const syncStatus = document.getElementById('syncStatus');
       syncStatus.classList.add('sync-ok');
       syncStatus.textContent = 'Dados carregados e sincronizados';
+      const dataLoadStatus = document.getElementById('dataLoadStatus');
+      if (dataLoadStatus) dataLoadStatus.style.display = 'flex';
     } else {
       cloudReady = false;
       document.getElementById('syncStatus').innerHTML =
