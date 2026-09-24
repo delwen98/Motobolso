@@ -328,6 +328,9 @@
   .today-hint { display:flex; gap:8px; align-items:flex-start; color:var(--text-muted); font-size:.7rem; line-height:1.45; padding:4px 4px 0; }
   .data-status { display:flex; align-items:center; justify-content:center; gap:6px; margin:8px 2px 2px; padding:8px 10px; border-radius:10px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 16%,var(--border)); font-size:.68rem; font-weight:700; }
   .data-status::before { content:'✓'; font-weight:800; }
+  .home-status-row { display:flex; align-items:center; gap:7px; margin:8px 2px 2px; }
+  .home-status-row .data-status { flex:1; margin:0; }
+  .logout-mini { width:auto; min-height:34px; padding:7px 10px; border-radius:9px; background:var(--card-bg); color:var(--text-muted); border:1px solid var(--border); font-size:.66rem; font-weight:700; box-shadow:none; }
   .full-box { width:100%; margin-top:7px; }
   .secondary-btn { background:var(--bg); color:var(--text); border:1px solid var(--border); }
   .settings-card { margin-bottom:10px; }
@@ -399,7 +402,7 @@
           <button class="despesa-btn" id="btnAddDespesa">+ Registrar despesa</button>
         </div>
       </div>
-      <div class="data-status" id="dataLoadStatus" style="display:none;">Dados carregados com sucesso</div>
+      <div class="home-status-row"><div class="data-status" id="dataLoadStatus" style="display:none;">Dados carregados com sucesso</div><button type="button" class="logout-mini" id="logoutMini" style="display:none;">Sair</button></div>
       <div class="today-hint">💡 <span>Registre durante o dia. O Moto Bolso calcula seu líquido automaticamente.</span></div>
     </main>
 
@@ -451,6 +454,7 @@
       <button type="button" class="nav-item active" data-target="sectionInicio"><span>⌂</span><small>Início</small></button>
       <button type="button" class="nav-item" data-target="sectionResumo"><span>◔</span><small>Resumo</small></button>
       <button type="button" class="nav-item" data-target="sectionHistorico"><span>☷</span><small>Histórico</small></button>
+      <button type="button" class="nav-item" data-target="sectionConfig"><span>⚙</span><small>Config.</small></button>
     </nav>
   </div></div>
 
@@ -568,7 +572,9 @@
     document.querySelector('.auth-shell').style.display = 'none';
     document.getElementById('appContent').classList.add('app-visible');
     const dataLoadStatus = document.getElementById('dataLoadStatus');
+    const logoutMini = document.getElementById('logoutMini');
     if (dataLoadStatus) dataLoadStatus.style.display = 'none';
+    if (logoutMini) logoutMini.style.display = 'none';
     currentUser = user;
     cloudReady = false;
     state = { entries: [] };
@@ -587,7 +593,9 @@
       syncStatus.classList.add('sync-ok');
       syncStatus.textContent = 'Dados carregados e sincronizados';
       const dataLoadStatus = document.getElementById('dataLoadStatus');
+      const logoutMini = document.getElementById('logoutMini');
       if (dataLoadStatus) dataLoadStatus.style.display = 'flex';
+      if (logoutMini) logoutMini.style.display = 'inline-flex';
     } else {
       cloudReady = false;
       document.getElementById('syncStatus').innerHTML =
@@ -978,9 +986,11 @@
       renderTotals();
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
+    const logout = async () => {
       if (supabaseClient) await supabaseClient.auth.signOut();
-    });
+    };
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('logoutMini').addEventListener('click', logout);
 
     let googleButtonInitialized = false;
 
