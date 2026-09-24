@@ -124,7 +124,7 @@
     letter-spacing: -0.01em;
     margin: 0 0 4px;
   }
-  .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 4px; line-height: 1.4; }
+   .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 4px; line-height: 1.4; }
   #syncStatus { font-size: 0.72rem; color:var(--text-muted); margin-bottom:12px; }
   #syncStatus.sync-ok { display:inline-flex!important; align-items:center; gap:6px; padding:5px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 18%,var(--border)); font-size:.68rem; font-weight:700; }
   #syncStatus.sync-ok::before { content:'✓'; font-weight:800; }
@@ -342,8 +342,8 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1><div class="sub">Ganhos, gasolina, manutenção e o que sobra de verdade.</div></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div>
-  <div class="sub" id="syncStatus" style="margin-bottom:16px;">Conectando…</div>
+  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div>
+  <div class="sub" id="syncStatus" style="display:none;">Conectando…</div>
 
   <div class="auth-shell">
     <div class="auth-card" id="loginCard" style="display:none;">
