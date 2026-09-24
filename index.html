@@ -527,9 +527,36 @@
     document.getElementById('loginCard').style.display = '';
     document.getElementById('appContent').style.display = 'none'; document.getElementById('heroCard').style.display = 'none';
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
-    // Garante que o botão Google seja renderizado sempre que a tela de login aparecer,
-    // inclusive se o carregamento da sessão/Supabase falhar.
-    if (typeof initGoogleSignIn === 'function') initGoogleSignIn();
+    // O botão é renderizado aqui diretamente. A função antiga ficava dentro de init(),
+    // então não podia ser chamada por showLogin() quando o Supabase falhava ao iniciar.
+    const googleBtn = document.getElementById('btnGoogleLogin');
+    if (googleBtn) {
+      googleBtn.innerHTML = '<span class="google-icon" aria-hidden="true">G</span><span>Continuar com Google</span>';
+      googleBtn.style.display = 'flex';
+      googleBtn.style.visibility = 'visible';
+      googleBtn.style.alignItems = 'center';
+      googleBtn.style.justifyContent = 'center';
+      googleBtn.style.gap = '10px';
+      googleBtn.style.cursor = 'pointer';
+      googleBtn.onclick = async () => {
+        const msgEl = document.getElementById('loginMsg');
+        if (!supabaseClient) {
+          msgEl.textContent = 'Serviço de login ainda não carregou. Tente novamente.';
+          return;
+        }
+        msgEl.textContent = '';
+        try {
+          const { error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: 'https://delwen98.github.io/Motobolso/', queryParams: { prompt: 'select_account' } }
+          });
+          if (error) throw error;
+        } catch (e) {
+          console.error('Google OAuth error:', e);
+          msgEl.textContent = 'Erro no login: ' + (e && e.message ? e.message : 'não foi possível autenticar.');
+        }
+      };
+    }
   }
 
   async function onAuthed(user) {
