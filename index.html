@@ -125,7 +125,9 @@
     margin: 0 0 4px;
   }
   .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 4px; line-height: 1.4; }
-  #syncStatus { font-size: 0.78rem; }
+  #syncStatus { font-size: 0.72rem; color:var(--text-muted); margin-bottom:12px; }
+  #syncStatus.sync-ok { display:inline-flex!important; align-items:center; gap:6px; padding:5px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 18%,var(--border)); font-size:.68rem; font-weight:700; }
+  #syncStatus.sync-ok::before { content:'✓'; font-weight:800; }
 
   .card {
     background: var(--card-bg);
@@ -571,11 +573,15 @@
     document.querySelector('.topbar').style.display = '';
     document.getElementById('syncStatus').style.display = '';
     document.getElementById('appContent').style.display = ''; document.getElementById('heroCard').style.display = '';
-    document.getElementById('syncStatus').textContent = 'Carregando…';
+    const syncStatusLoading = document.getElementById('syncStatus');
+    syncStatusLoading.classList.remove('sync-ok');
+    syncStatusLoading.textContent = 'Carregando seus dados…';
     const ok = await loadFromSupabase();
     if (ok) {
       cloudReady = true;
-      document.getElementById('syncStatus').innerHTML = '☁️ Conectado como ' + user.email;
+      const syncStatus = document.getElementById('syncStatus');
+      syncStatus.classList.add('sync-ok');
+      syncStatus.textContent = 'Dados carregados e sincronizados';
     } else {
       cloudReady = false;
       document.getElementById('syncStatus').innerHTML =
