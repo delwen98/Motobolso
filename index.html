@@ -334,8 +334,10 @@
   .full-box { width:100%; margin-top:7px; }
   .secondary-btn { background:var(--bg); color:var(--text); border:1px solid var(--border); }
   .settings-card { margin-bottom:10px; }
-  #heroCard { margin-top:0; }
+  #heroCard { margin-top:0; position:relative; }
   #heroCard .hero-value { font-size:clamp(2.35rem,11vw,3.1rem); }
+  .hero-logout { position:absolute; top:18px; right:18px; width:auto; min-width:82px; min-height:38px; padding:7px 12px; border-radius:10px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 28%,var(--border)); font-size:.7rem; font-weight:800; box-shadow:none; }
+  .hero-logout:active { opacity:.8; }
   @media (max-width:600px) { .bottom-nav { bottom:6px; margin-top:10px; padding:5px; } .nav-item { min-height:48px; } .quick-stat strong { font-size:.82rem; } .page-title h2 { font-size:1.4rem; } }
 
 </style>
@@ -365,6 +367,7 @@
   <div id="appContent" style="display:none;">
     <main id="sectionInicio" class="app-section active-section">
         <div class="card hero-card" id="heroCard" style="display:none;">
+    <button type="button" class="hero-logout" id="heroLogout" aria-label="Sair da conta">Sair</button>
     <div class="hero-kicker">Lucro líquido · este mês</div>
     <div class="hero-value pos" id="heroLiquido">R$ 0,00</div>
     <div class="hero-meta"><span><strong id="heroPct">0%</strong> da meta mensal</span><span>Meta <strong id="heroMeta">R$ 0,00</strong></span></div>
@@ -995,6 +998,7 @@
     };
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('logoutMini').addEventListener('click', logout);
+    document.getElementById('heroLogout').addEventListener('click', logout);
 
     let googleButtonInitialized = false;
 
