@@ -527,6 +527,9 @@
     document.getElementById('loginCard').style.display = '';
     document.getElementById('appContent').style.display = 'none'; document.getElementById('heroCard').style.display = 'none';
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
+    // Garante que o botão Google seja renderizado sempre que a tela de login aparecer,
+    // inclusive se o carregamento da sessão/Supabase falhar.
+    if (typeof initGoogleSignIn === 'function') initGoogleSignIn();
   }
 
   async function onAuthed(user) {
