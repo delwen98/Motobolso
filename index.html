@@ -328,6 +328,17 @@
   .today-hint { display:flex; gap:8px; align-items:flex-start; color:var(--text-muted); font-size:.7rem; line-height:1.45; padding:4px 4px 0; }
   .data-status { display:flex; align-items:center; justify-content:center; gap:6px; margin:8px 2px 2px; padding:8px 10px; border-radius:10px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb,var(--accent) 16%,var(--border)); font-size:.68rem; font-weight:700; }
   .data-status::before { content:'✓'; font-weight:800; }
+  .tour-overlay { position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.62); display:none; pointer-events:auto; }
+  .tour-overlay.active { display:block; }
+  .tour-spotlight { position:fixed; z-index:101; border-radius:16px; box-shadow:0 0 0 9999px rgba(0,0,0,.62); pointer-events:none; transition:all .22s ease; }
+  .tour-card { position:fixed; z-index:102; width:min(330px,calc(100vw - 28px)); padding:17px; border-radius:16px; background:var(--card-bg); color:var(--text); border:1px solid var(--border); box-shadow:0 18px 50px rgba(0,0,0,.25); }
+  .tour-step { color:var(--accent); font-size:.65rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px; }
+  .tour-card h3 { margin:0 0 5px; font-family:var(--font-display); font-size:1.02rem; }
+  .tour-card p { margin:0; color:var(--text-muted); font-size:.78rem; line-height:1.45; }
+  .tour-actions { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:14px; }
+  .tour-skip { width:auto; min-height:36px; padding:7px 9px; background:transparent; color:var(--text-muted); font-size:.7rem; }
+  .tour-next { width:auto; min-height:38px; padding:8px 14px; border-radius:10px; font-size:.75rem; }
+
   .home-status-row { display:flex; align-items:center; gap:7px; margin:8px 2px 2px; }
   .home-status-row .data-status { flex:1; margin:0; }
   .logout-mini { width:auto; min-height:34px; padding:7px 10px; border-radius:9px; background:var(--card-bg); color:var(--text-muted); border:1px solid var(--border); font-size:.66rem; font-weight:700; box-shadow:none; }
@@ -450,6 +461,7 @@
         <input type="number" id="diasTrabalhados" placeholder="26" inputmode="numeric" step="1">
         <div class="goal-projection">Projeção mensal <b id="metaMensalTxt">R$ 0</b></div>
       </div>
+      <div class="card settings-card"><h2>Ajuda</h2><button id="tourAgainBtn" class="secondary-btn">Ver tutorial novamente</button></div>
       <div class="card settings-card"><h2>Conta</h2><button id="logoutBtn" class="secondary-btn">Sair da conta</button></div>
     </main>
 
@@ -460,6 +472,16 @@
       <button type="button" class="nav-item" data-target="sectionConfig"><span>⚙</span><small>Config.</small></button>
     </nav>
   </div></div>
+
+  <div class="tour-overlay" id="tourOverlay" aria-hidden="true">
+    <div class="tour-spotlight" id="tourSpotlight"></div>
+    <div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+      <div class="tour-step" id="tourStep">1 de 5</div>
+      <h3 id="tourTitle">Vamos começar</h3>
+      <p id="tourText">Aqui você registra rapidamente quanto ganhou ou gastou no dia.</p>
+      <div class="tour-actions"><button type="button" class="tour-skip" id="tourSkip">Pular</button><button type="button" class="tour-next" id="tourNext">Próximo</button></div>
+    </div>
+  </div>
 
 <script>
 (function() {
@@ -992,6 +1014,68 @@
       renderEntries();
       renderTotals();
     });
+
+
+    const tourSteps = [
+      { target: 'sectionInicio .register-card', title: 'Vamos começar', text: 'Aqui você registra rapidamente quanto ganhou ou gastou no dia.', tab: 'sectionInicio' },
+      { target: 'sectionInicio .tabs', title: 'Ganho ou despesa', text: 'Escolha Ganho para o que recebeu ou Despesa para seus gastos.', tab: 'sectionInicio' },
+      { target: '.nav-item[data-target="sectionResumo"]', title: 'Acompanhe seu resultado', text: 'No Resumo você vê ganhos, gastos, lucro líquido e sua meta.', tab: 'sectionResumo' },
+      { target: '.nav-item[data-target="sectionHistorico"]', title: 'Consulte seus lançamentos', text: 'No Histórico ficam todos os registros que você fez.', tab: 'sectionHistorico' },
+      { target: '.nav-item[data-target="sectionConfig"]', title: 'Personalize o app', text: 'Em Configurações você ajusta sua meta e pode rever este tutorial.', tab: 'sectionConfig' }
+    ];
+    let tourIndex = 0;
+    const tourOverlay = document.getElementById('tourOverlay');
+    const tourSpotlight = document.getElementById('tourSpotlight');
+    const tourCard = document.getElementById('tourCard');
+    const tourStep = document.getElementById('tourStep');
+    const tourTitle = document.getElementById('tourTitle');
+    const tourText = document.getElementById('tourText');
+    const tourNext = document.getElementById('tourNext');
+
+    function showTourStep(index) {
+      tourIndex = index;
+      const step = tourSteps[index];
+      const nav = document.querySelector('.nav-item[data-target="' + step.tab + '"]');
+      if (nav && step.tab !== 'sectionInicio') nav.click();
+      else if (step.tab === 'sectionInicio') document.querySelector('.nav-item[data-target="sectionInicio"]')?.click();
+      requestAnimationFrame(() => {
+        const target = document.querySelector(step.target);
+        if (!target) return;
+        target.scrollIntoView({ behavior:'smooth', block:'center' });
+        setTimeout(() => {
+          const rect = target.getBoundingClientRect();
+          const pad = 7;
+          tourSpotlight.style.left = (rect.left - pad) + 'px';
+          tourSpotlight.style.top = (rect.top - pad) + 'px';
+          tourSpotlight.style.width = (rect.width + pad*2) + 'px';
+          tourSpotlight.style.height = (rect.height + pad*2) + 'px';
+          tourStep.textContent = (index + 1) + ' de ' + tourSteps.length;
+          tourTitle.textContent = step.title;
+          tourText.textContent = step.text;
+          tourNext.textContent = index === tourSteps.length - 1 ? 'Começar' : 'Próximo';
+          const cardWidth = Math.min(330, window.innerWidth - 28);
+          let left = Math.max(14, Math.min(window.innerWidth - cardWidth - 14, rect.left + rect.width/2 - cardWidth/2));
+          let top = rect.bottom + 14;
+          if (top + 145 > window.innerHeight) top = Math.max(14, rect.top - 160);
+          tourCard.style.left = left + 'px';
+          tourCard.style.top = top + 'px';
+        }, 180);
+      });
+    }
+    function startTour(force) {
+      if (!force && localStorage.getItem(localKey('motobolso_tour_done')) === '1') return;
+      tourOverlay.classList.add('active');
+      tourOverlay.setAttribute('aria-hidden','false');
+      showTourStep(0);
+    }
+    function finishTour() {
+      tourOverlay.classList.remove('active');
+      tourOverlay.setAttribute('aria-hidden','true');
+      localStorage.setItem(localKey('motobolso_tour_done'), '1');
+    }
+    tourNext.addEventListener('click', () => tourIndex < tourSteps.length - 1 ? showTourStep(tourIndex + 1) : finishTour());
+    document.getElementById('tourSkip').addEventListener('click', finishTour);
+    document.getElementById('tourAgainBtn').addEventListener('click', () => startTour(true));
 
     const logout = async () => {
       if (supabaseClient) await supabaseClient.auth.signOut();
