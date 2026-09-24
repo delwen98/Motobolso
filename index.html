@@ -97,27 +97,25 @@
   }
   .wrap { max-width: 620px; margin: 0 auto; }
   #appContent.app-visible { display: block !important; }
-  .auth-shell.auth-hidden { display: none !important; }
-  .auth-shell { position:fixed; inset:0; z-index:50; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:28px 18px 40px; overflow:auto; background:linear-gradient(90deg,rgba(4,7,8,.82),rgba(4,7,8,.5)),url("images/C35920BA-3D4A-4A2F-9E29-104647FFD4E6.png") center/cover no-repeat; }
-  .auth-shell::before { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.55)); pointer-events:none; }
-  .auth-card { position:relative; z-index:1; width:100%; max-width:430px; padding:30px; border-radius:24px; background:rgba(13,16,17,.72); border:1px solid rgba(255,255,255,.14); box-shadow:0 28px 80px rgba(0,0,0,.42); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); color:#f5f7f6; }
-  .auth-brand { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:24px; text-align:left; }
-  .auth-logo { width:64px; height:64px; border-radius:18px; display:grid; place-items:center; overflow:hidden; background:#090b0c; border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 28px rgba(0,0,0,.28); }
+  .auth-shell.auth-hidden { display:none !important; }
+  .auth-shell { position:fixed; inset:0; z-index:50; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 18px; overflow:auto; background:var(--bg); }
+  .auth-shell::before { content:""; position:absolute; width:320px; height:320px; top:-150px; right:-120px; border-radius:50%; background:var(--accent-soft); filter:blur(10px); opacity:.7; pointer-events:none; }
+  .auth-card { position:relative; z-index:1; width:100%; max-width:390px; padding:30px 24px 22px; border-radius:24px; background:var(--card-bg); border:1px solid var(--border); box-shadow:0 18px 50px rgba(32,31,28,.08); color:var(--text); }
+  .auth-brand { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:28px; text-align:center; }
+  .auth-logo { width:68px; height:68px; border-radius:20px; display:grid; place-items:center; overflow:hidden; background:var(--card-bg); border:1px solid var(--border); box-shadow:var(--shadow); }
   .auth-logo img { width:100%; height:100%; object-fit:contain; display:block; }
-  .auth-brand-name { font-family:var(--font-display); font-size:1.22rem; font-weight:700; letter-spacing:-.03em; color:#fff; }
-  .auth-brand-name .accent { color:#45d39a; }
-  .auth-brand-sub { color:rgba(245,247,246,.62); font-size:.72rem; margin-top:2px; }
-  .auth-title { font-family:var(--font-display); font-size:1.8rem; line-height:1.08; letter-spacing:-.045em; margin:0 0 9px; color:#fff; }
-  .auth-copy { color:rgba(245,247,246,.68); font-size:.88rem; line-height:1.55; margin:0 0 24px; }
-  .google-btn { background:#fff!important; color:#202124!important; border:1px solid rgba(255,255,255,.8)!important; display:flex!important; width:100%!important; min-height:52px; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.2); font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }\n  .google-btn .google-icon { width:20px; height:20px; display:grid; place-items:center; font:700 18px Arial,sans-serif; color:#4285f4; }
-  .google-btn:hover { background:#f7f7f7!important; border-color:#fff!important; }
-  .auth-divider { display:flex; align-items:center; gap:10px; margin:20px 0 16px; color:rgba(245,247,246,.5); font-size:.7rem; }
-  .auth-divider::before,.auth-divider::after { content:""; height:1px; background:rgba(255,255,255,.13); flex:1; }
-  .auth-benefits { display:grid; gap:10px; margin-top:20px; }
-  .auth-benefit { display:flex; gap:10px; align-items:flex-start; color:rgba(245,247,246,.66); font-size:.78rem; line-height:1.4; }
-  .auth-benefit-icon { flex:0 0 28px; width:28px; height:28px; border-radius:9px; background:rgba(69,211,154,.12); display:grid; place-items:center; color:#45d39a; font-size:.85rem; border:1px solid rgba(69,211,154,.14); }
-  .auth-foot { text-align:center; color:rgba(245,247,246,.42); font-size:.68rem; margin-top:22px; line-height:1.5; }
-  .auth-foot strong { color:rgba(245,247,246,.72); }
+  .auth-brand-name { font-family:var(--font-display); font-size:1.25rem; font-weight:700; letter-spacing:-.03em; color:var(--text); }
+  .auth-brand-name .accent { color:var(--accent); }
+  .auth-brand-sub { color:var(--text-muted); font-size:.72rem; margin-top:2px; }
+  .auth-title { font-family:var(--font-display); font-size:1.8rem; line-height:1.08; letter-spacing:-.045em; margin:0 0 9px; color:var(--text); text-align:center; }
+  .auth-copy { color:var(--text-muted); font-size:.86rem; line-height:1.5; margin:0 auto 22px; max-width:300px; text-align:center; }
+  .google-btn { background:var(--card-bg)!important; color:var(--text)!important; border:1px solid var(--border)!important; display:flex!important; width:100%!important; min-height:54px; border-radius:13px; overflow:hidden; box-shadow:var(--shadow); font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; transition:transform .15s,box-shadow .15s,border-color .15s; }
+  .google-btn .google-icon { width:20px; height:20px; display:grid; place-items:center; font:700 18px Arial,sans-serif; color:#4285f4; }
+  .google-btn:hover { border-color:color-mix(in srgb,var(--accent) 35%,var(--border))!important; box-shadow:0 5px 16px rgba(32,31,28,.08); }
+  .google-btn:active { transform:scale(.99); }
+  .auth-divider,.auth-benefits { display:none; }
+  .auth-foot { text-align:center; color:var(--text-muted); font-size:.66rem; margin-top:16px; line-height:1.5; }
+  .auth-foot strong { color:var(--text); }
 
   h1 {
     font-family: var(--font-display);
@@ -350,16 +348,10 @@
         </div>
       </div>
       <h2 class="auth-title">Seu dinheiro,<br>sob controle.</h2>
-      <p class="auth-copy">Registre seus ganhos, acompanhe seus gastos e veja quanto realmente sobra no fim do mês.</p>
+      <p class="auth-copy">Registre seus ganhos e gastos sem perder tempo no corre.</p>
       <div id="btnGoogleLogin" class="google-btn" aria-label="Continuar com Google"></div>
-      <div class="auth-divider"><span>ACESSO SEGURO</span></div>
-      <div class="auth-benefits">
-        <div class="auth-benefit"><span class="auth-benefit-icon">✓</span><span>Seus registros ficam sincronizados na nuvem.</span></div>
-        <div class="auth-benefit"><span class="auth-benefit-icon">↗</span><span>Acompanhe ganhos, gasolina e despesas em um só lugar.</span></div>
-        <div class="auth-benefit"><span class="auth-benefit-icon">◷</span><span>Feito para registrar tudo rapidamente pelo celular.</span></div>
-      </div>
-      <div class="sub" id="loginMsg" style="margin-top:14px;"></div>
-      <div class="auth-foot">Ao continuar, você entra na sua conta do <strong>Moto Bolso</strong>.</div>
+      <div class="sub" id="loginMsg" style="margin-top:14px;text-align:center;"></div>
+      <div class="auth-foot">Acesso seguro. Seus dados ficam vinculados à sua conta.</div>
     </div>
   </div>
 
