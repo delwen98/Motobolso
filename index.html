@@ -711,6 +711,12 @@
   }
 
   async function addEntry(entry) {
+    const allowedCategories = new Set(['gasolina', 'manutencao', 'outros']);
+    if (entry.type === 'despesa' && !allowedCategories.has(entry.category)) {
+      document.getElementById('syncStatus').textContent = '❌ Categoria de despesa inválida.';
+      return false;
+    }
+    if (entry.type === 'ganho') entry.category = null;
     if (currentUser && !cloudReady) {
       document.getElementById('syncStatus').textContent = '⚠️ Sem conexão com a nuvem. Tente novamente.';
       return false;
@@ -864,35 +870,67 @@
 
   function renderEntries() {
     const list = document.getElementById('entryList');
-    if (state.entries.length === 0) { list.innerHTML = '<div class="empty">Nenhum registro ainda.</div>'; return; }
+    list.replaceChildren();
+
+    if (state.entries.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'Nenhum registro ainda.';
+      list.appendChild(empty);
+      return;
+    }
+
     const sorted = [...state.entries].sort((a,b) => {
       const dateCompare = (b.date || '').localeCompare(a.date || '');
       if (dateCompare !== 0) return dateCompare;
       return (b.createdAt || '').localeCompare(a.createdAt || '');
     });
-    list.innerHTML = sorted.map(e => {
-      const isGanho = e.type === 'ganho';
-      const tagClass = isGanho ? 'tag-ganho' : ('tag-' + e.category);
-      const tagText = isGanho ? 'GANHO' : (e.category === 'gasolina' ? 'GASOLINA' : e.category === 'manutencao' ? 'MANUTENÇÃO' : 'OUTROS');
-      const sign = isGanho ? '+' : '−';
-      return `
-        <div class="entry">
-          <div>
-            <span class="tag ${tagClass}">${tagText}</span>
-            <span class="amt">${sign} ${fmt(e.total)}</span>
-            <div class="date">${formatDate(e.date)}</div>
-          </div>
-          <button class="del" data-id="${e.id}">remover</button>
-        </div>
-      `;
-    }).join('');
 
-    list.querySelectorAll('.del').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        await removeEntry(btn.getAttribute('data-id'));
-        renderEntries();
-        renderTotals();
+    const categoryMeta = {
+      gasolina: { className: 'tag-gasolina', label: 'GASOLINA' },
+      manutencao: { className: 'tag-manutencao', label: 'MANUTENÇÃO' },
+      outros: { className: 'tag-outros', label: 'OUTROS' }
+    };
+
+    sorted.forEach(e => {
+      const isGanho = e.type === 'ganho';
+      const meta = isGanho ? { className: 'tag-ganho', label: 'GANHO' } : (categoryMeta[e.category] || categoryMeta.outros);
+      const sign = isGanho ? '+' : '−';
+
+      const entry = document.createElement('div');
+      entry.className = 'entry';
+
+      const info = document.createElement('div');
+
+      const tag = document.createElement('span');
+      tag.className = 'tag ' + meta.className;
+      tag.textContent = meta.label;
+
+      const amount = document.createElement('span');
+      amount.className = 'amt';
+      amount.textContent = sign + ' ' + fmt(Number(e.total) || 0);
+
+      const date = document.createElement('div');
+      date.className = 'date';
+      date.textContent = formatDate(e.date || todayISO());
+
+      info.append(tag, amount, date);
+
+      const del = document.createElement('button');
+      del.className = 'del';
+      del.type = 'button';
+      del.textContent = 'remover';
+      del.dataset.id = String(e.id || '');
+      del.addEventListener('click', async () => {
+        const removed = await removeEntry(del.dataset.id);
+        if (removed) {
+          renderEntries();
+          renderTotals();
+        }
       });
+
+      entry.append(info, del);
+      list.appendChild(entry);
     });
   }
 
