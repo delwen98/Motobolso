@@ -339,9 +339,6 @@
   .tour-skip { width:auto; min-height:36px; padding:7px 9px; background:transparent; color:var(--text-muted); font-size:.7rem; }
    .tour-next { width:auto; min-height:38px; padding:8px 14px; border-radius:10px; font-size:.75rem; background:color-mix(in srgb,var(--accent) 78%,transparent); color:#fff; border:1px solid color-mix(in srgb,var(--accent) 45%,transparent); box-shadow:none; }
 
-  .home-status-row { display:flex; align-items:center; gap:7px; margin:8px 2px 2px; }
-  .home-status-row .data-status { flex:1; margin:0; }
-  .logout-mini { width:auto; min-height:34px; padding:7px 10px; border-radius:9px; background:var(--card-bg); color:var(--text-muted); border:1px solid var(--border); font-size:.66rem; font-weight:700; box-shadow:none; }
   .full-box { width:100%; margin-top:7px; }
   .secondary-btn { background:var(--bg); color:var(--text); border:1px solid var(--border); }
   .settings-card { margin-bottom:10px; }
@@ -416,8 +413,7 @@
           <button class="despesa-btn" id="btnAddDespesa">+ Registrar despesa</button>
         </div>
       </div>
-      <div class="home-status-row"><div class="data-status" id="dataLoadStatus" style="display:none;">Dados carregados com sucesso</div><button type="button" class="logout-mini" id="logoutMini" style="display:none;">Sair</button></div>
-      <div class="today-hint">💡 <span>Registre durante o dia. O Moto Bolso calcula seu líquido automaticamente.</span></div>
+  <div class="today-hint">💡 <span>Registre durante o dia. O Moto Bolso calcula seu líquido automaticamente.</span></div>
     </main>
 
     <main id="sectionHistorico" class="app-section">
@@ -1081,7 +1077,6 @@
       if (supabaseClient) await supabaseClient.auth.signOut();
     };
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    document.getElementById('logoutMini').addEventListener('click', logout);
     document.getElementById('logoutTop').addEventListener('click', logout);
 
     let googleButtonInitialized = false;
