@@ -292,18 +292,53 @@
     .auth-card { padding:26px 20px; border-radius:22px; }
     .auth-title { font-size:1.7rem; }
   }
+
+  .app-section { display:none; }
+  .app-section.active-section { display:block; animation:sectionIn .18s ease-out; }
+  @keyframes sectionIn { from { opacity:.4; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .bottom-nav { position:sticky; bottom:10px; z-index:20; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; padding:7px; margin:16px 0 0; background:color-mix(in srgb,var(--card-bg) 94%,transparent); border:1px solid var(--border); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); backdrop-filter:blur(14px); }
+  .nav-item { min-height:54px; padding:6px 4px; border:0; background:transparent; color:var(--text-muted); border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-weight:700; }
+  .nav-item span { font-size:1.15rem; line-height:1; }
+  .nav-item small { font-size:.66rem; font-weight:800; }
+  .nav-item.active { background:var(--accent-soft); color:var(--accent); }
+  .page-title { padding:6px 3px 12px; }
+  .page-title h2 { font-family:var(--font-display); font-size:1.55rem; margin:2px 0 3px; letter-spacing:-.04em; }
+  .page-title p { margin:0; color:var(--text-muted); font-size:.82rem; }
+  .eyebrow { display:block; color:var(--text-muted); font-size:.64rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+  .section-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; }
+  .section-heading h2 { margin:2px 0 0; }
+  .microcopy { color:var(--text-muted); font-size:.66rem; }
+  .quick-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin:10px 0; }
+  .quick-stat { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:12px 8px; text-align:center; }
+  .quick-stat span { display:block; color:var(--text-muted); font-size:.65rem; font-weight:700; margin-bottom:3px; }
+  .quick-stat strong { font-family:var(--font-display); font-size:.9rem; }
+  .quick-stat.expense strong { color:var(--gasolina); }
+  .quick-stat.net strong { color:var(--ganho); }
+  .register-card { padding:17px; }
+  .money-input { display:flex; align-items:center; gap:7px; padding:0 13px; border:1px solid var(--border); border-radius:12px; background:var(--bg); margin-bottom:12px; }
+  .money-input span { color:var(--text-muted); font-weight:800; font-size:.9rem; }
+  .money-input input { border:0!important; background:transparent!important; margin:0!important; padding:12px 0!important; min-height:48px; }
+  .date-row { display:flex; align-items:center; gap:10px; }
+  .date-row label { margin:0; white-space:nowrap; }
+  .date-row input { margin-bottom:12px; }
+  .expense-chips { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px; }
+  .expense-chip { min-height:40px; padding:7px 5px; border:1px solid var(--border); background:var(--bg); color:var(--text-muted); border-radius:10px; font-size:.72rem; }
+  .expense-chip.active { color:var(--gasolina); border-color:color-mix(in srgb,var(--gasolina) 35%,var(--border)); background:var(--gasolina-soft); }
+  .category-select { display:none; }
+  .today-hint { display:flex; gap:8px; align-items:flex-start; color:var(--text-muted); font-size:.7rem; line-height:1.45; padding:4px 4px 0; }
+  .full-box { width:100%; margin-top:7px; }
+  .secondary-btn { background:var(--bg); color:var(--text); border:1px solid var(--border); }
+  .settings-card { margin-bottom:10px; }
+  #heroCard { margin-top:0; }
+  #heroCard .hero-value { font-size:clamp(2.35rem,11vw,3.1rem); }
+  @media (max-width:600px) { .bottom-nav { bottom:6px; margin-top:12px; } .quick-stat strong { font-size:.82rem; } .page-title h2 { font-size:1.4rem; } }
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1><div class="sub">Ganhos, gasolina, manutenção e o que sobra de verdade.</div></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div>
   <div class="sub" id="syncStatus" style="margin-bottom:16px;">Conectando…</div>
-
-  <div class="card hero-card" id="heroCard" style="display:none;">
-    <div class="hero-kicker">Lucro líquido · este mês</div>
-    <div class="hero-value pos" id="heroLiquido">R$ 0,00</div>
-    <div class="hero-meta"><span><strong id="heroPct">0%</strong> da meta mensal</span><span>Meta <strong id="heroMeta">R$ 0,00</strong></span></div>
-  </div>
 
   <div class="auth-shell">
     <div class="auth-card" id="loginCard" style="display:none;">
@@ -329,98 +364,99 @@
   </div>
 
   <div id="appContent" style="display:none;">
-  <div class="card">
-    <h2>Meta diária</h2>
-    <label for="metaDiaria">Quanto você quer ganhar líquido por dia (R$)</label>
-    <input type="number" id="metaDiaria" placeholder="Ex: 120" inputmode="decimal" step="1">
-    <label for="diasTrabalhados">Dias que trabalha por mês</label>
-    <input type="number" id="diasTrabalhados" placeholder="Ex: 26" inputmode="numeric" step="1">
-    <div class="goal-projection">
-      Nesse ritmo, sua projeção mensal é <b id="metaMensalTxt">R$ 0</b>
-    </div>
+    <main id="sectionInicio" class="app-section active-section">
+        <div class="card hero-card" id="heroCard" style="display:none;">
+    <div class="hero-kicker">Lucro líquido · este mês</div>
+    <div class="hero-value pos" id="heroLiquido">R$ 0,00</div>
+    <div class="hero-meta"><span><strong id="heroPct">0%</strong> da meta mensal</span><span>Meta <strong id="heroMeta">R$ 0,00</strong></span></div>
   </div>
-
-  <div class="card">
-    <h2>Registrar</h2>
-    <div class="tabs">
-      <div class="tab active ganho" id="tabGanho">💰 Ganho</div>
-      <div class="tab despesa" id="tabDespesa">⛽ Despesa</div>
-    </div>
-
-    <div id="formGanho">
-      <label for="valorGanho">Valor ganho hoje (R$)</label>
-      <input type="number" id="valorGanho" placeholder="Ex: 150" inputmode="decimal" step="0.01">
-      <label for="dataGanho">Data</label>
-      <input type="date" id="dataGanho">
-      <button id="btnAddGanho">Adicionar ganho</button>
-    </div>
-
-    <div id="formDespesa" style="display:none;">
-      <label for="categoriaDespesa">Categoria</label>
-      <select id="categoriaDespesa">
-        <option value="gasolina">⛽ Gasolina</option>
-        <option value="manutencao">🔧 Manutenção</option>
-        <option value="outros">📦 Outros gastos</option>
-      </select>
-      <label for="valorDespesa">Valor (R$)</label>
-      <input type="number" id="valorDespesa" placeholder="Ex: 30" inputmode="decimal" step="0.01">
-      <label for="dataDespesa">Data</label>
-      <input type="date" id="dataDespesa">
-      <button class="despesa-btn" id="btnAddDespesa">Adicionar despesa</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Resumo do mês</h2>
-
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>Progresso da meta mensal</span>
-        <span id="progressPct">0%</span>
+      <div class="quick-stats">
+        <div class="quick-stat"><span>Hoje</span><strong id="todayGanho">R$ 0,00</strong></div>
+        <div class="quick-stat expense"><span>Gastos</span><strong id="todayDespesa">R$ 0,00</strong></div>
+        <div class="quick-stat net"><span>Líquido</span><strong id="todayLiquido">R$ 0,00</strong></div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    </div>
+      <div class="card register-card">
+        <div class="section-heading"><div><span class="eyebrow">NO CORRE</span><h2>Registrar</h2></div><span class="microcopy">leva poucos segundos</span></div>
+        <div class="tabs">
+          <div class="tab active ganho" id="tabGanho">💰 Ganho</div>
+          <div class="tab despesa" id="tabDespesa">⛽ Despesa</div>
+        </div>
+        <div id="formGanho">
+          <label for="valorGanho">Quanto ganhou?</label>
+          <div class="money-input"><span>R$</span><input type="number" id="valorGanho" placeholder="0,00" inputmode="decimal" step="0.01"></div>
+          <div class="date-row"><label for="dataGanho">Data</label><input type="date" id="dataGanho"></div>
+          <button id="btnAddGanho">+ Registrar ganho</button>
+        </div>
+        <div id="formDespesa" style="display:none;">
+          <label>Tipo de gasto</label>
+          <div class="expense-chips">
+            <button type="button" class="expense-chip active" data-category="gasolina">⛽ Gasolina</button>
+            <button type="button" class="expense-chip" data-category="manutencao">🔧 Manutenção</button>
+            <button type="button" class="expense-chip" data-category="outros">📦 Outros</button>
+          </div>
+          <select id="categoriaDespesa" class="category-select" aria-label="Categoria da despesa">
+            <option value="gasolina">Gasolina</option><option value="manutencao">Manutenção</option><option value="outros">Outros gastos</option>
+          </select>
+          <label for="valorDespesa">Quanto gastou?</label>
+          <div class="money-input"><span>R$</span><input type="number" id="valorDespesa" placeholder="0,00" inputmode="decimal" step="0.01"></div>
+          <div class="date-row"><label for="dataDespesa">Data</label><input type="date" id="dataDespesa"></div>
+          <button class="despesa-btn" id="btnAddDespesa">+ Registrar despesa</button>
+        </div>
+      </div>
+      <div class="today-hint">💡 <span>Registre durante o dia. O Moto Bolso calcula seu líquido automaticamente.</span></div>
+    </main>
 
-    <div class="liquido-box">
-      <div class="label">Lucro líquido do mês (ganho − despesas)</div>
-      <div class="value pos" id="liquidoMes">R$ 0</div>
-    </div>
+    <main id="sectionHistorico" class="app-section">
+      <div class="page-title"><span class="eyebrow">REGISTROS</span><h2>Histórico</h2><p>Veja tudo que você lançou.</p></div>
+      <div class="card"><div class="entry-list" id="entryList"><div class="empty">Nenhum registro ainda.</div></div></div>
+      <div class="reset-link"><a id="resetBtn">Limpar todos os dados</a></div>
+    </main>
 
-    <div class="totals-grid">
-      <div class="total-box box-ganho"><div class="label">Ganho total</div><div class="value" id="totGanho">R$ 0</div></div>
-      <div class="total-box box-gasolina"><div class="label">Gasolina</div><div class="value" id="totGasolina">R$ 0</div></div>
-      <div class="total-box box-manutencao"><div class="label">Manutenção</div><div class="value" id="totManutencao">R$ 0</div></div>
-    </div>
-    <div class="totals-grid" style="grid-template-columns: 1fr;">
-      <div class="total-box box-outros"><div class="label">Outros gastos</div><div class="value" id="totOutros">R$ 0</div></div>
-    </div>
-  </div>
+    <main id="sectionResumo" class="app-section">
+      <div class="page-title"><span class="eyebrow">VISÃO GERAL</span><h2>Resumo</h2><p>O que está acontecendo com seu dinheiro.</p></div>
+      <div class="card">
+        <div class="section-heading"><div><span class="eyebrow">META</span><h2>Progresso do mês</h2></div><strong id="progressPct">0%</strong></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="liquido-box"><div class="label">Lucro líquido do mês</div><div class="value pos" id="liquidoMes">R$ 0</div></div>
+        <div class="totals-grid">
+          <div class="total-box box-ganho"><div class="label">Ganhos</div><div class="value" id="totGanho">R$ 0</div></div>
+          <div class="total-box box-gasolina"><div class="label">Gasolina</div><div class="value" id="totGasolina">R$ 0</div></div>
+          <div class="total-box box-manutencao"><div class="label">Manutenção</div><div class="value" id="totManutencao">R$ 0</div></div>
+        </div>
+        <div class="total-box box-outros full-box"><div class="label">Outros gastos</div><div class="value" id="totOutros">R$ 0</div></div>
+      </div>
+      <div class="card">
+        <div class="section-heading"><div><span class="eyebrow">LUCRO LÍQUIDO</span><h2>Divisão</h2></div></div>
+        <div class="slider-group"><div class="slider-label"><span>Investimento</span><span id="lblInvest">20%</span></div><input type="range" id="sliderInvest" min="0" max="100" value="20"></div>
+        <div class="slider-group" style="margin-bottom:6px;"><div class="slider-label"><span>Reserva</span><span id="lblReserva">20%</span></div><input type="range" id="sliderReserva" min="0" max="100" value="20"></div>
+        <div class="totals-grid">
+          <div class="total-box box-invest"><div class="label">Investir</div><div class="value" id="valInvest">R$ 0</div></div>
+          <div class="total-box box-reserva"><div class="label">Reservar</div><div class="value" id="valReserva">R$ 0</div></div>
+          <div class="total-box box-outros"><div class="label">Livre</div><div class="value" id="valLivre">R$ 0</div></div>
+        </div>
+      </div>
+    </main>
 
-  <div class="card">
-    <h2>Dividir o que sobrou (lucro líquido)</h2>
-    <div class="slider-group">
-      <div class="slider-label"><span>Investimento</span><span id="lblInvest">20%</span></div>
-      <input type="range" id="sliderInvest" min="0" max="100" value="20">
-    </div>
-    <div class="slider-group" style="margin-bottom:6px;">
-      <div class="slider-label"><span>Reserva</span><span id="lblReserva">20%</span></div>
-      <input type="range" id="sliderReserva" min="0" max="100" value="20">
-    </div>
-    <div class="totals-grid" style="margin-top:10px;">
-      <div class="total-box box-invest"><div class="label">Investir</div><div class="value" id="valInvest">R$ 0</div></div>
-      <div class="total-box box-reserva"><div class="label">Reservar</div><div class="value" id="valReserva">R$ 0</div></div>
-      <div class="total-box box-outros"><div class="label">Livre</div><div class="value" id="valLivre">R$ 0</div></div>
-    </div>
-  </div>
+    <main id="sectionConfig" class="app-section">
+      <div class="page-title"><span class="eyebrow">CONFIGURAÇÃO</span><h2>Mais</h2><p>Deixe o Moto Bolso do seu jeito.</p></div>
+      <div class="card">
+        <h2>Meta diária</h2>
+        <label for="metaDiaria">Quanto quer ganhar líquido por dia?</label>
+        <div class="money-input"><span>R$</span><input type="number" id="metaDiaria" placeholder="120" inputmode="decimal" step="1"></div>
+        <label for="diasTrabalhados">Dias que trabalha por mês</label>
+        <input type="number" id="diasTrabalhados" placeholder="26" inputmode="numeric" step="1">
+        <div class="goal-projection">Projeção mensal <b id="metaMensalTxt">R$ 0</b></div>
+      </div>
+      <div class="card settings-card"><h2>Conta</h2><button id="logoutBtn" class="secondary-btn">Sair da conta</button></div>
+    </main>
 
-  <div class="card">
-    <h2>Histórico</h2>
-    <div class="entry-list" id="entryList"><div class="empty">Nenhum registro ainda.</div></div>
-  </div>
-
-  <div class="reset-link"><a id="resetBtn">Limpar todos os dados</a> · <a id="logoutBtn">Sair da conta</a></div>
-  </div>
-</div>
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <button type="button" class="nav-item active" data-target="sectionInicio"><span>⌂</span><small>Início</small></button>
+      <button type="button" class="nav-item" data-target="sectionHistorico"><span>☷</span><small>Histórico</small></button>
+      <button type="button" class="nav-item" data-target="sectionResumo"><span>◔</span><small>Resumo</small></button>
+      <button type="button" class="nav-item" data-target="sectionConfig"><span>⚙</span><small>Mais</small></button>
+    </nav>
+  </div></div>
 
 <script>
 (function() {
@@ -743,6 +779,14 @@
   }
 
   function renderAll() {
+
+    const todayEntries = state.entries.filter(e => e.date === todayISO());
+    const todayGanho = todayEntries.filter(e => e.type === 'ganho').reduce((s,e) => s + e.total, 0);
+    const todayDespesa = todayEntries.filter(e => e.type === 'despesa').reduce((s,e) => s + e.total, 0);
+    const tg = document.getElementById('todayGanho'), td = document.getElementById('todayDespesa'), tl = document.getElementById('todayLiquido');
+    if (tg) tg.textContent = fmt(todayGanho);
+    if (td) td.textContent = fmt(todayDespesa);
+    if (tl) { const net = todayGanho - todayDespesa; tl.textContent = fmt(net); tl.style.color = net >= 0 ? 'var(--ganho)' : 'var(--danger)'; }
     renderGoal();
     renderSliders();
     renderEntries();
@@ -788,6 +832,26 @@
     document.getElementById('themeToggle').addEventListener('click', () => { const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('motobolso_theme', next); applyTheme(next); });
     document.getElementById('dataGanho').value = todayISO();
     document.getElementById('dataDespesa').value = todayISO();
+
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const target = item.getAttribute('data-target');
+        document.querySelectorAll('.app-section').forEach(section => section.classList.remove('active-section'));
+        const section = document.getElementById(target);
+        if (section) section.classList.add('active-section');
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    document.querySelectorAll('.expense-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.expense-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('categoriaDespesa').value = chip.getAttribute('data-category');
+      });
+    });
 
     document.getElementById('tabGanho').addEventListener('click', () => {
       document.getElementById('tabGanho').classList.add('active');
