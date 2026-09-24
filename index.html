@@ -296,10 +296,10 @@
   .app-section { display:none; }
   .app-section.active-section { display:block; animation:sectionIn .18s ease-out; }
   @keyframes sectionIn { from { opacity:.4; transform:translateY(4px); } to { opacity:1; transform:none; } }
-  .bottom-nav { position:sticky; bottom:10px; z-index:20; display:grid; grid-template-columns:repeat(3,1fr); gap:5px; padding:7px; margin:16px 0 0; background:color-mix(in srgb,var(--card-bg) 94%,transparent); border:1px solid var(--border); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); backdrop-filter:blur(14px); }
-  .nav-item { min-height:54px; padding:6px 4px; border:0; background:transparent; color:var(--text-muted); border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-weight:700; }
-  .nav-item span { font-size:1.15rem; line-height:1; }
-  .nav-item small { font-size:.66rem; font-weight:800; }
+  .bottom-nav { position:sticky; bottom:10px; z-index:20; display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:5px; margin:12px 0 0; background:color-mix(in srgb,var(--card-bg) 94%,transparent); border:1px solid var(--border); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); backdrop-filter:blur(14px); }
+   .nav-item { min-height:48px; padding:4px 2px; border:0; background:transparent; color:var(--text-muted); border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-weight:700; }
+   .nav-item span { font-size:1.02rem; line-height:1; }
+   .nav-item small { font-size:.62rem; font-weight:800; }
   .nav-item.active { background:var(--accent-soft); color:var(--accent); }
   .page-title { padding:6px 3px 12px; }
   .page-title h2 { font-family:var(--font-display); font-size:1.55rem; margin:2px 0 3px; letter-spacing:-.04em; }
@@ -336,7 +336,7 @@
   .settings-card { margin-bottom:10px; }
   #heroCard { margin-top:0; }
   #heroCard .hero-value { font-size:clamp(2.35rem,11vw,3.1rem); }
-  @media (max-width:600px) { .bottom-nav { bottom:6px; margin-top:12px; } .quick-stat strong { font-size:.82rem; } .page-title h2 { font-size:1.4rem; } }
+  @media (max-width:600px) { .bottom-nav { bottom:6px; margin-top:10px; padding:5px; } .nav-item { min-height:48px; } .quick-stat strong { font-size:.82rem; } .page-title h2 { font-size:1.4rem; } }
 
 </style>
 </head>
