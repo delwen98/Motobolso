@@ -594,7 +594,7 @@
       syncStatus.textContent = 'Dados carregados e sincronizados';
       const dataLoadStatus = document.getElementById('dataLoadStatus');
       const logoutMini = document.getElementById('logoutMini');
-      if (dataLoadStatus) dataLoadStatus.style.display = 'flex';
+      if (dataLoadStatus) dataLoadStatus.style.display = 'none';
       if (logoutMini) logoutMini.style.display = 'inline-flex';
     } else {
       cloudReady = false;
@@ -948,6 +948,8 @@
       const saved = await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
       if (!saved) return;
       renderEntries(); renderTotals();
+      const status = document.getElementById('dataLoadStatus');
+      if (status) { status.textContent = '✓ Ganho registrado com sucesso'; status.style.display = 'flex'; setTimeout(() => status.style.display = 'none', 2200); }
       valorInput.value = ''; valorInput.focus();
     });
 
@@ -960,6 +962,8 @@
       const saved = await addEntry({ type: 'despesa', category: categoria, total, date: dataInput.value || todayISO() });
       if (!saved) return;
       renderEntries(); renderTotals();
+      const status = document.getElementById('dataLoadStatus');
+      if (status) { status.textContent = '✓ Despesa registrada com sucesso'; status.style.display = 'flex'; setTimeout(() => status.style.display = 'none', 2200); }
       valorInput.value = ''; valorInput.focus();
     });
 
