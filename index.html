@@ -296,7 +296,7 @@
   .app-section { display:none; }
   .app-section.active-section { display:block; animation:sectionIn .18s ease-out; }
   @keyframes sectionIn { from { opacity:.4; transform:translateY(4px); } to { opacity:1; transform:none; } }
-  .bottom-nav { position:sticky; bottom:10px; z-index:20; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; padding:7px; margin:16px 0 0; background:color-mix(in srgb,var(--card-bg) 94%,transparent); border:1px solid var(--border); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); backdrop-filter:blur(14px); }
+  .bottom-nav { position:sticky; bottom:10px; z-index:20; display:grid; grid-template-columns:repeat(3,1fr); gap:5px; padding:7px; margin:16px 0 0; background:color-mix(in srgb,var(--card-bg) 94%,transparent); border:1px solid var(--border); border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.08); backdrop-filter:blur(14px); }
   .nav-item { min-height:54px; padding:6px 4px; border:0; background:transparent; color:var(--text-muted); border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-weight:700; }
   .nav-item span { font-size:1.15rem; line-height:1; }
   .nav-item small { font-size:.66rem; font-weight:800; }
@@ -449,9 +449,8 @@
 
     <nav class="bottom-nav" aria-label="Navegação principal">
       <button type="button" class="nav-item active" data-target="sectionInicio"><span>⌂</span><small>Início</small></button>
-      <button type="button" class="nav-item" data-target="sectionHistorico"><span>☷</span><small>Histórico</small></button>
       <button type="button" class="nav-item" data-target="sectionResumo"><span>◔</span><small>Resumo</small></button>
-      <button type="button" class="nav-item" data-target="sectionConfig"><span>⚙</span><small>Mais</small></button>
+      <button type="button" class="nav-item" data-target="sectionHistorico"><span>☷</span><small>Histórico</small></button>
     </nav>
   </div></div>
 
