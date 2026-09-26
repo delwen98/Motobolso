@@ -583,7 +583,9 @@
         try {
           const { error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: window.location.origin + '/app/', queryParams: { prompt: 'select_account' } }
+            options: { redirectTo: window.location.hostname === 'delwen98.github.io'
+                ? 'https://delwen98.github.io/Motobolso/app/'
+                : window.location.origin + '/app/', queryParams: { prompt: 'select_account' } }
           });
           if (error) throw error;
         } catch (e) {
