@@ -838,24 +838,60 @@
     return data||[];
   }
 
+  function gasolineEntryTotal(dateStr){
+    return state.entries
+      .filter(e => e.type === 'despesa' && e.category === 'gasolina' && e.date === dateStr)
+      .reduce((s,e) => s + (Number(e.total) || 0), 0);
+  }
+
+  function workDayFuelCost(day){
+    const entryFuel = gasolineEntryTotal(day.date);
+    if(entryFuel > 0) return entryFuel;
+    return Math.max(0, Number(day.fuel_liters || 0)) * Math.max(0, Number(day.fuel_price || 0));
+  }
+
   async function renderRealProfit(){
     const days=await getWorkDays();
     const month=days.filter(d=>isThisMonth(d.date));
-    const totals=computeTotals();
+    const monthFuel=month.reduce((s,d)=>s+workDayFuelCost(d),0);
+    const monthTotals=computeTotals();
+    const gasolineEntries=monthTotals.gasolina;
+    const fuel=Math.max(monthFuel, gasolineEntries);
+    const net=monthTotals.ganho-fuel-monthTotals.manutencao-monthTotals.outros;
     const km=month.reduce((s,d)=>s+Number(d.km||0),0);
     const hours=month.reduce((s,d)=>s+Number(d.hours||0),0);
-    const fuel=month.reduce((s,d)=>s+(Number(d.fuel_liters||0)*Number(d.fuel_price||0)),0);
-    const net=totals.ganho-totals.manutencao-totals.outros-fuel;
-    const perKm=km>0?net/km:0, perHour=hours>0?net/hours:0;
-    const costKm=km>0?(fuel+totals.manutencao+totals.outros)/km:0;
-    const required=200+Math.max(0, costKm*km);
+    const perKm=km>0?net/km:0;
+    const perHour=hours>0?net/hours:0;
+    const costKm=km>0?(fuel+monthTotals.manutencao+monthTotals.outros)/km:0;
+    const required=200+Math.max(0,costKm*km);
+
+    const today=todayISO();
+    const todayDay=days.find(d=>d.date===today);
+    const todayEntries=state.entries.filter(e=>e.date===today);
+    const todayGanho=todayEntries.filter(e=>e.type==='ganho').reduce((s,e)=>s+(Number(e.total)||0),0);
+    const todayGasEntries=gasolineEntryTotal(today);
+    const todayFuel=todayGasEntries>0 ? todayGasEntries : (todayDay ? workDayFuelCost(todayDay) : 0);
+    const todayOther=todayEntries.filter(e=>e.type==='despesa' && e.category!=='gasolina').reduce((s,e)=>s+(Number(e.total)||0),0);
+    const todayNet=todayGanho-todayFuel-todayOther;
+    const todayKm=todayDay ? Number(todayDay.km||0) : 0;
+    const todayHours=todayDay ? Number(todayDay.hours||0) : 0;
+    const todayPerKm=todayKm>0?todayNet/todayKm:0;
+    const todayPerHour=todayHours>0?todayNet/todayHours:0;
+
     const result=document.getElementById('realProfitResult');
     if(result){
-      result.hidden=false;
-      result.innerHTML='<b>Fechamento salvo.</b><div class="rp-grid"><div><small>Lucro real</small><strong>'+fmt(net)+'</strong></div><div><small>Lucro/km</small><strong>'+fmt(perKm)+'</strong></div><div><small>Lucro/hora</small><strong>'+fmt(perHour)+'</strong></div></div>';
+      const hasTodayData=!!todayDay || todayEntries.length>0;
+      result.hidden=!hasTodayData;
+      if(hasTodayData){
+        result.innerHTML='<b>Fechamento de hoje.</b><div class="rp-grid"><div><small>Lucro real</small><strong>'+fmt(todayNet)+'</strong></div><div><small>Lucro/km</small><strong>'+fmt(todayPerKm)+'</strong></div><div><small>Lucro/hora</small><strong>'+fmt(todayPerHour)+'</strong></div></div>';
+      }
     }
+
     const a=document.getElementById('profitPerKm'),b=document.getElementById('profitPerHour'),d=document.getElementById('costPerKm'),e=document.getElementById('requiredRevenue');
-    if(a)a.textContent=fmt(perKm);if(b)b.textContent=fmt(perHour);if(d)d.textContent=fmt(costKm);if(e)e.textContent=fmt(required);
+    if(a)a.textContent=fmt(perKm);
+    if(b)b.textContent=fmt(perHour);
+    if(d)d.textContent=fmt(costKm);
+    if(e)e.textContent=fmt(required);
   }
 
   function renderAll() {
@@ -871,6 +907,7 @@
     renderSliders();
     renderEntries();
     renderTotals();
+    if (currentUser && cloudReady) renderRealProfit();
   }
 
   function renderEntries() {
