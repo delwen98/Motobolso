@@ -7,6 +7,12 @@
   "theme_color": "#17181a",
   "icons": [
     {
+      "src": "images/motobolso-app-icon.svg",
+      "sizes": "1024x1024",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
       "src": "images/motobolso-icon.png",
       "sizes": "180x180",
       "type": "image/png",
