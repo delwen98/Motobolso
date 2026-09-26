@@ -50,13 +50,7 @@
   .auth-brand-sub { color:var(--text-muted); font-size:.72rem; margin-top:2px; }
   .auth-title { font-family:var(--font-display); font-size:1.8rem; line-height:1.08; letter-spacing:-.045em; margin:0 0 9px; color:var(--text); text-align:center; }
   .auth-copy { color:var(--text-muted); font-size:.86rem; line-height:1.5; margin:0 auto 22px; max-width:300px; text-align:center; }
-  .google-btn { background:var(--card-bg)!important; color:var(--text)!important; border:1px solid var(--border)!important; display:flex!important; width:100%!important; min-height:54px; border-radius:13px; overflow:hidden; box-shadow:var(--shadow); font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; transition:transform .15s,box-shadow .15s,border-color .15s; }
-  .google-btn .google-icon { width:20px; height:20px; display:grid; place-items:center; font:700 18px Arial,sans-serif; color:#4285f4; }
-  .google-btn:hover { border-color:color-mix(in srgb,var(--accent) 35%,var(--border))!important; box-shadow:0 5px 16px rgba(32,31,28,.08); }
-  .google-btn:active { transform:scale(.99); }
-  .auth-divider,.auth-benefits { display:none; }
-  .auth-foot { text-align:center; color:var(--text-muted); font-size:.66rem; margin-top:16px; line-height:1.5; }
-  .auth-foot strong { color:var(--text); }
+  .auth-form{display:flex;flex-direction:column;gap:10px}.auth-form label{margin:2px 0 0;font-size:.72rem;font-weight:700;color:var(--text-muted)}.auth-form input{width:100%;min-height:50px;padding:12px 13px;border-radius:13px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:600 .92rem var(--font-body);margin:0}.auth-form input:focus{outline:none;border-color:var(--accent)}.auth-submit{margin-top:5px;min-height:50px}.auth-switch{display:flex;justify-content:center;gap:5px;margin-top:13px;color:var(--text-muted);font-size:.74rem}.auth-switch button,.auth-link{width:auto;min-height:auto;padding:0;border:0;background:none;color:var(--accent);font:700 .74rem var(--font-body);cursor:pointer}.auth-link-wrap{text-align:center;margin-top:13px}.auth-link-wrap button{width:auto;min-height:auto;padding:0;border:0;background:none;color:var(--text-muted);font:600 .7rem var(--font-body);cursor:pointer;text-decoration:underline}.auth-foot{text-align:center;color:var(--text-muted);font-size:.66rem;margin-top:16px;line-height:1.5}.auth-foot strong{color:var(--text)}#resetPasswordWrap label{display:block;margin:10px 0 6px;font-size:.72rem;font-weight:700}#resetPasswordWrap input{width:100%;min-height:50px;padding:12px 13px;border-radius:13px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:600 .92rem var(--font-body)}
 
   h1 {
     font-family: var(--font-display);
@@ -322,18 +316,13 @@
 
   <div class="auth-shell">
     <div class="auth-card" id="loginCard" style="display:none;">
-      <div class="auth-brand">
-        <div class="auth-logo"><img src="../images/motobolso-app-icon.svg" alt="Moto Bolso"></div>
-        <div>
-          <div class="auth-brand-name">Moto <span class="accent">Bolso</span></div>
-          <div class="auth-brand-sub">Feito por motoboy, para motoboy</div>
-        </div>
-      </div>
-      <h2 class="auth-title">Seu dinheiro,<br>sob controle.</h2>
-      <p class="auth-copy">Controle seu corre em poucos toques.</p>
-      <div id="btnGoogleLogin" class="google-btn" aria-label="Continuar com Google"></div>
-      <div class="sub" id="loginMsg" style="margin-top:14px;text-align:center;"></div>
-      <div class="auth-foot">Acesso seguro. Seus dados ficam vinculados à sua conta.</div>
+      <div class="auth-brand"><div class="auth-logo"><img src="../images/motobolso-app-icon.svg" alt="MotoBolso"></div><div><div class="auth-brand-name">Moto<span class="accent">Bolso</span></div><div class="auth-brand-sub">Controle seu corre em poucos toques.</div></div></div>
+      <h2 class="auth-title" id="authTitle">Entrar</h2><p class="auth-copy" id="authCopy">Seu dinheiro, sob controle.</p>
+      <form class="auth-form" id="authForm" novalidate><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="seu@email.com" required><label for="authPassword">Senha</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Sua senha" minlength="6" required><button class="auth-submit" id="authSubmitBtn" type="submit">Entrar</button></form>
+      <div class="auth-link-wrap" id="forgotWrap"><button id="forgotPasswordBtn" type="button">Esqueci minha senha</button></div>
+      <div id="resetPasswordWrap" style="display:none;"><label for="newPassword">Nova senha</label><input id="newPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Nova senha"><button id="updatePasswordBtn" type="button">Salvar nova senha</button></div>
+      <div class="auth-switch"><span id="authSwitchText">Ainda não tem conta?</span><button id="authSwitchBtn" type="button">Criar conta</button></div>
+      <div class="sub" id="loginMsg" style="margin-top:14px;text-align:center;" aria-live="polite"></div><div class="auth-foot">Acesso seguro. Seus dados ficam vinculados à sua conta.</div>
     </div>
   </div>
 
@@ -521,10 +510,11 @@
       } else {
         loadLocal();
         showLogin();
-        initGoogleSignIn();
+        ();
       }
 
       supabaseClient.auth.onAuthStateChange((_event, session) => {
+      if (event === 'PASSWORD_RECOVERY') { showPasswordRecovery(); return; }
         if (session) {
           onAuthed(session.user).catch(e => console.error(e));
         } else {
@@ -555,9 +545,9 @@
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
     // O botão é renderizado aqui diretamente. A função antiga ficava dentro de init(),
     // então não podia ser chamada por showLogin() quando o Supabase falhava ao iniciar.
-    const googleBtn = document.getElementById('btnGoogleLogin');
+    const googleBtn = document.getElementById('');
     if (googleBtn) {
-      googleBtn.innerHTML = '<span class="google-icon" aria-hidden="true">G</span><span>Continuar com Google</span>';
+      googleBtn.innerHTML = '<span class="google-icon" aria-hidden="true">G</span><span></span>';
       googleBtn.style.display = 'flex';
       googleBtn.style.visibility = 'visible';
       googleBtn.style.alignItems = 'center';
@@ -572,12 +562,7 @@
         }
         msgEl.textContent = '';
         try {
-          const { error } = await supabaseClient.auth.signInWithOAuth({
-            provider: 'google',
-            options: { redirectTo: window.location.hostname === 'delwen98.github.io'
-                ? 'https://delwen98.github.io/Motobolso/app/'
-                : 'https://www.motobolso.com.br/app/', queryParams: { prompt: 'select_account' } }
-          });
+          const { error } = await supabaseClient.auth.
           if (error) throw error;
         } catch (e) {
           console.error('Google OAuth error:', e);
@@ -1240,63 +1225,17 @@
     };
     document.getElementById('logoutBtn').addEventListener('click', logout);
 
-    let googleButtonInitialized = false;
-
-    function initGoogleSignIn() {
-      if (googleButtonInitialized) return;
-      const msgEl = document.getElementById('loginMsg');
-      const button = document.getElementById('btnGoogleLogin');
-      const loginCard = document.getElementById('loginCard');
-
-      if (!button || !loginCard) return;
-      if (loginCard.style.display === 'none') {
-        setTimeout(initGoogleSignIn, 300);
-        return;
-      }
-
-      button.innerHTML = '<span class="google-icon" aria-hidden="true">G</span><span>Continuar com Google</span>';
-      button.style.display = 'flex';
-      button.style.visibility = 'visible';
-      button.style.alignItems = 'center';
-      button.style.justifyContent = 'center';
-      button.style.gap = '10px';
-      button.style.cursor = 'pointer';
-      button.setAttribute('role', 'button');
-      button.setAttribute('tabindex', '0');
-
-      const startGoogleLogin = async () => {
-        if (!supabaseClient) {
-          msgEl.textContent = 'Serviço de login ainda não carregou. Tente novamente.';
-          return;
-        }
-        msgEl.textContent = '';
-        try {
-          const { error } = await supabaseClient.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-              redirectTo: window.location.origin + '/app/',
-              queryParams: {
-                prompt: 'select_account'
-              }
-            }
-          });
-          if (error) throw error;
-        } catch (e) {
-          console.error('Google OAuth error:', e);
-          msgEl.textContent = 'Erro no login: ' + (e && e.message ? e.message : 'não foi possível autenticar.');
-        }
-      };
-
-      button.addEventListener('click', startGoogleLogin);
-      button.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          startGoogleLogin();
-        }
-      });
-      googleButtonInitialized = true;
+    let authMode='login';
+    function appRedirectUrl(){return window.location.hostname==='delwen98.github.io'?'https://delwen98.github.io/Motobolso/app/':'https://www.motobolso.com.br/app/';}
+    function setAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='signup'?'Criar conta':'Entrar';document.getElementById('authCopy').textContent=mode==='signup'?'Crie sua conta e comece a acompanhar o corre.':'Seu dinheiro, sob controle.';document.getElementById('authSubmitBtn').textContent=mode==='signup'?'Criar conta':'Entrar';document.getElementById('authSwitchText').textContent=mode==='signup'?'Já tem conta?':'Ainda não tem conta?';document.getElementById('authSwitchBtn').textContent=mode==='signup'?'Entrar':'Criar conta';document.getElementById('forgotWrap').style.display=mode==='signup'?'none':'';document.getElementById('loginMsg').textContent='';}
+    function showPasswordRecovery(){document.getElementById('loginCard').style.display='';document.getElementById('authTitle').textContent='Nova senha';document.getElementById('authCopy').textContent='Escolha uma nova senha para continuar.';document.getElementById('authForm').style.display='none';document.getElementById('forgotWrap').style.display='none';document.querySelector('.auth-switch').style.display='none';document.getElementById('resetPasswordWrap').style.display='block';}
+    function initAuthUI(){const form=document.getElementById('authForm'),switchBtn=document.getElementById('authSwitchBtn'),forgotBtn=document.getElementById('forgotPasswordBtn'),updateBtn=document.getElementById('updatePasswordBtn'),msg=document.getElementById('loginMsg'),email=document.getElementById('authEmail'),password=document.getElementById('authPassword');
+      form.addEventListener('submit',async(e)=>{e.preventDefault();if(!supabaseClient){msg.textContent='Serviço de login ainda não carregou. Tente novamente.';return;}const emailValue=String(email.value||'').trim().toLowerCase(),passwordValue=String(password.value||'');if(!emailValue||!email.checkValidity()){email.focus();msg.textContent='Digite um e-mail válido.';return;}if(passwordValue.length<6){password.focus();msg.textContent='A senha precisa ter pelo menos 6 caracteres.';return;}msg.textContent=authMode==='signup'?'Criando sua conta…':'Entrando…';try{if(authMode==='signup'){const {data,error}=await supabaseClient.auth.signUp({email:emailValue,password:passwordValue,options:{emailRedirectTo:appRedirectUrl()}});if(error)throw error;msg.textContent=data.session?'Conta criada. Entrando…':'Conta criada. Confira seu e-mail para confirmar o acesso.';}else{const {error}=await supabaseClient.auth.signInWithPassword({email:emailValue,password:passwordValue});if(error)throw error;}}catch(err){console.error('Auth error:',err);msg.textContent=err?.message==='Invalid login credentials'?'E-mail ou senha incorretos.':(err?.message||'Não foi possível concluir. Tente novamente.');}});
+      switchBtn.addEventListener('click',()=>{setAuthMode(authMode==='login'?'signup':'login');email.focus();});
+      forgotBtn.addEventListener('click',async()=>{const emailValue=String(email.value||'').trim().toLowerCase();if(!emailValue||!email.checkValidity()){email.focus();msg.textContent='Digite seu e-mail para receber o link de recuperação.';return;}msg.textContent='Enviando link de recuperação…';try{const {error}=await supabaseClient.auth.resetPasswordForEmail(emailValue,{redirectTo:appRedirectUrl()});if(error)throw error;msg.textContent='Se esse e-mail estiver cadastrado, você receberá um link para criar uma nova senha.';}catch(err){console.error(err);msg.textContent='Não foi possível enviar o link. Tente novamente.';}});
+      updateBtn.addEventListener('click',async()=>{const newPassword=String(document.getElementById('newPassword').value||'');if(newPassword.length<6){msg.textContent='A senha precisa ter pelo menos 6 caracteres.';return;}try{msg.textContent='Salvando…';const {error}=await supabaseClient.auth.updateUser({password:newPassword});if(error)throw error;msg.textContent='Senha atualizada. Entrando…';setTimeout(()=>window.location.href=appRedirectUrl(),500);}catch(err){console.error(err);msg.textContent='Não foi possível atualizar a senha. Tente novamente.';}});
     }
-
+    initAuthUI();
     await initCloud();
   }
 
