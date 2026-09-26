@@ -317,7 +317,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><div class="top-actions"><button type="button" class="logout-top" id="logoutTop">Sair</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
+  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><div class="top-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
   <div class="sub" id="syncStatus" style="display:none;">Conectando…</div>
 
   <div class="auth-shell">
@@ -1239,7 +1239,6 @@
       if (supabaseClient) await supabaseClient.auth.signOut();
     };
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    document.getElementById('logoutTop').addEventListener('click', logout);
 
     let googleButtonInitialized = false;
 
