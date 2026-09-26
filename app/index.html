@@ -908,6 +908,13 @@
     if(e)e.textContent=fmt(required);
   }
 
+  async function refreshDecisionCards() {
+    if (!currentUser || !cloudReady) return;
+    const days = await getWorkDays();
+    renderContinueDecision(days);
+    await renderRealProfit();
+  }
+
   function renderAll() {
 
     const todayEntries = state.entries.filter(e => e.date === todayISO());
@@ -921,8 +928,7 @@
     renderSliders();
     renderEntries();
     renderTotals();
-    if (currentUser && cloudReady) getWorkDays().then(renderContinueDecision);
-    if (currentUser && cloudReady) renderRealProfit();
+    refreshDecisionCards();
   }
 
   function renderEntries() {
@@ -983,6 +989,7 @@
         if (removed) {
           renderEntries();
           renderTotals();
+          refreshDecisionCards();
         }
       });
 
@@ -1072,6 +1079,7 @@
       const saved = await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
       if (!saved) return;
       renderEntries(); renderTotals();
+      refreshDecisionCards();
       const status = document.getElementById('dataLoadStatus');
       if (status) { status.textContent = '✓ Ganho registrado com sucesso'; status.style.display = 'flex'; setTimeout(() => status.style.display = 'none', 2200); }
       valorInput.value = ''; valorInput.focus();
@@ -1086,6 +1094,7 @@
       const saved = await addEntry({ type: 'despesa', category: categoria, total, date: dataInput.value || todayISO() });
       if (!saved) return;
       renderEntries(); renderTotals();
+      refreshDecisionCards();
       const status = document.getElementById('dataLoadStatus');
       if (status) { status.textContent = '✓ Despesa registrada com sucesso'; status.style.display = 'flex'; setTimeout(() => status.style.display = 'none', 2200); }
       valorInput.value = ''; valorInput.focus();
@@ -1112,6 +1121,7 @@
       saveLocal();
       renderEntries();
       renderTotals();
+      refreshDecisionCards();
     });
 
 
