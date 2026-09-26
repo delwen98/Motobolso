@@ -262,6 +262,25 @@
   .quick-stat strong { font-family:var(--font-display); font-size:.9rem; }
   .quick-stat.expense strong { color:var(--gasolina); }
   .quick-stat.net strong { color:var(--ganho); }
+  .day-board { padding:20px; border-color:color-mix(in srgb,var(--accent) 30%,var(--border)); background:linear-gradient(145deg,var(--card-bg),color-mix(in srgb,var(--accent-soft) 38%,var(--card-bg))); }
+  .hero-label { color:var(--text-muted); font-size:.74rem; margin-top:-8px; margin-bottom:14px; }
+  .day-goal-row { display:flex; justify-content:space-between; gap:12px; color:var(--text-muted); font-size:.72rem; margin-bottom:7px; }
+  .day-goal-row strong { color:var(--text); font-family:var(--font-display); }
+  .day-progress { height:9px; margin-bottom:8px; }
+  .day-goal-note { color:var(--text-muted); font-size:.68rem; line-height:1.4; }
+  .quick-amounts { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:8px; }
+  .quick-amount { min-height:43px; padding:8px 4px; border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:11px; font-size:.78rem; font-weight:800; }
+  .quick-amount:active { transform:scale(.98); }
+  .expense-quick .quick-amount { color:var(--gasolina); }
+  .lazy-details { padding:0; overflow:hidden; }
+  .lazy-details summary { list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:17px; }
+  .lazy-details summary::-webkit-details-marker { display:none; }
+  .lazy-details summary h2 { margin:2px 0 3px; }
+  .lazy-details summary span { color:var(--text-muted); font-size:.68rem; }
+  .lazy-details summary>b { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:var(--accent-soft); color:var(--accent); }
+  .lazy-details[open] summary>b { transform:rotate(45deg); }
+  .details-body { padding:0 17px 17px; }
+  .details-body .feature-copy { margin-bottom:12px; }
   .register-card { padding:17px; }
   .money-input { display:flex; align-items:center; gap:7px; padding:0 13px; border:1px solid var(--border); border-radius:12px; background:var(--bg); margin-bottom:12px; }
   .money-input span { color:var(--text-muted); font-weight:800; font-size:.9rem; }
@@ -301,7 +320,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1><span class="plan-badge" id="planBadge">FREE</span></div><div class="top-actions"><button type="button" class="logout-top" id="logoutTop">Sair</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
+  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><div class="top-actions"><button type="button" class="logout-top" id="logoutTop">Sair</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
   <div class="sub" id="syncStatus" style="display:none;">Conectando…</div>
 
   <div class="auth-shell">
@@ -323,46 +342,77 @@
 
   <div id="appContent" style="display:none;">
     <main id="sectionInicio" class="app-section active-section">
-        <div class="card hero-card" id="heroCard" style="display:none;">
-<div class="hero-kicker">Lucro líquido · este mês</div>
-    <div class="hero-value pos" id="heroLiquido">R$ 0,00</div>
-    <div class="hero-meta"><span><strong id="heroPct">0%</strong> da meta mensal</span><span>Meta <strong id="heroMeta">R$ 0,00</strong></span></div>
+        <div class="card hero-card day-board" id="heroCard">
+  <div class="hero-kicker">SEU CORRE · HOJE</div>
+  <div class="hero-value pos" id="heroLiquido">R$ 0,00</div>
+  <div class="hero-label">já colocou no bolso</div>
+  <div class="day-goal-row"><span>Meta líquida <strong id="heroMeta">R$ 0,00</strong></span><strong id="heroPct">0%</strong></div>
+  <div class="progress-bar day-progress"><div class="progress-fill" id="dayProgressFill" style="width:0%"></div></div>
+  <div class="day-goal-note" id="dayGoalNote">Defina uma meta e acompanhe seu corre sem fazer conta.</div>
+</div>
+<div class="quick-stats">
+  <div class="quick-stat"><span>Faturado</span><strong id="todayGanho">R$ 0,00</strong></div>
+  <div class="quick-stat expense"><span>Gastos</span><strong id="todayDespesa">R$ 0,00</strong></div>
+  <div class="quick-stat net"><span>Bolso</span><strong id="todayLiquido">R$ 0,00</strong></div>
+</div>
+<div class="card register-card">
+  <div class="section-heading"><div><span class="eyebrow">MODO PREGUIÇA</span><h2>Registra aí 👇</h2></div><span class="microcopy">2 toques</span></div>
+  <div class="tabs">
+    <div class="tab active ganho" id="tabGanho">💰 Ganhei</div>
+    <div class="tab despesa" id="tabDespesa">💸 Gastei</div>
   </div>
-      <div class="quick-stats">
-        <div class="quick-stat"><span>Hoje</span><strong id="todayGanho">R$ 0,00</strong></div>
-        <div class="quick-stat expense"><span>Gastos</span><strong id="todayDespesa">R$ 0,00</strong></div>
-        <div class="quick-stat net"><span>Líquido</span><strong id="todayLiquido">R$ 0,00</strong></div>
-      </div>
-      <div class="card register-card">
-        <div class="section-heading"><div><span class="eyebrow">NO CORRE</span><h2>Registrar</h2></div><span class="microcopy">leva poucos segundos</span></div>
-        <div class="tabs">
-          <div class="tab active ganho" id="tabGanho">💰 Ganho</div>
-          <div class="tab despesa" id="tabDespesa">⛽ Despesa</div>
-        </div>
-        <div id="formGanho">
-          <label for="valorGanho">Quanto ganhou?</label>
-          <div class="money-input"><span>R$</span><input type="number" id="valorGanho" placeholder="0,00" inputmode="decimal" step="0.01"></div>
-          <div class="date-row"><label for="dataGanho">Data</label><input type="date" id="dataGanho"></div>
-          <button id="btnAddGanho">+ Registrar ganho</button>
-        </div>
-        <div id="formDespesa" style="display:none;">
-          <label>Tipo de gasto</label>
-          <div class="expense-chips">
-            <button type="button" class="expense-chip active" data-category="gasolina">⛽ Gasolina</button>
-            <button type="button" class="expense-chip" data-category="manutencao">🔧 Manutenção</button>
-            <button type="button" class="expense-chip" data-category="outros">📦 Outros</button>
-          </div>
-          <select id="categoriaDespesa" class="category-select" aria-label="Categoria da despesa">
-            <option value="gasolina">Gasolina</option><option value="manutencao">Manutenção</option><option value="outros">Outros gastos</option>
-          </select>
-          <label for="valorDespesa">Quanto gastou?</label>
-          <div class="money-input"><span>R$</span><input type="number" id="valorDespesa" placeholder="0,00" inputmode="decimal" step="0.01"></div>
-          <div class="date-row"><label for="dataDespesa">Data</label><input type="date" id="dataDespesa"></div>
-          <button class="despesa-btn" id="btnAddDespesa">+ Registrar despesa</button>
-        </div>
-      </div>
-  <div class="today-hint">💡 <span>Registre durante o dia. O Moto Bolso calcula seu líquido automaticamente.</span></div>
-          <div class="card real-profit-card"><div class="section-heading"><div><span class="eyebrow">FECHAMENTO DO CORRE</span><h2>Lucro real</h2></div><span class="microcopy">registre no fim do dia</span></div><p class="feature-copy">Km, horas e combustível para descobrir quanto realmente sobrou.</p><div class="mini-grid"><div><label for="workKm">Km rodados</label><input type="number" id="workKm" min="0" step="0.1" placeholder="0" inputmode="decimal"></div><div><label for="workHours">Horas no corre</label><input type="number" id="workHours" min="0" max="24" step="0.1" placeholder="0" inputmode="decimal"></div><div><label for="fuelLiters">Litros abastecidos</label><input type="number" id="fuelLiters" min="0" step="0.01" placeholder="0" inputmode="decimal"></div><div><label for="fuelPrice">Preço/litro</label><input type="number" id="fuelPrice" min="0" step="0.01" placeholder="0,00" inputmode="decimal"></div></div><button id="saveWorkDay" type="button">Salvar fechamento do dia</button><div id="realProfitResult" class="real-profit-result" hidden></div></div><div class="card continue-card" id="continueCard"><h2>Vale a pena continuar?</h2><div class="continue-status"><b id="continueTitle">Registre seu corre de hoje</b><span id="continueBadge">HOJE</span></div><div class="continue-main"><div class="label" id="continueLabel">Faltam para sua meta líquida</div><div class="value warn" id="continueValue">R$ 0,00</div></div><div class="continue-grid"><div><small>Já colocou no bolso</small><strong id="continueNet">R$ 0,00</strong></div><div><small>Ritmo por hora</small><strong id="continueHour">R$ 0,00/h</strong></div></div><p class="continue-note" id="continueNote">Defina sua meta diária para saber quanto falta.</p></div>
+  <div id="formGanho">
+    <label>Toque no valor ou digite outro</label>
+    <div class="quick-amounts" data-target="valorGanho">
+      <button type="button" class="quick-amount" data-value="20">R$20</button>
+      <button type="button" class="quick-amount" data-value="30">R$30</button>
+      <button type="button" class="quick-amount" data-value="50">R$50</button>
+      <button type="button" class="quick-amount" data-value="100">R$100</button>
+    </div>
+    <div class="money-input"><span>R$</span><input type="number" id="valorGanho" placeholder="Outro valor" inputmode="decimal" step="0.01"></div>
+    <input type="date" id="dataGanho" hidden>
+    <button id="btnAddGanho">+ Registrar ganho</button>
+  </div>
+  <div id="formDespesa" style="display:none;">
+    <label>Onde gastou?</label>
+    <div class="expense-chips">
+      <button type="button" class="expense-chip active" data-category="gasolina">⛽ Gasolina</button>
+      <button type="button" class="expense-chip" data-category="manutencao">🔧 Manutenção</button>
+      <button type="button" class="expense-chip" data-category="outros">📦 Outros</button>
+    </div>
+    <select id="categoriaDespesa" class="category-select" aria-label="Categoria da despesa">
+      <option value="gasolina">Gasolina</option><option value="manutencao">Manutenção</option><option value="outros">Outros gastos</option>
+    </select>
+    <label>Toque no valor ou digite outro</label>
+    <div class="quick-amounts expense-quick" data-target="valorDespesa">
+      <button type="button" class="quick-amount" data-value="10">R$10</button>
+      <button type="button" class="quick-amount" data-value="20">R$20</button>
+      <button type="button" class="quick-amount" data-value="30">R$30</button>
+      <button type="button" class="quick-amount" data-value="50">R$50</button>
+    </div>
+    <div class="money-input"><span>R$</span><input type="number" id="valorDespesa" placeholder="Outro valor" inputmode="decimal" step="0.01"></div>
+    <input type="date" id="dataDespesa" hidden>
+    <button class="despesa-btn" id="btnAddDespesa">+ Registrar gasto</button>
+  </div>
+  <div id="dataLoadStatus" class="data-status" style="display:none;"></div>
+</div>
+<div class="today-hint">💡 <span>Você registra. O MotoBolso faz as contas.</span></div>
+          <details class="card real-profit-card lazy-details">
+  <summary><div><span class="eyebrow">QUANDO QUISER</span><h2>Fechar o corre</h2><span>2 min no fim do dia para descobrir seu lucro real.</span></div><b>＋</b></summary>
+  <div class="details-body">
+    <p class="feature-copy">Só informe o que o MotoBolso não consegue saber sozinho.</p>
+    <div class="mini-grid">
+      <div><label for="workKm">Km rodados</label><input type="number" id="workKm" min="0" step="0.1" placeholder="Ex.: 120" inputmode="decimal"></div>
+      <div><label for="workHours">Horas no corre</label><input type="number" id="workHours" min="0" max="24" step="0.1" placeholder="Ex.: 8" inputmode="decimal"></div>
+    </div>
+    <div class="mini-grid">
+      <div><label for="fuelLiters">Litros abastecidos <small>(se não lançou gasolina)</small></label><input type="number" id="fuelLiters" min="0" step="0.01" placeholder="Opcional" inputmode="decimal"></div>
+      <div><label for="fuelPrice">Preço/litro</label><input type="number" id="fuelPrice" min="0" step="0.01" placeholder="Opcional" inputmode="decimal"></div>
+    </div>
+    <button id="saveWorkDay" type="button">Fechar meu corre</button>
+    <div id="realProfitResult" class="real-profit-result" hidden></div>
+  </div>
+</details><div class="card continue-card" id="continueCard"><h2>Vale a pena continuar?</h2><div class="continue-status"><b id="continueTitle">Registre seu corre de hoje</b><span id="continueBadge">HOJE</span></div><div class="continue-main"><div class="label" id="continueLabel">Faltam para sua meta líquida</div><div class="value warn" id="continueValue">R$ 0,00</div></div><div class="continue-grid"><div><small>Já colocou no bolso</small><strong id="continueNet">R$ 0,00</strong></div><div><small>Ritmo por hora</small><strong id="continueHour">R$ 0,00/h</strong></div></div><p class="continue-note" id="continueNote">Defina sua meta diária para saber quanto falta.</p></div>
 </main>
 
     <main id="sectionHistorico" class="app-section">
@@ -924,6 +974,14 @@
     if (tg) tg.textContent = fmt(todayGanho);
     if (td) td.textContent = fmt(todayDespesa);
     if (tl) { const net = todayGanho - todayDespesa; tl.textContent = fmt(net); tl.style.color = net >= 0 ? 'var(--ganho)' : 'var(--danger)'; }
+    const meta = Number(settings.metaDiaria) || 0;
+    const pct = meta > 0 ? Math.min(100, Math.max(0, (Math.max(0, todayGanho - todayDespesa) / meta) * 100)) : 0;
+    const fill = document.getElementById('dayProgressFill');
+    if (fill) fill.style.width = pct + '%';
+    const goalNote = document.getElementById('dayGoalNote');
+    if (goalNote) goalNote.textContent = meta > 0
+      ? (todayGanho - todayDespesa >= meta ? 'Meta atingida. Se quiser, pode fechar o corre. 🔥' : 'Faltam ' + fmt(Math.max(0, meta - (todayGanho - todayDespesa))) + ' para sua meta.')
+      : 'Defina uma meta e acompanhe seu corre sem fazer conta.';
     renderGoal();
     renderSliders();
     renderEntries();
@@ -1071,33 +1129,49 @@
     sliderInvest.addEventListener('input', () => clampSliders('invest'));
     sliderReserva.addEventListener('input', () => clampSliders('reserva'));
 
+    async function saveQuickEntry(type, total, category) {
+      if (!Number.isFinite(total) || total <= 0) return false;
+      const saved = await addEntry({ type, category, total, date: todayISO() });
+      if (!saved) return false;
+      renderEntries(); renderTotals(); refreshDecisionCards();
+      const status = document.getElementById('dataLoadStatus');
+      if (status) {
+        status.textContent = type === 'ganho' ? 'Ganho registrado · boa! 👊' : 'Gasto registrado · já entrou na conta.';
+        status.style.display = 'flex';
+        clearTimeout(window.__mbStatusTimer);
+        window.__mbStatusTimer = setTimeout(() => status.style.display = 'none', 2200);
+      }
+      return true;
+    }
+
+    document.querySelectorAll('.quick-amount').forEach(chip => {
+      chip.addEventListener('click', async () => {
+        const target = chip.closest('.quick-amounts')?.dataset.target;
+        const value = Number(chip.dataset.value);
+        if (target === 'valorGanho') {
+          await saveQuickEntry('ganho', value);
+        } else if (target === 'valorDespesa') {
+          const category = document.getElementById('categoriaDespesa').value;
+          await saveQuickEntry('despesa', value, category);
+        }
+      });
+    });
+
     document.getElementById('btnAddGanho').addEventListener('click', async () => {
       const valorInput = document.getElementById('valorGanho');
-      const dataInput = document.getElementById('dataGanho');
       const total = parseFloat(valorInput.value);
       if (!Number.isFinite(total) || total <= 0) { valorInput.focus(); return; }
-      const saved = await addEntry({ type: 'ganho', total, date: dataInput.value || todayISO() });
-      if (!saved) return;
-      renderEntries(); renderTotals();
-      refreshDecisionCards();
-      const status = document.getElementById('dataLoadStatus');
-      if (status) { status.textContent = '✓ Ganho registrado com sucesso'; status.style.display = 'flex'; setTimeout(() => status.style.display = 'none', 2200); }
-      valorInput.value = ''; valorInput.focus();
+      const saved = await saveQuickEntry('ganho', total);
+      if (saved) { valorInput.value = ''; valorInput.focus(); }
     });
 
     document.getElementById('btnAddDespesa').addEventListener('click', async () => {
       const valorInput = document.getElementById('valorDespesa');
-      const dataInput = document.getElementById('dataDespesa');
-      const categoria = document.getElementById('categoriaDespesa').value;
       const total = parseFloat(valorInput.value);
+      const categoria = document.getElementById('categoriaDespesa').value;
       if (!Number.isFinite(total) || total <= 0) { valorInput.focus(); return; }
-      const saved = await addEntry({ type: 'despesa', category: categoria, total, date: dataInput.value || todayISO() });
-      if (!saved) return;
-      renderEntries(); renderTotals();
-      refreshDecisionCards();
-      const status = document.getElementById('dataLoadStatus');
-      if (status) { status.textContent = '✓ Despesa registrada com sucesso'; status.style.display = 'flex'; setTimeout(() => status.style.display = 'none', 2200); }
-      valorInput.value = ''; valorInput.focus();
+      const saved = await saveQuickEntry('despesa', total, categoria);
+      if (saved) { valorInput.value = ''; valorInput.focus(); }
     });
 
     document.getElementById('resetBtn').addEventListener('click', async () => {
@@ -1126,8 +1200,8 @@
 
 
     const tourSteps = [
-      { target: 'sectionInicio .register-card', title: 'Vamos começar', text: 'Aqui você registra rapidamente quanto ganhou ou gastou no dia.', tab: 'sectionInicio' },
-      { target: 'sectionInicio .tabs', title: 'Ganho ou despesa', text: 'Escolha Ganho para o que recebeu ou Despesa para seus gastos.', tab: 'sectionInicio' },
+      { target: 'sectionInicio .day-board', title: 'Seu placar', text: 'Aqui você vê quanto já colocou no bolso e quanto falta para sua meta.', tab: 'sectionInicio' },
+      { target: 'sectionInicio .register-card', title: 'Modo preguiça', text: 'Toque em um valor pronto e o lançamento é feito na hora. Sem formulário.', tab: 'sectionInicio' },
       { target: '.nav-item[data-target="sectionResumo"]', title: 'Acompanhe seu resultado', text: 'No Resumo você vê ganhos, gastos, lucro líquido e sua meta.', tab: 'sectionResumo' },
       { target: '.nav-item[data-target="sectionHistorico"]', title: 'Consulte seus lançamentos', text: 'No Histórico ficam todos os registros que você fez.', tab: 'sectionHistorico' },
       { target: '.nav-item[data-target="sectionConfig"]', title: 'Personalize o app', text: 'Em Configurações você ajusta sua meta e pode rever este tutorial.', tab: 'sectionConfig' }
