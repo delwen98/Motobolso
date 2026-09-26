@@ -510,10 +510,10 @@
       } else {
         loadLocal();
         showLogin();
-        ();
+
       }
 
-      supabaseClient.auth.onAuthStateChange((_event, session) => {
+      supabaseClient.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') { showPasswordRecovery(); return; }
         if (session) {
           onAuthed(session.user).catch(e => console.error(e));
@@ -541,35 +541,9 @@
     document.querySelector('.topbar').style.display = 'none';
     document.getElementById('syncStatus').style.display = 'none';
     document.getElementById('loginCard').style.display = '';
-    document.getElementById('appContent').style.display = 'none'; document.getElementById('heroCard').style.display = 'none';
+    document.getElementById('appContent').style.display = 'none';
+    document.getElementById('heroCard').style.display = 'none';
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
-    // O botão é renderizado aqui diretamente. A função antiga ficava dentro de init(),
-    // então não podia ser chamada por showLogin() quando o Supabase falhava ao iniciar.
-    const googleBtn = document.getElementById('');
-    if (googleBtn) {
-      googleBtn.innerHTML = '<span class="google-icon" aria-hidden="true">G</span><span></span>';
-      googleBtn.style.display = 'flex';
-      googleBtn.style.visibility = 'visible';
-      googleBtn.style.alignItems = 'center';
-      googleBtn.style.justifyContent = 'center';
-      googleBtn.style.gap = '10px';
-      googleBtn.style.cursor = 'pointer';
-      googleBtn.onclick = async () => {
-        const msgEl = document.getElementById('loginMsg');
-        if (!supabaseClient) {
-          msgEl.textContent = 'Serviço de login ainda não carregou. Tente novamente.';
-          return;
-        }
-        msgEl.textContent = '';
-        try {
-          const { error } = await supabaseClient.auth.
-          if (error) throw error;
-        } catch (e) {
-          console.error('Google OAuth error:', e);
-          msgEl.textContent = 'Erro no login: ' + (e && e.message ? e.message : 'não foi possível autenticar.');
-        }
-      };
-    }
   }
 
   async function onAuthed(user) {
