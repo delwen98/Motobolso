@@ -765,6 +765,7 @@
     badge.textContent=pro?'PRO':'FREE'; title.textContent=pro?'MotoBolso Pro':'MotoBolso Free'; status.textContent=pro?'ATIVO':'GRÁTIS'; desc.textContent=pro?'Todos os recursos avançados para controlar seu corre.':'Controle financeiro essencial para acompanhar seu corre.'; price.textContent=pro?'R$ 7,90':'R$ 0';
     benefits.innerHTML=pro?'<li>✓ Todos os recursos do Free</li><li>✓ Recursos avançados</li><li>✓ Sem limitações do plano</li>':'<li>✓ Ganhos e despesas</li><li>✓ Histórico</li><li>✓ Resumo básico</li>';
     upgrade.textContent=pro?'Plano Pro ativo':'Conhecer o Pro — R$ 7,90/mês'; upgrade.disabled=pro;
+    document.querySelectorAll('.pro-feature-card').forEach(card=>{ const lock=card.querySelector('.pro-lock'), content=card.querySelector('.pro-feature-content'); if(lock) lock.style.display=pro?'none':''; if(content){content.style.filter=pro?'none':'';content.style.opacity=pro?'1':'';content.style.pointerEvents=pro?'auto':'none';} });
   }
   function openProModal(){if(isPro())return;const m=document.getElementById('proModal');m.classList.add('open');m.setAttribute('aria-hidden','false')}
   function closeProModal(){const m=document.getElementById('proModal');m.classList.remove('open');m.setAttribute('aria-hidden','true')}
