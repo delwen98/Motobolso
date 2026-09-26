@@ -3,30 +3,47 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>MotoBolso — Quanto sobrou do seu corre?</title>
-<meta name="description" content="Controle ganhos e gastos e descubra quanto realmente sobra do seu corre.">
+<title>MotoBolso — Descubra quanto realmente sobra do seu corre</title>
+<meta name="description" content="Descubra em segundos quanto realmente sobra do seu corre depois dos gastos. Controle financeiro simples para motoboys.">
 <meta name="theme-color" content="#03070d">
 <link rel="icon" type="image/png" href="images/motobolso-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#03070d;--card:#08131f;--line:rgba(100,180,255,.16);--text:#f5f9ff;--muted:#8ca0b4;--blue:#1682ff;--cyan:#51caff;--green:#3fe3ad;--orange:#ffae63;--d:'Space Grotesk',sans-serif;--b:'Manrope',sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--b);overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 70% 4%,rgba(22,130,255,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);background-size:auto,42px 42px,42px 42px;mask-image:linear-gradient(#000,transparent 78%)}
-.wrap{width:min(1060px,calc(100% - 28px));margin:auto}a{text-decoration:none;color:inherit}
-header{height:64px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5}.brand{display:flex;align-items:center;gap:9px;font:700 1rem var(--d)}.brand img{width:34px;height:34px;object-fit:contain;border-radius:10px}.brand em{font-style:normal;color:var(--cyan)}.login{font-size:.7rem;font-weight:800;color:#9eb2c6;padding:9px 12px;border:1px solid var(--line);border-radius:10px}
-.hero{min-height:calc(100svh - 64px);display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:24px;padding:30px 0 55px}.tag{font-size:.62rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#75d9ff}.tag:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin:0 7px 1px 0}
-h1{font:700 clamp(3.1rem,7vw,6rem)/.9 var(--d);letter-spacing:-.07em;margin:15px 0 19px;max-width:620px}h1 span{color:var(--cyan)}.sub{color:var(--muted);font-size:.94rem;line-height:1.65;max-width:510px}.sub b{color:#eaf4ff}.cta{display:flex;gap:9px;align-items:center;margin-top:22px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 19px;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);font-size:.78rem;font-weight:800;box-shadow:0 14px 38px rgba(22,130,255,.25)}.ghost{font-size:.75rem;font-weight:800;color:#91a5b9;padding:10px}.note{margin-top:9px;color:#53697f;font-size:.62rem}
-.visual{position:relative;display:grid;place-items:center;min-height:530px}.glow{position:absolute;width:350px;height:350px;background:#087cff;filter:blur(110px);opacity:.17;border-radius:50%}.phone{width:min(310px,78vw);padding:8px;border-radius:36px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.025));border:1px solid rgba(190,225,255,.24);box-shadow:0 35px 80px #000,0 0 60px rgba(22,130,255,.12);transform:rotate(2.5deg);position:relative;z-index:2}.screen{min-height:510px;border-radius:29px;background:linear-gradient(160deg,#071827,#091e33 60%,#06101c);padding:16px 13px;overflow:hidden}.notch{width:82px;height:20px;background:#02060a;border-radius:20px;margin:-8px auto 17px}.bar{display:flex;justify-content:space-between;font-size:.57rem;color:#7890a8}.bar b{font:700 .95rem var(--d);color:#fff}.balance{margin-top:17px;padding:18px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.045)}.balance small{font-size:.58rem;color:#7b92a8}.balance strong{display:block;font:700 2.15rem var(--d);color:var(--green);margin:6px 0}.balance i{font-style:normal;font-size:.57rem;color:#71d7be}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.stat{padding:13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}.stat small{font-size:.52rem;color:#71889e}.stat b{display:block;font:700 .92rem var(--d);margin-top:5px}.green{color:var(--green)}.orange{color:var(--orange)}.chart{margin-top:8px;padding:13px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025)}.chart small{font-size:.55rem;color:#748ca3}.bars{height:95px;display:flex;align-items:end;gap:6px;margin-top:9px}.bars i{flex:1;background:linear-gradient(#52d0ff,#126ce0);border-radius:4px 4px 2px 2px}.navfake{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;color:#607b95;font-size:.46rem;line-height:1.6;margin-top:12px}.navfake b{color:#55cfff}
-.float{position:absolute;z-index:3;padding:11px 13px;border:1px solid var(--line);border-radius:13px;background:rgba(5,13,22,.9);box-shadow:0 18px 45px #000;font-size:.56rem;color:#70869d}.float b{display:block;font:700 .9rem var(--d);color:#fff;margin-top:3px}.f1{left:2px;top:115px}.f2{right:0;bottom:75px}.f2 b{color:var(--green)}
-section{padding:65px 0}.eyebrow{color:#5bcfff;font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.title{font:700 clamp(2.1rem,5vw,4rem)/.96 var(--d);letter-spacing:-.06em;margin:10px 0 13px}.copy{color:var(--muted);font-size:.86rem;line-height:1.65;max-width:590px}
-.math{display:grid;grid-template-columns:1fr 1.1fr;gap:35px;align-items:center}.calc{padding:24px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,#091827,#06101a)}.calc-top{display:flex;justify-content:space-between;color:#71879d;font-size:.58rem}.total{font:700 clamp(3rem,6vw,4.8rem) var(--d);letter-spacing:-.06em;color:var(--green);margin:25px 0}.row{display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid var(--line);font-size:.72rem}.row span:last-child{font-weight:800}.row .out{color:var(--orange)}
-.points{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}.point{padding:18px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.025)}.point b{display:block;font:700 1rem var(--d);margin-bottom:6px}.point span{color:var(--muted);font-size:.7rem;line-height:1.5}
-.final{text-align:center;padding:68px 20px;border:1px solid rgba(81,202,255,.17);border-radius:26px;background:radial-gradient(circle at 50% 0,rgba(22,130,255,.2),transparent 60%),#06101a}.final .title{margin-left:auto;margin-right:auto}.final .copy{margin:0 auto 22px}.final .btn{min-width:210px}
-footer{padding:25px 0 40px;color:#4f6479;font-size:.62rem;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06)}
-@media(max-width:760px){.hero,.math{grid-template-columns:1fr}.hero{padding:24px 0 42px;min-height:auto}.hero h1{font-size:clamp(3.15rem,15.5vw,4.6rem)}.sub{font-size:.88rem}.cta{flex-direction:column;align-items:stretch}.cta .btn{text-align:center}.ghost{text-align:center}.visual{min-height:430px;margin-top:4px}.phone{width:255px}.screen{min-height:455px}.float{font-size:.52rem}.f1{top:45px}.f2{bottom:35px}.math{gap:25px}.points{grid-template-columns:1fr}.point{padding:16px}section{padding:52px 0}.title{font-size:2.35rem}.final{padding:52px 17px}footer{flex-direction:column;gap:7px}}
-@media(min-width:761px){.mobile-break{display:none}}
-.launch-price{display:flex;align-items:baseline;gap:6px;margin:12px 0 16px}.launch-price strong{font-size:1.55rem;letter-spacing:-.04em}.launch-price span{font-size:.78rem;color:var(--muted)}
+:root{--bg:#03070d;--panel:#08131f;--panel2:#0b1a29;--line:rgba(100,180,255,.15);--text:#f5f9ff;--muted:#8ca0b4;--blue:#1682ff;--cyan:#51caff;--green:#3fe3ad;--orange:#ffae63;--d:'Space Grotesk',sans-serif;--b:'Manrope',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--b);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 70% 0,rgba(22,130,255,.19),transparent 30%),linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:auto,44px 44px,44px 44px;mask-image:linear-gradient(#000,transparent 78%)}
+.wrap{width:min(1080px,calc(100% - 28px));margin:auto}a{text-decoration:none;color:inherit}
+header{height:66px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5}.brand{display:flex;align-items:center;gap:9px;font:700 1rem var(--d)}.brand img{width:34px;height:34px;object-fit:contain;border-radius:10px}.brand em{font-style:normal;color:var(--cyan)}.login{font-size:.7rem;font-weight:800;color:#a7b8c8;padding:9px 12px;border:1px solid var(--line);border-radius:10px}
+
+.hero{padding:38px 0 54px;display:grid;grid-template-columns:1.03fr .97fr;gap:48px;align-items:center;min-height:calc(100svh - 66px)}
+.tag{font-size:.62rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#75d9ff}.tag:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin:0 7px 1px 0}
+h1{font:700 clamp(3rem,6.6vw,5.6rem)/.91 var(--d);letter-spacing:-.07em;margin:16px 0 18px;max-width:650px}h1 span{color:var(--cyan)}.hero-copy{color:var(--muted);font-size:.94rem;line-height:1.65;max-width:535px}.hero-copy b{color:#edf6ff}
+.trust{display:flex;gap:15px;flex-wrap:wrap;margin-top:18px;color:#60778d;font-size:.62rem;font-weight:700}.trust span:before{content:"✓";color:var(--green);margin-right:5px}
+.price-line{margin-top:19px;font-size:.68rem;color:#6f8498}.price-line strong{color:#fff;font-size:.88rem}
+
+.calc-card{position:relative;padding:23px;border:1px solid rgba(81,202,255,.2);border-radius:25px;background:linear-gradient(145deg,rgba(11,28,44,.98),rgba(5,14,23,.98));box-shadow:0 30px 80px rgba(0,0,0,.42),0 0 70px rgba(22,130,255,.08)}
+.calc-card:before{content:"";position:absolute;inset:-1px;border-radius:25px;pointer-events:none;background:linear-gradient(135deg,rgba(81,202,255,.12),transparent 45%);opacity:.8}
+.calc-head{position:relative}.eyebrow{color:#5bcfff;font-size:.59rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.calc-title{font:700 1.5rem/1.05 var(--d);letter-spacing:-.04em;margin:8px 0 5px}.calc-sub{color:#7890a5;font-size:.68rem;line-height:1.5}
+.fields{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}.field label{display:block;color:#71879b;font-size:.57rem;font-weight:800;margin:0 0 6px}.input-wrap{display:flex;align-items:center;height:48px;padding:0 12px;border:1px solid rgba(100,180,255,.16);border-radius:12px;background:rgba(255,255,255,.035)}.input-wrap span{color:#688198;font-size:.75rem}.input-wrap input{width:100%;border:0;outline:0;background:transparent;color:#fff;font:700 .95rem var(--d);padding-left:5px;min-width:0}
+.result{position:relative;margin-top:12px;padding:17px;border-radius:16px;background:rgba(63,227,173,.055);border:1px solid rgba(63,227,173,.17)}.result-label{color:#7d978f;font-size:.56rem;font-weight:800;letter-spacing:.08em}.result strong{display:block;font:700 clamp(2.3rem,6vw,3.3rem)/1 var(--d);letter-spacing:-.06em;color:var(--green);margin:5px 0}.result-note{color:#7f988f;font-size:.61rem}.result-note b{color:#dcece8}
+.breakdown{position:relative;display:flex;justify-content:space-between;gap:10px;margin-top:11px;color:#6e8498;font-size:.59rem}.breakdown b{color:#e8f0f7}
+.calc-cta{position:relative;display:flex;flex-direction:column;gap:8px;margin-top:14px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 19px;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);font-size:.78rem;font-weight:800;box-shadow:0 14px 38px rgba(22,130,255,.2)}.micro{font-size:.55rem;color:#536a7f;text-align:center}
+
+section{padding:72px 0}.section-head{max-width:610px}.title{font:700 clamp(2.2rem,5vw,4rem)/.96 var(--d);letter-spacing:-.06em;margin:9px 0 13px}.copy{color:var(--muted);font-size:.87rem;line-height:1.68;max-width:590px}
+.pain-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:30px}.pain{padding:21px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)}.pain b{display:block;font:700 1rem var(--d);margin-bottom:7px}.pain span{color:var(--muted);font-size:.7rem;line-height:1.55}.pain .bad{color:#ffbd82}.pain .good{color:var(--green)}
+
+.demo{display:grid;grid-template-columns:.9fr 1.1fr;gap:35px;align-items:center}.mock{padding:22px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,#091827,#06101a)}.mock-top{display:flex;justify-content:space-between;color:#71879d;font-size:.57rem}.mock-total{font:700 clamp(2.8rem,6vw,4.4rem) var(--d);letter-spacing:-.06em;color:var(--green);margin:22px 0}.mock-row{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);font-size:.7rem}.mock-row b{font-weight:800}.out{color:var(--orange)}
+.steps{display:grid;gap:9px}.step{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start;padding:17px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.022)}.num{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(81,202,255,.1);color:var(--cyan);font:700 .7rem var(--d)}.step b{font:700 .88rem var(--d)}.step span{display:block;color:var(--muted);font-size:.67rem;line-height:1.5;margin-top:3px}
+
+.final{text-align:center;padding:68px 20px;border:1px solid rgba(81,202,255,.17);border-radius:26px;background:radial-gradient(circle at 50% 0,rgba(22,130,255,.2),transparent 60%),#06101a}.final .title{margin-left:auto;margin-right:auto}.final .copy{margin:0 auto 18px}.final-price{margin:4px 0 18px}.final-price strong{font:700 1.7rem var(--d)}.final-price span{color:var(--muted);font-size:.72rem;margin-left:5px}.final .btn{min-width:230px}
+footer{padding:25px 0 40px;color:#4f6479;font-size:.61rem;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06)}
+
+@media(max-width:760px){
+.hero{grid-template-columns:1fr;gap:26px;padding:25px 0 40px;min-height:auto}.hero h1{font-size:clamp(3rem,15vw,4.35rem)}.hero-copy{font-size:.87rem}.trust{gap:10px}.calc-card{padding:18px;border-radius:21px}.fields{grid-template-columns:1fr 1fr}.input-wrap{height:46px}.calc-title{font-size:1.35rem}section{padding:54px 0}.pain-grid,.demo{grid-template-columns:1fr}.pain-grid{gap:8px}.pain{padding:17px}.demo{gap:23px}.title{font-size:2.35rem}.final{padding:52px 17px}footer{flex-direction:column;gap:7px}
+}
+@media(max-width:390px){.fields{grid-template-columns:1fr}.hero h1{font-size:2.9rem}}
 </style>
 </head>
 <body>
@@ -39,44 +56,83 @@ footer{padding:25px 0 40px;color:#4f6479;font-size:.62rem;display:flex;justify-c
 <section class="wrap hero">
 <div>
 <div class="tag">feito por motoboy, para motoboy</div>
-<h1>Quanto sobrou do seu <span>corre</span> hoje?</h1>
-<p class="sub">Você vê quanto faturou. O <b>MotoBolso</b> mostra quanto realmente ficou — depois da gasolina, manutenção e outros gastos.</p>
-<div class="cta"><a class="btn" href="app/">Começar agora →</a><a class="ghost" href="#como">Ver como funciona</a></div>
-<div class="note">Mobile • rápido • sem planilha</div>
+<h1>Você sabe quanto <span>realmente</span> sobra?</h1>
+<p class="hero-copy">Faturar R$300 não significa colocar R$300 no bolso. <b>Descubra agora quanto sobra depois dos gastos</b> — e pare de trabalhar no escuro.</p>
+<div class="trust"><span>sem planilha</span><span>poucos toques</span><span>feito para celular</span></div>
+<div class="price-line"><strong>R$ 6,90/mês</strong> · tudo liberado</div>
 </div>
-<div class="visual" aria-hidden="true">
-<div class="glow"></div>
-<div class="float f1">GANHOS HOJE<b>+ R$ 265,00</b></div>
-<div class="float f2">LÍQUIDO<b>R$ 187,40</b></div>
-<div class="phone"><div class="screen">
-<div class="notch"></div>
-<div class="bar"><b>MotoBolso</b><span>Hoje · 21:47</span></div>
-<div class="balance"><small>QUANTO SOBROU HOJE</small><strong>R$ 187,40</strong><i>↑ resultado líquido</i></div>
-<div class="stats"><div class="stat"><small>GANHOS</small><b class="green">R$ 265,00</b></div><div class="stat"><small>GASTOS</small><b class="orange">R$ 77,60</b></div></div>
-<div class="chart"><small>Seu ritmo na semana</small><div class="bars"><i style="height:35%"></i><i style="height:54%"></i><i style="height:43%"></i><i style="height:76%"></i><i style="height:62%"></i><i style="height:88%"></i><i style="height:72%"></i></div></div>
-<div class="navfake"><b>⌂<br>Início</b><span>＋<br>Lançar</span><span>▤<br>Histórico</span><span>◔<br>Resumo</span></div>
-</div></div>
-</div>
-</section>
 
-<section class="wrap" id="como">
-<div class="math">
-<div><div class="eyebrow">a conta que importa</div><h2 class="title">Faturamento não é o que fica.</h2><p class="copy">Registre o que entra e o que sai. O MotoBolso transforma seu dia de trabalho em um número simples: <strong style="color:#fff">quanto sobrou.</strong></p></div>
-<div class="calc"><div class="calc-top"><span>FECHAMENTO DO DIA</span><span>26 SET</span></div><div class="total">R$ 187,40</div><div class="row"><span>Ganhos</span><span>+ R$ 265,00</span></div><div class="row"><span>Gasolina</span><span class="out">− R$ 52,60</span></div><div class="row"><span>Outros gastos</span><span class="out">− R$ 25,00</span></div></div>
+<div class="calc-card" id="calculadora">
+<div class="calc-head"><div class="eyebrow">descubra agora · grátis para calcular</div><h2 class="calc-title">Quanto sobrou do seu corre?</h2><p class="calc-sub">Coloque os números de hoje. A conta aparece na hora.</p></div>
+<div class="fields">
+<div class="field"><label>QUANTO FATUROU</label><div class="input-wrap"><span>R$</span><input id="ganhos" inputmode="decimal" value="300" aria-label="Quanto faturou"></div></div>
+<div class="field"><label>GASOLINA</label><div class="input-wrap"><span>R$</span><input id="gasolina" inputmode="decimal" value="50" aria-label="Gasto com gasolina"></div></div>
+<div class="field"><label>OUTROS GASTOS</label><div class="input-wrap"><span>R$</span><input id="outros" inputmode="decimal" value="20" aria-label="Outros gastos"></div></div>
 </div>
-<div class="points">
-<div class="point"><b>01 · Ganho</b><span>Lançou. Pronto. O valor entra na conta.</span></div>
-<div class="point"><b>02 · Gasto</b><span>Gasolina ou manutenção sem esquecer depois.</span></div>
-<div class="point"><b>03 · Resultado</b><span>O líquido aparece automaticamente.</span></div>
+<div class="result"><div class="result-label">VOCÊ COLOCOU NO BOLSO</div><strong id="resultado">R$ 230,00</strong><div class="result-note">Seu faturamento foi <b id="percentual">76,7%</b> do valor líquido.</div></div>
+<div class="breakdown"><span>Faturou <b id="r-g">R$ 300,00</b></span><span>Gastos <b id="r-d">− R$ 70,00</b></span></div>
+<div class="calc-cta"><a class="btn" href="app/">Quero controlar meu corre →</a><div class="micro">No MotoBolso, você lança. Ele faz as contas.</div></div>
 </div>
 </section>
 
 <section class="wrap">
-<div class="final"><div class="eyebrow">seu próximo ganho</div><h2 class="title">Pare de adivinhar.<br><span style="color:var(--cyan)">Saiba quanto sobra.</span></h2><p class="copy">Abra o MotoBolso e comece pelo próximo lançamento.</p><div class="launch-price"><strong>R$ 6,90</strong><span>/mês · tudo liberado</span></div><a class="btn" href="app/">Começar agora →</a></div>
+<div class="section-head"><div class="eyebrow">o problema</div><h2 class="title">Você trabalha. Mas sabe quanto está sobrando?</h2><p class="copy">No fim do dia, o número que aparece no aplicativo é faturamento. Só que sua moto também come uma parte dele.</p></div>
+<div class="pain-grid">
+<div class="pain"><b>“Fiz R$300 hoje.”</b><span>Ótimo. Mas quanto disso foi para gasolina e outros custos?</span></div>
+<div class="pain"><b class="bad">“Depois eu anoto.”</b><span>O problema é que esse depois quase nunca chega.</span></div>
+<div class="pain"><b class="good">“Agora eu sei.”</b><span>O MotoBolso transforma seus lançamentos em <strong>dinheiro de verdade no bolso.</strong></span></div>
+</div>
+</section>
+
+<section class="wrap">
+<div class="demo">
+<div>
+<div class="eyebrow">como funciona</div>
+<h2 class="title">Você faz o corre. A gente faz as contas.</h2>
+<p class="copy">Nada de planilha, fórmula ou fechamento complicado. O objetivo é registrar o mínimo e enxergar o que importa.</p>
+</div>
+<div class="steps">
+<div class="step"><div class="num">01</div><div><b>Ganhou?</b><span>Lança o valor em poucos toques.</span></div></div>
+<div class="step"><div class="num">02</div><div><b>Gastou?</b><span>Registra gasolina, manutenção ou outro gasto.</span></div></div>
+<div class="step"><div class="num">03</div><div><b>Quer saber se vale continuar?</b><span>O MotoBolso mostra o quanto já sobrou e o que falta para sua meta.</span></div></div>
+</div>
+</div>
+</section>
+
+<section class="wrap">
+<div class="demo">
+<div class="mock">
+<div class="mock-top"><span>FECHAMENTO DO DIA</span><span>HOJE</span></div>
+<div class="mock-total">R$ 187,40</div>
+<div class="mock-row"><span>Ganhos</span><b>+ R$ 265,00</b></div>
+<div class="mock-row"><span>Gasolina</span><b class="out">− R$ 52,60</b></div>
+<div class="mock-row"><span>Outros gastos</span><b class="out">− R$ 25,00</b></div>
+</div>
+<div><div class="eyebrow">a conta que importa</div><h2 class="title">Faturamento não é o que fica.</h2><p class="copy">O número que interessa é o que sobra depois do custo do corre. É isso que o MotoBolso coloca na sua frente.</p></div>
+</div>
+</section>
+
+<section class="wrap">
+<div class="final"><div class="eyebrow">controle seu corre</div><h2 class="title">Pare de adivinhar.<br><span style="color:var(--cyan)">Saiba quanto sobra.</span></h2><p class="copy">Tudo em um só lugar, pensado para quem trabalha de moto.</p><div class="final-price"><strong>R$ 6,90</strong><span>/mês · tudo liberado</span></div><a class="btn" href="app/">Começar agora →</a></div>
 </section>
 </main>
 
 <footer class="wrap"><span>© 2026 MotoBolso</span><span>Controle financeiro feito por motoboy, para motoboy.</span></footer>
-<script>const p=new URLSearchParams(location.search),c=p.get('utm_campaign');if(c)document.documentElement.dataset.campaign=c;</script>
+
+<script>
+const money=v=>{const n=Number(String(v).replace(',','.'))||0;return n};
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const inputs=[document.getElementById('ganhos'),document.getElementById('gasolina'),document.getElementById('outros')];
+function calc(){
+ const g=money(inputs[0].value),ga=money(inputs[1].value),o=money(inputs[2].value),r=Math.max(0,g-ga-o);
+ document.getElementById('resultado').textContent=brl(r);
+ document.getElementById('r-g').textContent=brl(g);
+ document.getElementById('r-d').textContent='− '+brl(ga+o);
+ document.getElementById('percentual').textContent=(g?((r/g)*100).toFixed(1).replace('.',','):'0')+'%';
+}
+inputs.forEach(i=>i.addEventListener('input',calc));
+calc();
+const p=new URLSearchParams(location.search),c=p.get('utm_campaign');if(c)document.documentElement.dataset.campaign=c;
+</script>
 </body>
 </html>
