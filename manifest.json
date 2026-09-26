@@ -1,7 +1,7 @@
 {
   "name": "Moto Bolso",
   "short_name": "Moto Bolso",
-  "start_url": "/app/",
+  "start_url": "app/",
   "display": "standalone",
   "background_color": "#17181a",
   "theme_color": "#17181a",
@@ -19,5 +19,5 @@
       "purpose": "any maskable"
     }
   ],
-  "scope": "/app/"
+  "scope": "./"
 }
