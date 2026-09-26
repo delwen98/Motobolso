@@ -2,136 +2,80 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MotoBolso — Quanto sobrou do seu corre?</title>
-<meta name="description" content="Controle ganhos, gasolina, manutenção e lucro do seu corre em poucos toques.">
+<meta name="description" content="Controle ganhos e gastos e descubra quanto realmente sobra do seu corre.">
 <meta name="theme-color" content="#03070d">
 <link rel="icon" type="image/png" href="images/motobolso-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#03070d;--panel:#08111d;--panel2:#0b1725;--line:rgba(117,178,255,.16);--text:#f4f8ff;--muted:#879bb0;--blue:#1682ff;--cyan:#50caff;--green:#3ee3ad;--orange:#ffad62;--display:'Space Grotesk',sans-serif;--body:'Manrope',sans-serif;--mono:'DM Mono',monospace}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(#000,transparent 80%)}
-body:after{content:"";position:fixed;width:560px;height:560px;right:-260px;top:-220px;background:rgba(22,130,255,.18);filter:blur(130px);pointer-events:none}
-a{color:inherit;text-decoration:none}.wrap{width:min(1160px,calc(100% - 36px));margin:auto}
-nav{height:78px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5}
-.brand{display:flex;align-items:center;gap:10px;font:700 1.08rem var(--display)}.brand img{width:39px;height:39px;object-fit:contain;border-radius:12px;display:block}.brand span span{color:var(--cyan)}
-.nav{display:flex;align-items:center;gap:26px;color:#8195aa;font-size:.78rem;font-weight:700}.nav a:hover{color:#fff}
-.nav .cta{padding:11px 16px;border-radius:12px;background:#fff;color:#06101b;box-shadow:none}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:51px;padding:0 20px;border-radius:14px;background:linear-gradient(135deg,#167cff,#36c0ff);font-weight:800;font-size:.82rem;box-shadow:0 14px 45px rgba(22,130,255,.25);transition:.2s}.btn:hover{transform:translateY(-2px)}
-.btn.dark{background:rgba(255,255,255,.045);border:1px solid var(--line);box-shadow:none;color:#d9e7f5}
-.hero{min-height:calc(100vh - 78px);display:grid;grid-template-columns:.91fr 1.09fr;align-items:center;gap:34px;padding:42px 0 85px}
-.kicker{display:inline-flex;align-items:center;gap:8px;color:#8bdfff;font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em}.kicker i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 13px var(--green)}
-h1{font:700 clamp(3.5rem,7.2vw,6.8rem)/.88 var(--display);letter-spacing:-.075em;margin:20px 0 25px;max-width:690px}h1 em{font-style:normal;color:var(--cyan)}
-.lead{font-size:1.02rem;line-height:1.7;color:var(--muted);max-width:535px}.lead strong{color:#e8f2fc}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:27px}.micro{margin-top:12px;color:#52677d;font-size:.68rem}
-.hero-visual{position:relative;min-height:570px;display:grid;place-items:center}.hero-glow{position:absolute;width:430px;height:430px;border-radius:50%;background:#0879ff;filter:blur(110px);opacity:.18}
-.phone{width:min(335px,72vw);padding:9px;border:1px solid rgba(185,220,255,.25);border-radius:39px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.025));box-shadow:0 40px 100px #000,0 0 70px rgba(22,130,255,.12);transform:rotate(3deg);position:relative;z-index:2}
-.screen{border-radius:31px;overflow:hidden;padding:17px 14px 15px;background:linear-gradient(155deg,#071727,#091d32 60%,#06101c);min-height:550px}.notch{width:90px;height:21px;background:#02060a;border-radius:20px;margin:-9px auto 18px}.appbar{display:flex;justify-content:space-between;align-items:center;font-size:.6rem;color:#7690a9}.appbar b{font:700 1rem var(--display);color:#fff}
-.balance{margin-top:18px;padding:20px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.02));box-shadow:inset 0 1px rgba(255,255,255,.06)}.balance small{font-size:.63rem;color:#7890a8}.balance strong{display:block;font:700 2.35rem var(--display);margin:7px 0;color:var(--green);letter-spacing:-.04em}.balance span{font-size:.61rem;color:#79d8bf}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}.stat{padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.035)}.stat small{font-size:.56rem;color:#7088a0}.stat b{display:block;font:700 1rem var(--display);margin-top:5px}.g{color:var(--green)}.o{color:var(--orange)}
-.chart{margin-top:9px;padding:14px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.03)}.chart small{font-size:.59rem;color:#7890a8}.bars{height:105px;display:flex;align-items:end;gap:7px;margin-top:11px}.bars i{flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(#4bcfff,#116ce0);opacity:.85}
-.phone-nav{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;margin-top:14px;color:#627b94;font-size:.5rem;line-height:1.5}.phone-nav b{color:#56cfff}
-.float{position:absolute;z-index:3;padding:15px 17px;border:1px solid rgba(117,178,255,.2);border-radius:16px;background:rgba(7,17,29,.86);backdrop-filter:blur(18px);box-shadow:0 20px 50px #000}.float.one{left:0;top:120px;transform:rotate(-5deg)}.float.two{right:0;bottom:100px;transform:rotate(-4deg)}.float small{display:block;color:#6e849a;font-size:.58rem}.float strong{display:block;font:700 1.08rem var(--display);margin-top:5px}.float .green{color:var(--green)}
-.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:#050b13}.ticker-track{display:flex;width:max-content;animation:move 28s linear infinite}.ticker span{padding:16px 24px;color:#688097;font:500 .65rem var(--mono);white-space:nowrap}.ticker b{color:#4bcfff}@keyframes move{to{transform:translateX(-50%)}}
-section{padding:105px 0}.eyebrow{color:#54caff;font:700 .65rem var(--mono);text-transform:uppercase;letter-spacing:.12em}.title{font:700 clamp(2.4rem,5vw,4.5rem)/.94 var(--display);letter-spacing:-.065em;margin:12px 0 17px;max-width:760px}.copy{color:var(--muted);line-height:1.7;max-width:620px}
-.story{display:grid;grid-template-columns:1fr 1fr;gap:65px;align-items:center}.money-card{border:1px solid var(--line);border-radius:27px;padding:28px;background:linear-gradient(145deg,#091827,#06101a);box-shadow:0 30px 90px rgba(0,0,0,.4);position:relative}.money-card:before{content:"";position:absolute;inset:-1px;border-radius:27px;background:linear-gradient(135deg,rgba(80,202,255,.2),transparent 40%);z-index:-1}.money-top{display:flex;justify-content:space-between;color:#6d849c;font-size:.62rem}.money-total{font:700 clamp(3rem,6vw,5rem)/1 var(--display);letter-spacing:-.06em;margin:32px 0;color:var(--green)}.money-line{display:flex;justify-content:space-between;padding:15px 0;border-top:1px solid var(--line);font-size:.78rem}.money-line span:last-child{font-weight:800}.money-line .expense{color:var(--orange)}
-.breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}.mini{padding:19px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.03)}.mini small{color:#71879e;font-size:.58rem}.mini strong{display:block;font:700 1.15rem var(--display);margin-top:7px}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:42px}.step{min-height:235px;padding:25px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018));position:relative;overflow:hidden}.step:after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;background:#1682ff;filter:blur(60px);opacity:.12;right:-30px;bottom:-30px}.step-num{font:500 2rem var(--mono);color:#3ebfff}.step h3{font:700 1.05rem var(--display);margin:45px 0 9px}.step p{font-size:.82rem;line-height:1.65;color:var(--muted);margin:0}
-.real{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:center}.strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:5px 3px 18px}.strip::-webkit-scrollbar{display:none}.shot{flex:0 0 285px;scroll-snap-align:start;border:1px solid var(--line);border-radius:25px;padding:8px;background:#07111e;box-shadow:0 20px 55px rgba(0,0,0,.35)}.shot-screen{height:390px;border-radius:19px;background:linear-gradient(160deg,#091a2b,#06111e);padding:17px;overflow:hidden}.shot-title{font:700 1rem var(--display);margin:4px 0 23px}.fake-input{padding:18px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.035);margin-top:12px}.fake-input small{font-size:.55rem;color:#718aa3}.fake-input b{display:block;font:700 1.8rem var(--display);margin-top:7px}.fake-btn{margin-top:12px;text-align:center;padding:14px;border-radius:12px;background:linear-gradient(135deg,#167cff,#36c0ff);font-weight:800;font-size:.7rem}.shot-foot{text-align:center;color:#698199;font-size:.62rem;padding:12px 4px 4px}
-.quote{border-left:2px solid var(--blue);padding-left:20px;color:#dce8f5;font:600 1.15rem/1.6 var(--display);margin-top:28px}
-.faq{max-width:820px;margin-top:30px}.faq details{border-top:1px solid var(--line);padding:20px 0}.faq details:last-child{border-bottom:1px solid var(--line)}summary{cursor:pointer;font-weight:800;font-size:.85rem}.faq p{color:var(--muted);line-height:1.7;font-size:.78rem;margin:12px 0 0}
-.final{padding:80px 20px;text-align:center;border:1px solid rgba(80,202,255,.18);border-radius:30px;background:radial-gradient(circle at 50% 0,rgba(22,130,255,.2),transparent 55%),#06101b}.final .title{margin-left:auto;margin-right:auto}.final .copy{margin:0 auto 27px}
-footer{padding:35px 0 55px;color:#50657b;font-size:.68rem;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06)}
-@media(max-width:850px){.hero,.story,.real{grid-template-columns:1fr}.hero{padding-top:30px}.hero-visual{min-height:520px}.story{gap:30px}.steps{grid-template-columns:1fr}.nav a:not(.cta){display:none}.float.one{left:0}.float.two{right:0}}
-@media(max-width:560px){.wrap{width:calc(100% - 24px)}nav{height:67px}.brand img{width:36px;height:36px}.nav .cta{padding:10px 13px;font-size:.68rem}.hero{padding:27px 0 55px;gap:8px}.kicker{font-size:.58rem}h1{font-size:clamp(3.15rem,16vw,4.6rem);margin:17px 0 21px}.lead{font-size:.9rem}.actions{flex-direction:column}.actions .btn{width:100%}.hero-visual{min-height:470px}.phone{width:267px}.screen{min-height:480px}.balance strong{font-size:2rem}.float{padding:11px 12px}.float.one{top:45px}.float.two{bottom:45px}.float strong{font-size:.9rem}.ticker span{padding:13px 17px;font-size:.58rem}section{padding:66px 0}.title{font-size:2.55rem}.story{gap:25px}.money-card{padding:21px}.money-total{font-size:3.4rem;margin:25px 0}.breakdown{grid-template-columns:1fr 1fr}.breakdown .mini:last-child{grid-column:1/-1}.steps{margin-top:27px}.step{min-height:185px}.step h3{margin-top:30px}.real{gap:30px}.strip{margin-right:-12px;padding-right:24px}.shot{flex-basis:76vw}.final{padding:55px 18px}footer{flex-direction:column;gap:8px}}
+:root{--bg:#03070d;--card:#08131f;--line:rgba(100,180,255,.16);--text:#f5f9ff;--muted:#8ca0b4;--blue:#1682ff;--cyan:#51caff;--green:#3fe3ad;--orange:#ffae63;--d:'Space Grotesk',sans-serif;--b:'Manrope',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--b);overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 70% 4%,rgba(22,130,255,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);background-size:auto,42px 42px,42px 42px;mask-image:linear-gradient(#000,transparent 78%)}
+.wrap{width:min(1060px,calc(100% - 28px));margin:auto}a{text-decoration:none;color:inherit}
+header{height:64px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5}.brand{display:flex;align-items:center;gap:9px;font:700 1rem var(--d)}.brand img{width:34px;height:34px;object-fit:contain;border-radius:10px}.brand em{font-style:normal;color:var(--cyan)}.login{font-size:.7rem;font-weight:800;color:#9eb2c6;padding:9px 12px;border:1px solid var(--line);border-radius:10px}
+.hero{min-height:calc(100svh - 64px);display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:24px;padding:30px 0 55px}.tag{font-size:.62rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#75d9ff}.tag:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin:0 7px 1px 0}
+h1{font:700 clamp(3.1rem,7vw,6rem)/.9 var(--d);letter-spacing:-.07em;margin:15px 0 19px;max-width:620px}h1 span{color:var(--cyan)}.sub{color:var(--muted);font-size:.94rem;line-height:1.65;max-width:510px}.sub b{color:#eaf4ff}.cta{display:flex;gap:9px;align-items:center;margin-top:22px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 19px;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);font-size:.78rem;font-weight:800;box-shadow:0 14px 38px rgba(22,130,255,.25)}.ghost{font-size:.75rem;font-weight:800;color:#91a5b9;padding:10px}.note{margin-top:9px;color:#53697f;font-size:.62rem}
+.visual{position:relative;display:grid;place-items:center;min-height:530px}.glow{position:absolute;width:350px;height:350px;background:#087cff;filter:blur(110px);opacity:.17;border-radius:50%}.phone{width:min(310px,78vw);padding:8px;border-radius:36px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.025));border:1px solid rgba(190,225,255,.24);box-shadow:0 35px 80px #000,0 0 60px rgba(22,130,255,.12);transform:rotate(2.5deg);position:relative;z-index:2}.screen{min-height:510px;border-radius:29px;background:linear-gradient(160deg,#071827,#091e33 60%,#06101c);padding:16px 13px;overflow:hidden}.notch{width:82px;height:20px;background:#02060a;border-radius:20px;margin:-8px auto 17px}.bar{display:flex;justify-content:space-between;font-size:.57rem;color:#7890a8}.bar b{font:700 .95rem var(--d);color:#fff}.balance{margin-top:17px;padding:18px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.045)}.balance small{font-size:.58rem;color:#7b92a8}.balance strong{display:block;font:700 2.15rem var(--d);color:var(--green);margin:6px 0}.balance i{font-style:normal;font-size:.57rem;color:#71d7be}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.stat{padding:13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}.stat small{font-size:.52rem;color:#71889e}.stat b{display:block;font:700 .92rem var(--d);margin-top:5px}.green{color:var(--green)}.orange{color:var(--orange)}.chart{margin-top:8px;padding:13px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025)}.chart small{font-size:.55rem;color:#748ca3}.bars{height:95px;display:flex;align-items:end;gap:6px;margin-top:9px}.bars i{flex:1;background:linear-gradient(#52d0ff,#126ce0);border-radius:4px 4px 2px 2px}.navfake{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;color:#607b95;font-size:.46rem;line-height:1.6;margin-top:12px}.navfake b{color:#55cfff}
+.float{position:absolute;z-index:3;padding:11px 13px;border:1px solid var(--line);border-radius:13px;background:rgba(5,13,22,.9);box-shadow:0 18px 45px #000;font-size:.56rem;color:#70869d}.float b{display:block;font:700 .9rem var(--d);color:#fff;margin-top:3px}.f1{left:2px;top:115px}.f2{right:0;bottom:75px}.f2 b{color:var(--green)}
+section{padding:65px 0}.eyebrow{color:#5bcfff;font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.title{font:700 clamp(2.1rem,5vw,4rem)/.96 var(--d);letter-spacing:-.06em;margin:10px 0 13px}.copy{color:var(--muted);font-size:.86rem;line-height:1.65;max-width:590px}
+.math{display:grid;grid-template-columns:1fr 1.1fr;gap:35px;align-items:center}.calc{padding:24px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(145deg,#091827,#06101a)}.calc-top{display:flex;justify-content:space-between;color:#71879d;font-size:.58rem}.total{font:700 clamp(3rem,6vw,4.8rem) var(--d);letter-spacing:-.06em;color:var(--green);margin:25px 0}.row{display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid var(--line);font-size:.72rem}.row span:last-child{font-weight:800}.row .out{color:var(--orange)}
+.points{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}.point{padding:18px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.025)}.point b{display:block;font:700 1rem var(--d);margin-bottom:6px}.point span{color:var(--muted);font-size:.7rem;line-height:1.5}
+.final{text-align:center;padding:68px 20px;border:1px solid rgba(81,202,255,.17);border-radius:26px;background:radial-gradient(circle at 50% 0,rgba(22,130,255,.2),transparent 60%),#06101a}.final .title{margin-left:auto;margin-right:auto}.final .copy{margin:0 auto 22px}.final .btn{min-width:210px}
+footer{padding:25px 0 40px;color:#4f6479;font-size:.62rem;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06)}
+@media(max-width:760px){.hero,.math{grid-template-columns:1fr}.hero{padding:24px 0 42px;min-height:auto}.hero h1{font-size:clamp(3.15rem,15.5vw,4.6rem)}.sub{font-size:.88rem}.cta{flex-direction:column;align-items:stretch}.cta .btn{text-align:center}.ghost{text-align:center}.visual{min-height:430px;margin-top:4px}.phone{width:255px}.screen{min-height:455px}.float{font-size:.52rem}.f1{top:45px}.f2{bottom:35px}.math{gap:25px}.points{grid-template-columns:1fr}.point{padding:16px}section{padding:52px 0}.title{font-size:2.35rem}.final{padding:52px 17px}footer{flex-direction:column;gap:7px}}
+@media(min-width:761px){.mobile-break{display:none}}
 </style>
 </head>
 <body>
-<header class="wrap"><nav>
-<a class="brand" href="#"><img src="images/motobolso-header-icon.svg" alt="MotoBolso"><span>Moto<span>Bolso</span></span></a>
-<div class="nav"><a href="#como">Como funciona</a><a href="#telas">O app</a><a class="cta" href="app/">Entrar no MotoBolso</a></div>
-</nav></header>
+<header class="wrap">
+<a class="brand" href="#"><img src="images/motobolso-header-icon.svg" alt=""><span>Moto<em>Bolso</em></span></a>
+<a class="login" href="app/">Entrar →</a>
+</header>
 
 <main>
 <section class="wrap hero">
 <div>
-<div class="kicker"><i></i> controle o seu corre</div>
-<h1>Quanto sobrou do seu <em>corre</em> hoje?</h1>
-<p class="lead">Você vê o faturamento. O <strong>MotoBolso</strong> mostra o que realmente ficou no seu bolso — depois da gasolina, manutenção e outros gastos.</p>
-<div class="actions"><a class="btn" href="app/">Registrar meu primeiro ganho →</a><a class="btn dark" href="#como">Entender em 30 segundos</a></div>
-<div class="micro">Feito para usar no celular. Sem planilha. Sem complicação.</div>
+<div class="tag">feito para quem vive de moto</div>
+<h1>Quanto sobrou do seu <span>corre</span> hoje?</h1>
+<p class="sub">Você vê quanto faturou. O <b>MotoBolso</b> mostra quanto realmente ficou — depois da gasolina, manutenção e outros gastos.</p>
+<div class="cta"><a class="btn" href="app/">Começar agora →</a><a class="ghost" href="#como">Ver como funciona</a></div>
+<div class="note">Mobile • rápido • sem planilha</div>
 </div>
-<div class="hero-visual" aria-hidden="true">
-<div class="hero-glow"></div>
-<div class="float one"><small>GANHO DE HOJE</small><strong>+ R$ 265,00</strong></div>
-<div class="float two"><small>DEPOIS DOS GASTOS</small><strong class="green">R$ 187,40</strong></div>
+<div class="visual" aria-hidden="true">
+<div class="glow"></div>
+<div class="float f1">GANHOS HOJE<b>+ R$ 265,00</b></div>
+<div class="float f2">LÍQUIDO<b>R$ 187,40</b></div>
 <div class="phone"><div class="screen">
-<div class="notch"></div><div class="appbar"><b>MotoBolso</b><span>Hoje · 21:47</span></div>
-<div class="balance"><small>Quanto sobrou hoje</small><strong>R$ 187,40</strong><span>↑ resultado líquido</span></div>
-<div class="stats"><div class="stat"><small>GANHOS</small><b class="g">R$ 265,00</b></div><div class="stat"><small>GASTOS</small><b class="o">R$ 77,60</b></div></div>
+<div class="notch"></div>
+<div class="bar"><b>MotoBolso</b><span>Hoje · 21:47</span></div>
+<div class="balance"><small>QUANTO SOBROU HOJE</small><strong>R$ 187,40</strong><i>↑ resultado líquido</i></div>
+<div class="stats"><div class="stat"><small>GANHOS</small><b class="green">R$ 265,00</b></div><div class="stat"><small>GASTOS</small><b class="orange">R$ 77,60</b></div></div>
 <div class="chart"><small>Seu ritmo na semana</small><div class="bars"><i style="height:35%"></i><i style="height:54%"></i><i style="height:43%"></i><i style="height:76%"></i><i style="height:62%"></i><i style="height:88%"></i><i style="height:72%"></i></div></div>
-<div class="phone-nav"><b>⌂<br>Início</b><span>＋<br>Lançar</span><span>▤<br>Histórico</span><span>◔<br>Resumo</span></div>
+<div class="navfake"><b>⌂<br>Início</b><span>＋<br>Lançar</span><span>▤<br>Histórico</span><span>◔<br>Resumo</span></div>
 </div></div>
 </div>
 </section>
 
-<div class="ticker"><div class="ticker-track"><span><b>R$ 265</b> faturados</span><span>− <b>R$ 77,60</b> gastos</span><span><b>R$ 187,40</b> líquidos</span><span>+ <b>6h42</b> no corre</span><span><b>128 km</b> rodados</span><span><b>R$ 265</b> faturados</span><span>− <b>R$ 77,60</b> gastos</span><span><b>R$ 187,40</b> líquidos</span><span>+ <b>6h42</b> no corre</span><span><b>128 km</b> rodados</span></div></div>
-
-<section class="wrap story">
-<div>
-<div class="eyebrow">a conta que importa</div>
-<h2 class="title">Faturamento impressiona. <span style="color:var(--cyan)">Lucro paga as contas.</span></h2>
-<p class="copy">No fim do dia, não importa só quanto entrou. O que importa é quanto ficou depois de colocar combustível, fazer manutenção e pagar os custos do corre.</p>
-<div class="quote">“R$ 300 no bolso não são R$ 300 de lucro.”</div>
-</div>
-<div class="money-card">
-<div class="money-top"><span>FECHAMENTO DO DIA</span><span>26 SET</span></div>
-<div class="money-total">R$ 187,40</div>
-<div class="money-line"><span>Ganhos</span><span>+ R$ 265,00</span></div>
-<div class="money-line"><span>Gasolina</span><span class="expense">− R$ 52,60</span></div>
-<div class="money-line"><span>Outros gastos</span><span class="expense">− R$ 25,00</span></div>
-<div class="breakdown"><div class="mini"><small>POR HORA</small><strong>R$ 28,09</strong></div><div class="mini"><small>GASTOS</small><strong>29%</strong></div><div class="mini"><small>RESULTADO</small><strong style="color:var(--green)">71%</strong></div></div>
-</div>
-</section>
-
 <section class="wrap" id="como">
-<div class="eyebrow">do corre ao resultado</div>
-<h2 class="title">Você lança. O MotoBolso faz a conta.</h2>
-<p class="copy">Nada de planilha aberta no meio da rua. A lógica é simples e rápida.</p>
-<div class="steps">
-<article class="step"><div class="step-num">01</div><h3>Entrou dinheiro?</h3><p>Terminou uma corrida ou fechou o dia. Toque em ganho e lance o valor.</p></article>
-<article class="step"><div class="step-num">02</div><h3>Teve gasto?</h3><p>Gasolina, manutenção ou outro custo. Registre na hora para não esquecer.</p></article>
-<article class="step"><div class="step-num">03</div><h3>Quer saber o que sobrou?</h3><p>Abra o resumo. O resultado líquido já está calculado para você.</p></article>
+<div class="math">
+<div><div class="eyebrow">a conta que importa</div><h2 class="title">Faturamento não é o que fica.</h2><p class="copy">Registre o que entra e o que sai. O MotoBolso transforma seu dia de trabalho em um número simples: <strong style="color:#fff">quanto sobrou.</strong></p></div>
+<div class="calc"><div class="calc-top"><span>FECHAMENTO DO DIA</span><span>26 SET</span></div><div class="total">R$ 187,40</div><div class="row"><span>Ganhos</span><span>+ R$ 265,00</span></div><div class="row"><span>Gasolina</span><span class="out">− R$ 52,60</span></div><div class="row"><span>Outros gastos</span><span class="out">− R$ 25,00</span></div></div>
 </div>
-</section>
-
-<section class="wrap real" id="telas">
-<div><div class="eyebrow">por dentro do app</div><h2 class="title">Feito para a mão que está no guidão.</h2><p class="copy">Poucos toques, números grandes e informação que importa. O MotoBolso foi pensado para entrar na sua rotina, não para virar mais uma tarefa.</p></div>
-<div class="strip">
-<article class="shot"><div class="shot-screen"><div class="shot-title">Registrar ganho</div><div class="fake-input"><small>VALOR DO GANHO</small><b>R$ 180,00</b></div><div class="fake-input"><small>DATA</small><b style="font-size:1rem">26/09/2026</b></div><div class="fake-btn">Salvar ganho</div></div><div class="shot-foot">01 · Lança em poucos toques</div></article>
-<article class="shot"><div class="shot-screen"><div class="shot-title">Registrar despesa</div><div class="fake-input"><small>CATEGORIA</small><b style="font-size:1rem">⛽ Gasolina</b></div><div class="fake-input"><small>VALOR</small><b>R$ 52,60</b></div><div class="fake-btn">Salvar despesa</div></div><div class="shot-foot">02 · Não deixe o gasto escapar</div></article>
-<article class="shot"><div class="shot-screen"><div class="shot-title">Resumo</div><div class="fake-input"><small>SALDO LÍQUIDO</small><b style="color:var(--green)">R$ 4.320</b></div><div class="fake-input"><small>GANHOS</small><b style="color:var(--green)">R$ 5.820</b></div><div class="fake-input"><small>GASTOS</small><b style="color:var(--orange)">R$ 1.499</b></div></div><div class="shot-foot">03 · Enxerga o mês inteiro</div></article>
+<div class="points">
+<div class="point"><b>01 · Ganho</b><span>Lançou. Pronto. O valor entra na conta.</span></div>
+<div class="point"><b>02 · Gasto</b><span>Gasolina ou manutenção sem esquecer depois.</span></div>
+<div class="point"><b>03 · Resultado</b><span>O líquido aparece automaticamente.</span></div>
 </div>
 </section>
 
 <section class="wrap">
-<div class="eyebrow">sem enrolação</div><h2 class="title">O que você precisa saber.</h2>
-<div class="faq">
-<details><summary>Preciso instalar alguma coisa?</summary><p>Não. O MotoBolso funciona no navegador do celular e foi pensado para uma experiência rápida no Android.</p></details>
-<details><summary>Ele calcula meu lucro?</summary><p>Sim. Você registra ganhos e despesas e acompanha o resultado líquido.</p></details>
-<details><summary>Posso consultar meus lançamentos depois?</summary><p>Sim. O histórico organiza seus registros para você conferir quando precisar.</p></details>
-<details><summary>Meus lançamentos ficam ligados à minha conta?</summary><p>Sim. O acesso é individual e os registros são vinculados à sua conta.</p></details>
-</div>
+<div class="final"><div class="eyebrow">seu próximo ganho</div><h2 class="title">Pare de adivinhar.<br><span style="color:var(--cyan)">Saiba quanto sobra.</span></h2><p class="copy">Abra o MotoBolso e comece pelo próximo lançamento.</p><a class="btn" href="app/">Começar agora →</a></div>
 </section>
-
-<section class="wrap"><div class="final"><div class="eyebrow">comece pelo próximo ganho</div><h2 class="title">Pare de adivinhar. <span style="color:var(--cyan)">Saiba quanto sobra.</span></h2><p class="copy">Abra o MotoBolso, lance seu primeiro ganho e comece a enxergar o seu corre de outro jeito.</p><a class="btn" href="app/">Começar agora →</a></div></section>
 </main>
 
 <footer class="wrap"><span>© 2026 MotoBolso</span><span>Controle financeiro para quem vive de moto.</span></footer>
-<script>
-const p=new URLSearchParams(location.search),c=p.get('utm_campaign');if(c)document.documentElement.dataset.campaign=c;
-</script>
+<script>const p=new URLSearchParams(location.search),c=p.get('utm_campaign');if(c)document.documentElement.dataset.campaign=c;</script>
 </body>
 </html>
