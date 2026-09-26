@@ -1227,6 +1227,12 @@
       if (supabaseClient) await supabaseClient.auth.signOut();
     };
 
+    function appRedirectUrl(){
+      return window.location.hostname === 'delwen98.github.io'
+        ? 'https://delwen98.github.io/Motobolso/app/'
+        : 'https://www.motobolso.com.br/app/';
+    }
+
     function initAuthUI(){
       const form=document.getElementById('authForm'),forgotBtn=document.getElementById('forgotPasswordBtn'),updateBtn=document.getElementById('updatePasswordBtn'),msg=document.getElementById('loginMsg'),email=document.getElementById('authEmail'),password=document.getElementById('authPassword'),switchBtn=document.getElementById('authSwitchBtn'),switchText=document.getElementById('authSwitchText'),submitBtn=document.getElementById('authSubmitBtn'),title=document.getElementById('authTitle'),copy=document.getElementById('authCopy'),forgotWrap=document.getElementById('forgotWrap');
       let signupMode=false;
