@@ -3,90 +3,52 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MotoBolso — Controle financeiro para motoboys</title>
-  <meta name="description" content="Entre na lista de espera do MotoBolso, o controle financeiro simples feito para quem trabalha de moto.">
-  <meta name="theme-color" content="#06111f">
+  <title>MotoBolso — Saiba quanto realmente sobra</title>
+  <meta name="description" content="Controle seus ganhos, gastos e lucro em poucos toques. MotoBolso é feito para quem trabalha de moto.">
+  <meta name="theme-color" content="#050b14">
   <link rel="icon" type="image/png" href="images/motobolso-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{
-      --bg:#050b14;--bg2:#081525;--card:rgba(14,30,50,.62);--line:rgba(151,198,255,.16);
-      --text:#f4f8ff;--muted:#9aaec5;--blue:#1687ff;--cyan:#42d8ff;--green:#39e6b0;
-      --shadow:0 28px 90px rgba(0,0,0,.42);--radius:26px;--display:'Space Grotesk',sans-serif;--body:'Manrope',sans-serif
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;color:var(--text);font-family:var(--body);background:
-      radial-gradient(circle at 78% 7%,rgba(22,135,255,.24),transparent 28rem),
-      radial-gradient(circle at 12% 30%,rgba(66,216,255,.10),transparent 24rem),var(--bg);min-height:100vh}
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
-    a{color:inherit;text-decoration:none}
-    .container{width:min(1120px,calc(100% - 36px));margin:auto}
-    nav{height:78px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
-    .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;font-size:1.08rem}
-    .brand img{width:38px;height:38px;border-radius:11px;box-shadow:0 0 28px rgba(22,135,255,.28)}
-    .nav-cta{padding:10px 16px;border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:12px;font-size:.82rem;font-weight:800}
-    .hero{min-height:calc(100vh - 78px);display:grid;grid-template-columns:1.03fr .97fr;gap:62px;align-items:center;padding:52px 0 90px}
-    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 11px;border:1px solid rgba(66,216,255,.2);background:rgba(66,216,255,.07);border-radius:999px;color:#91eaff;font-size:.73rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-    .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
-    h1{font-family:var(--display);font-size:clamp(3rem,7vw,5.7rem);line-height:.94;letter-spacing:-.07em;margin:22px 0 22px;max-width:700px}
-    h1 span{background:linear-gradient(100deg,#fff 15%,#65cfff 72%,#1687ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .hero-copy{color:var(--muted);font-size:1.08rem;line-height:1.7;max-width:610px;margin:0 0 30px}
-    .hero-copy strong{color:#e9f5ff}
-    .lead-form{display:flex;gap:10px;max-width:570px;padding:7px;border:1px solid var(--line);background:rgba(5,14,25,.72);backdrop-filter:blur(20px);border-radius:18px;box-shadow:var(--shadow)}
-    .lead-form input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#fff;padding:14px;font:600 .9rem var(--body)}
-    .lead-form input::placeholder{color:#60758e}
-    .primary{border:0;cursor:pointer;padding:0 21px;border-radius:13px;background:linear-gradient(135deg,#1687ff,#35c9ff);color:#fff;font:800 .88rem var(--body);white-space:nowrap;box-shadow:0 10px 30px rgba(22,135,255,.25)}
-    .form-note{color:#60758e;font-size:.7rem;margin-top:10px}
-    .message{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;font-size:.82rem}
-    .message.ok{display:block;background:rgba(57,230,176,.08);border:1px solid rgba(57,230,176,.2);color:#80f1cd}
-    .message.err{display:block;background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2);color:#ffaaaa}
-    .visual{position:relative;min-height:560px;display:grid;place-items:center}
-    .glow{position:absolute;width:330px;height:330px;border-radius:50%;background:#1687ff;filter:blur(90px);opacity:.2}
-    .phone{width:min(310px,72vw);border:1px solid rgba(180,220,255,.24);border-radius:39px;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.025));box-shadow:0 35px 100px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);transform:rotate(4deg);position:relative;z-index:1}
-    .screen{border-radius:30px;overflow:hidden;background:linear-gradient(160deg,#071727,#0a1e34 65%,#06111f);padding:20px 15px 16px;min-height:535px}
-    .notch{width:92px;height:22px;background:#02070d;border-radius:20px;margin:-10px auto 19px}
-    .mini-top{display:flex;justify-content:space-between;align-items:center;color:#a8c0d8;font-size:.65rem}
-    .mini-brand{font-family:var(--display);font-size:1rem;color:#fff;font-weight:700}
-    .glass{border:1px solid var(--line);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(18px);border-radius:17px}
-    .balance{margin-top:17px;padding:18px}.balance small{color:#8199b1}.balance strong{display:block;font:700 2.05rem var(--display);margin:7px 0;color:#48e2c0}.trend{font-size:.64rem;color:#74d9c1}
-    .stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}.stat{padding:13px}.stat small{color:#8199b1;font-size:.61rem}.stat b{display:block;font:700 1rem var(--display);margin-top:5px}.green{color:#54dfbb}.orange{color:#ffae64}
-    .chart{margin-top:9px;padding:15px;height:155px}.bars{height:95px;display:flex;align-items:end;gap:7px;margin-top:10px}.bars i{display:block;flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(to top,#126ee0,#43cfff);opacity:.8}
-    .phone-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:12px;color:#6f8aa5;font-size:.53rem;text-align:center}.phone-nav b{color:#48bfff}
-    .float-card{position:absolute;right:-5px;bottom:54px;width:178px;padding:14px;z-index:2;transform:rotate(-4deg)}.float-card small{color:#7790a8;font-size:.61rem}.float-card strong{display:block;font:700 1.1rem var(--display);margin-top:5px}
-    section{padding:105px 0}.section-kicker{color:#65d8ff;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em}.section-title{font:700 clamp(2rem,4vw,3.5rem) var(--display);letter-spacing:-.05em;margin:12px 0 16px}.section-copy{color:var(--muted);max-width:650px;line-height:1.7}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:42px}.feature{padding:25px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:var(--radius);min-height:200px}.icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:rgba(22,135,255,.1);border:1px solid rgba(22,135,255,.18);font-size:1.05rem}.feature h3{font:700 1.05rem var(--display);margin:18px 0 8px}.feature p{color:var(--muted);font-size:.84rem;line-height:1.6;margin:0}
+    :root{--bg:#050b14;--card:rgba(14,30,50,.62);--line:rgba(151,198,255,.16);--text:#f4f8ff;--muted:#9aaec5;--blue:#1687ff;--cyan:#42d8ff;--green:#39e6b0;--orange:#ffae64;--shadow:0 28px 90px rgba(0,0,0,.42);--radius:26px;--display:'Space Grotesk',sans-serif;--body:'Manrope',sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font-family:var(--body);background:radial-gradient(circle at 78% 7%,rgba(22,135,255,.24),transparent 28rem),radial-gradient(circle at 12% 30%,rgba(66,216,255,.1),transparent 24rem),var(--bg);min-height:100vh}body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 75%)}a{color:inherit;text-decoration:none}.container{width:min(1120px,calc(100% - 36px));margin:auto}
+    nav{height:78px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}.brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;font-size:1.08rem}.brand img{width:38px;height:38px;border-radius:11px;box-shadow:0 0 28px rgba(22,135,255,.28)}.nav-links{display:flex;gap:22px;align-items:center;font-size:.78rem;color:#91a6bc}.nav-links a:hover{color:#fff}.nav-cta,.primary{border:0;cursor:pointer;padding:11px 17px;border-radius:13px;background:linear-gradient(135deg,#1687ff,#35c9ff);color:#fff;font:800 .8rem var(--body);box-shadow:0 10px 30px rgba(22,135,255,.2)}
+    .hero{min-height:calc(100vh - 78px);display:grid;grid-template-columns:1.03fr .97fr;gap:58px;align-items:center;padding:52px 0 88px}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 11px;border:1px solid rgba(66,216,255,.2);background:rgba(66,216,255,.07);border-radius:999px;color:#91eaff;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}h1{font-family:var(--display);font-size:clamp(3rem,7vw,5.7rem);line-height:.94;letter-spacing:-.07em;margin:22px 0;max-width:700px}h1 span{background:linear-gradient(100deg,#fff 15%,#65cfff 72%,#1687ff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero-copy{color:var(--muted);font-size:1.08rem;line-height:1.7;max-width:610px;margin:0 0 28px}.hero-copy strong{color:#e9f5ff}.hero-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.secondary{padding:11px 17px;border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:13px;font-size:.8rem;font-weight:800}.micro{margin-top:12px;color:#60758e;font-size:.7rem}.trust{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;color:#8298ae;font-size:.7rem}.trust span{display:flex;gap:6px;align-items:center}.trust b{color:var(--green)}
+    .visual{position:relative;min-height:560px;display:grid;place-items:center}.glow{position:absolute;width:330px;height:330px;border-radius:50%;background:#1687ff;filter:blur(90px);opacity:.2}.phone{width:min(310px,72vw);border:1px solid rgba(180,220,255,.24);border-radius:39px;padding:10px;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.025));box-shadow:0 35px 100px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);transform:rotate(4deg);position:relative;z-index:1}.screen{border-radius:30px;overflow:hidden;background:linear-gradient(160deg,#071727,#0a1e34 65%,#06111f);padding:20px 15px 16px;min-height:535px}.notch{width:92px;height:22px;background:#02070d;border-radius:20px;margin:-10px auto 19px}.mini-top{display:flex;justify-content:space-between;align-items:center;color:#a8c0d8;font-size:.65rem}.mini-brand{font-family:var(--display);font-size:1rem;color:#fff;font-weight:700}.glass{border:1px solid var(--line);background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(18px);border-radius:17px}.balance{margin-top:17px;padding:18px}.balance small{color:#8199b1}.balance strong{display:block;font:700 2.05rem var(--display);margin:7px 0;color:#48e2c0}.trend{font-size:.64rem;color:#74d9c1}.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}.stat{padding:13px}.stat small{color:#8199b1;font-size:.61rem}.stat b{display:block;font:700 1rem var(--display);margin-top:5px}.green{color:#54dfbb}.orange{color:#ffae64}.chart{margin-top:9px;padding:15px;height:155px}.bars{height:95px;display:flex;align-items:end;gap:7px;margin-top:10px}.bars i{display:block;flex:1;border-radius:5px 5px 2px 2px;background:linear-gradient(to top,#126ee0,#43cfff);opacity:.8}.phone-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:12px;color:#6f8aa5;font-size:.53rem;text-align:center}.phone-nav b{color:#48bfff}.float-card{position:absolute;right:-5px;bottom:54px;width:178px;padding:14px;z-index:2;transform:rotate(-4deg)}.float-card small{color:#7790a8;font-size:.61rem}.float-card strong{display:block;font:700 1.1rem var(--display);margin-top:5px}
+    section{padding:105px 0}.section-kicker{color:#65d8ff;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.13em}.section-title{font:700 clamp(2rem,4vw,3.5rem) var(--display);letter-spacing:-.05em;margin:12px 0 16px}.section-copy{color:var(--muted);max-width:650px;line-height:1.7}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:42px}.feature{padding:25px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:var(--radius);min-height:200px}.icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:rgba(22,135,255,.1);border:1px solid rgba(22,135,255,.18);font-size:1.05rem}.feature h3{font:700 1.05rem var(--display);margin:18px 0 8px}.feature p{color:var(--muted);font-size:.84rem;line-height:1.6;margin:0}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:42px}.step{padding:25px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))}.number{font:700 2.3rem var(--display);color:#65d8ff}.step h3{font:700 1rem var(--display);margin:14px 0 8px}.step p{color:var(--muted);font-size:.83rem;line-height:1.6;margin:0}
     .showcase{display:grid;grid-template-columns:.85fr 1.15fr;gap:28px;align-items:center}.showcase-card{padding:30px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018))}.check{display:flex;gap:10px;margin:17px 0;color:#c5d4e4;font-size:.87rem}.check span{color:#48e2c0}
-    .cta{position:relative;overflow:hidden;text-align:center;padding:75px 30px;border:1px solid rgba(66,216,255,.18);border-radius:32px;background:radial-gradient(circle at 50% 0,rgba(22,135,255,.22),transparent 52%),rgba(255,255,255,.035)}.cta h2{font:700 clamp(2rem,5vw,3.8rem) var(--display);letter-spacing:-.06em;margin:12px auto 15px;max-width:750px}.cta p{color:var(--muted);margin:0 auto 28px;max-width:580px;line-height:1.7}.cta .lead-form{margin:auto;text-align:left}
-    footer{padding:35px 0 55px;color:#60758e;font-size:.72rem;display:flex;justify-content:space-between;gap:20px;border-top:1px solid rgba(255,255,255,.06)}
-    @media(max-width:820px){.hero,.showcase{grid-template-columns:1fr}.hero{padding-top:35px}.visual{min-height:510px}.grid3{grid-template-columns:1fr}.hero h1{font-size:clamp(3rem,14vw,5rem)}}
-    @media(max-width:560px){.container{width:min(100% - 24px,1120px)}nav{height:70px}.nav-cta{font-size:.7rem}.lead-form{flex-direction:column;background:transparent;border:0;padding:0}.lead-form input{border:1px solid var(--line);background:rgba(5,14,25,.72);border-radius:13px;padding:15px}.primary{min-height:50px}.phone{width:285px}.float-card{right:-2px;bottom:25px;width:155px}section{padding:75px 0}.cta{padding:55px 18px}footer{flex-direction:column}}
+    .faq{max-width:820px;margin-top:36px}.faq details{border-bottom:1px solid var(--line);padding:18px 0}.faq summary{cursor:pointer;font-weight:700;font-size:.9rem}.faq p{color:var(--muted);line-height:1.7;font-size:.83rem;margin:12px 0 0}.cta{position:relative;overflow:hidden;text-align:center;padding:75px 30px;border:1px solid rgba(66,216,255,.18);border-radius:32px;background:radial-gradient(circle at 50% 0,rgba(22,135,255,.22),transparent 52%),rgba(255,255,255,.035)}.cta h2{font:700 clamp(2rem,5vw,3.8rem) var(--display);letter-spacing:-.06em;margin:12px auto 15px;max-width:750px}.cta p{color:var(--muted);margin:0 auto 28px;max-width:580px;line-height:1.7}.lead-form{display:flex;gap:10px;max-width:570px;margin:auto;padding:7px;border:1px solid var(--line);background:rgba(5,14,25,.72);backdrop-filter:blur(20px);border-radius:18px;box-shadow:var(--shadow);text-align:left}.lead-form input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#fff;padding:14px;font:600 .9rem var(--body)}.lead-form input::placeholder{color:#60758e}.message{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;font-size:.82rem}.message.ok{display:block;background:rgba(57,230,176,.08);border:1px solid rgba(57,230,176,.2);color:#80f1cd}.message.err{display:block;background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2);color:#ffaaaa}footer{padding:35px 0 55px;color:#60758e;font-size:.72rem;display:flex;justify-content:space-between;gap:20px;border-top:1px solid rgba(255,255,255,.06)}
+    @media(max-width:820px){.hero,.showcase{grid-template-columns:1fr}.hero{padding-top:35px}.visual{min-height:510px}.grid3,.steps{grid-template-columns:1fr}.hero h1{font-size:clamp(3rem,14vw,5rem)}.nav-links a:not(.nav-cta){display:none}}
+    @media(max-width:560px){.container{width:min(100% - 24px,1120px)}nav{height:70px}.nav-cta{font-size:.7rem}.hero-actions{flex-direction:column;align-items:stretch}.hero-actions a{text-align:center}.phone{width:285px}.float-card{right:-2px;bottom:25px;width:155px}section{padding:75px 0}.cta{padding:55px 18px}.lead-form{flex-direction:column;background:transparent;border:0;padding:0}.lead-form input{border:1px solid var(--line);background:rgba(5,14,25,.72);border-radius:13px;padding:15px}.lead-form .primary{min-height:50px}footer{flex-direction:column}}
   </style>
 </head>
 <body>
   <header class="container">
     <nav>
       <a class="brand" href="#"><img src="images/motobolso-icon.png" alt="MotoBolso"><span>Moto<span style="color:#35c9ff">Bolso</span></span></a>
-      <a class="nav-cta" href="#lista">Entrar na lista de espera</a>
+      <div class="nav-links">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#beneficios">Benefícios</a>
+        <a class="nav-cta" href="app/">Começar agora</a>
+      </div>
     </nav>
   </header>
 
   <main>
     <section class="container hero">
       <div>
-        <div class="eyebrow"><i class="dot"></i> lançamento em breve</div>
-        <h1>Seu dinheiro na estrada. <span>Seu controle no bolso.</span></h1>
-        <p class="hero-copy">O <strong>MotoBolso</strong> foi pensado para quem vive de moto: registre ganhos, gasolina e manutenção e descubra quanto realmente sobra no fim do dia.</p>
-        <form class="lead-form" id="leadForm">
-          <input id="name" name="name" type="text" placeholder="Seu nome" autocomplete="name" maxlength="100">
-          <input id="email" name="email" type="email" placeholder="Seu melhor e-mail" autocomplete="email" required maxlength="254">
-          <button class="primary" type="submit">Quero participar</button>
-        </form>
-        <div class="form-note">Sem spam. Você será avisado quando o MotoBolso estiver pronto.</div>
-        <div class="message" id="message" role="status"></div>
+        <div class="eyebrow"><i class="dot"></i> feito para quem vive de moto</div>
+        <h1>Você trabalha muito. <span>Saiba o que realmente sobra.</span></h1>
+        <p class="hero-copy">O <strong>MotoBolso</strong> ajuda você a controlar ganhos, gasolina, manutenção e outras despesas em poucos toques — para saber quanto seu trabalho realmente rende.</p>
+        <div class="hero-actions">
+          <a class="primary" href="app/">Começar a controlar meu dinheiro →</a>
+          <a class="secondary" href="#como-funciona">Ver como funciona</a>
+        </div>
+        <div class="micro">Sem planilha. Sem conta complicada. Feito para a rotina do motoboy.</div>
+        <div class="trust"><span><b>✓</b> Rápido de usar</span><span><b>✓</b> Mobile</span><span><b>✓</b> Seus lançamentos organizados</span></div>
       </div>
 
       <div class="visual" aria-hidden="true">
@@ -101,27 +63,38 @@
               <div class="glass stat"><small>GASTOS</small><b class="orange">R$ 1.499</b></div>
             </div>
             <div class="glass chart"><small style="color:#8199b1;font-size:.62rem">Ganhos por dia</small><div class="bars"><i style="height:38%"></i><i style="height:55%"></i><i style="height:45%"></i><i style="height:72%"></i><i style="height:63%"></i><i style="height:84%"></i><i style="height:68%"></i><i style="height:92%"></i></div></div>
-            <div class="phone-nav"><b>⌂<br>Início</b><span>▤<br>Histórico</span><span>＋<br>Registrar</span><span>◔<br>Relatórios</span></div>
+            <div class="phone-nav"><b>⌂<br>Início</b><span>▤<br>Histórico</span><span>＋<br>Registrar</span><span>◔<br>Resumo</span></div>
           </div>
         </div>
-        <div class="glass float-card"><small>Meta diária</small><strong>R$ 180,00</strong><small style="color:#54dfbb">Hoje você está acima da meta</small></div>
+        <div class="glass float-card"><small>Resultado de hoje</small><strong>R$ 142,50</strong><small style="color:#54dfbb">líquido após gastos</small></div>
       </div>
     </section>
 
-    <section class="container">
-      <div class="section-kicker">Feito para a rotina real</div>
-      <h2 class="section-title">Menos planilha. Mais clareza.</h2>
-      <p class="section-copy">O MotoBolso transforma os números do seu trabalho em uma visão simples do que entrou, do que saiu e do que ficou.</p>
+    <section class="container" id="beneficios">
+      <div class="section-kicker">O problema</div>
+      <h2 class="section-title">Faturamento não é lucro.</h2>
+      <p class="section-copy">Você pode passar horas na rua, ver o dinheiro entrando e ainda não saber quanto realmente ganhou. O MotoBolso transforma esse corre em números fáceis de entender.</p>
       <div class="grid3">
-        <article class="feature"><div class="icon">↗</div><h3>Saiba quanto ganhou</h3><p>Registre seus ganhos rapidamente e acompanhe sua evolução sem complicação.</p></article>
-        <article class="feature"><div class="icon">⛽</div><h3>Controle os gastos</h3><p>Separe gasolina, manutenção e outros custos para entender o preço real do seu trabalho.</p></article>
-        <article class="feature"><div class="icon">◎</div><h3>Veja o que sobrou</h3><p>Acompanhe o resultado líquido e defina metas para trabalhar com mais organização.</p></article>
+        <article class="feature"><div class="icon">↗</div><h3>Registre o que entra</h3><p>Adicione seus ganhos rapidamente e acompanhe quanto já entrou no dia ou no mês.</p></article>
+        <article class="feature"><div class="icon">⛽</div><h3>Não esqueça os custos</h3><p>Gasolina, manutenção e outros gastos entram na conta para mostrar o resultado real.</p></article>
+        <article class="feature"><div class="icon">◎</div><h3>Veja o que sobrou</h3><p>Tenha uma visão simples do seu líquido e use metas para organizar melhor o trabalho.</p></article>
+      </div>
+    </section>
+
+    <section class="container" id="como-funciona">
+      <div class="section-kicker">Como funciona</div>
+      <h2 class="section-title">Do corre ao resultado em poucos toques.</h2>
+      <p class="section-copy">A ideia é simples: você trabalha, registra e deixa o MotoBolso organizar os números.</p>
+      <div class="steps">
+        <article class="step"><div class="number">01</div><h3>Lance seu ganho</h3><p>Terminou uma corrida ou fechou o dia? Registre o valor sem perder tempo.</p></article>
+        <article class="step"><div class="number">02</div><h3>Registre os gastos</h3><p>Informe gasolina, manutenção ou outros custos do seu trabalho.</p></article>
+        <article class="step"><div class="number">03</div><h3>Veja seu resultado</h3><p>O app organiza tudo e mostra quanto realmente ficou no seu bolso.</p></article>
       </div>
     </section>
 
     <section class="container showcase">
       <div>
-        <div class="section-kicker">Uma visão diferente</div>
+        <div class="section-kicker">Seu dinheiro, sem enrolação</div>
         <h2 class="section-title">Não é sobre faturar. É sobre saber o que sobra.</h2>
         <p class="section-copy">Cada corrida tem um custo. O MotoBolso ajuda você a enxergar o resultado depois de gasolina, manutenção e outros gastos.</p>
         <div class="check"><span>✓</span> Registro rápido de ganhos e despesas</div>
@@ -141,16 +114,24 @@
       </div>
     </section>
 
-    <section class="container" id="lista">
+    <section class="container">
+      <div class="section-kicker">Dúvidas comuns</div>
+      <h2 class="section-title">Antes de começar.</h2>
+      <div class="faq">
+        <details><summary>Preciso instalar um aplicativo?</summary><p>Não. O MotoBolso funciona pela web e foi pensado para funcionar muito bem no celular.</p></details>
+        <details><summary>Posso usar no Android?</summary><p>Sim. O app é responsivo e pode ser usado pelo navegador do celular.</p></details>
+        <details><summary>O MotoBolso calcula meu lucro?</summary><p>Sim. Ao registrar ganhos e despesas, você consegue acompanhar o resultado líquido e organizar suas metas.</p></details>
+        <details><summary>Meus dados ficam protegidos?</summary><p>O acesso é individual e os lançamentos são vinculados à sua conta.</p></details>
+      </div>
+    </section>
+
+    <section class="container" id="acesso">
       <div class="cta">
-        <div class="section-kicker">Acesso antecipado</div>
-        <h2>Quer ser um dos primeiros a testar o MotoBolso?</h2>
-        <p>Entre na lista de espera e receba uma mensagem quando abrirmos o acesso.</p>
-        <form class="lead-form" id="leadFormBottom">
-          <input name="email" type="email" placeholder="Seu melhor e-mail" autocomplete="email" required maxlength="254">
-          <button class="primary" type="submit">Entrar na lista</button>
-        </form>
-        <div class="message" id="messageBottom" role="status"></div>
+        <div class="section-kicker">Comece agora</div>
+        <h2>Chega de terminar o dia sem saber quanto sobrou.</h2>
+        <p>Entre no MotoBolso e comece a organizar seus ganhos e gastos.</p>
+        <a class="primary" href="app/" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px">Começar a usar o MotoBolso →</a>
+        <p style="font-size:.7rem;margin-top:14px;margin-bottom:0">Acesso pelo celular • Feito para motoboys</p>
       </div>
     </section>
   </main>
@@ -161,51 +142,10 @@
   </footer>
 
   <script>
-    const SUPABASE_URL = 'https://lrsuuxgufmgowrstqubs.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    async function capture(form, messageEl) {
-      const email = form.querySelector('[name="email"]').value.trim().toLowerCase();
-      const nameInput = form.querySelector('[name="name"]');
-      const name = nameInput ? nameInput.value.trim() : '';
-      const button = form.querySelector('button');
-      const original = button.textContent;
-      button.disabled = true;
-      button.textContent = 'Enviando…';
-      messageEl.className = 'message';
-      messageEl.textContent = '';
-
-      const { error } = await supabaseClient.from('leads').insert({
-        name: name || null,
-        email,
-        source: 'landing_page',
-        consent: true
-      });
-
-      button.disabled = false;
-      button.textContent = original;
-
-      if (error && error.code !== '23505') {
-        console.error(error);
-        messageEl.className = 'message err';
-        messageEl.textContent = 'Não foi possível registrar agora. Tente novamente.';
-        return;
-      }
-
-      messageEl.className = 'message ok';
-      messageEl.textContent = '✓ Cadastro realizado. Avisaremos você no lançamento.';
-      form.reset();
-    }
-
-    document.getElementById('leadForm').addEventListener('submit', e => {
-      e.preventDefault();
-      capture(e.currentTarget, document.getElementById('message'));
-    });
-    document.getElementById('leadFormBottom').addEventListener('submit', e => {
-      e.preventDefault();
-      capture(e.currentTarget, document.getElementById('messageBottom'));
-    });
+    // Mantém os parâmetros de campanha disponíveis para futuras métricas e anúncios.
+    const params = new URLSearchParams(window.location.search);
+    const campaign = params.get('utm_campaign') || '';
+    if (campaign) document.documentElement.dataset.campaign = campaign;
   </script>
 </body>
 </html>
