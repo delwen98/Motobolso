@@ -1269,12 +1269,25 @@
             if(error)throw error;
           }
         }catch(err){
-          console.error('Auth error:',err);
+          console.error('Auth error:', {
+            name: err?.name,
+            message: err?.message,
+            status: err?.status,
+            code: err?.code,
+            details: err?.details,
+            hint: err?.hint,
+            cause: err?.cause
+          });
           const message=String(err?.message||'');
+          const status=err?.status ? 'HTTP '+String(err.status) : '';
+          const code=err?.code ? String(err.code) : '';
+          const name=err?.name && err.name !== 'AuthApiError' ? String(err.name) : '';
+          const technical=[name,code,status].filter(Boolean).join(' · ');
+          const detail=message || 'Erro sem mensagem retornada pelo Supabase.';
           if(message.toLowerCase().includes('already registered')) msg.textContent='Esse e-mail já possui uma conta. Entre ou use outro e-mail.';
           else if(message.toLowerCase().includes('email not confirmed')) msg.textContent='Confirme seu e-mail antes de entrar. Confira sua caixa de entrada.';
           else if(message==='Invalid login credentials') msg.textContent='E-mail ou senha incorretos.';
-          else msg.textContent=message||'Não foi possível concluir. Tente novamente.';
+          else msg.textContent=(technical ? technical+' — ' : '')+detail;
         }
       });
       forgotBtn.addEventListener('click',async()=>{
