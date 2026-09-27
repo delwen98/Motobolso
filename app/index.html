@@ -317,7 +317,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><div class="top-actions"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
+  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><div class="top-actions"><button class="logout-top" id="logoutTop" type="button" aria-label="Sair" title="Sair">↪</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
   <div class="sub" id="syncStatus" style="display:none;">Conectando…</div>
 
   <div class="auth-shell">
@@ -1226,6 +1226,7 @@
     const logout = async () => {
       if (supabaseClient) await supabaseClient.auth.signOut();
     };
+    document.getElementById('logoutTop')?.addEventListener('click', logout);
 
     function appRedirectUrl(){
       return window.location.hostname === 'delwen98.github.io'
