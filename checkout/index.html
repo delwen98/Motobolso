@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Assinar MotoBolso PRO</title>
+<meta name="theme-color" content="#03070d">
+<link rel="icon" href="../images/motobolso-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#03070d;--card:#08131f;--line:rgba(100,180,255,.16);--text:#f5f9ff;--muted:#8ca0b4;--blue:#1682ff;--cyan:#51caff;--green:#3fe3ad;--danger:#ff7070;--d:'Space Grotesk',sans-serif;--b:'Manrope',sans-serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,rgba(22,130,255,.18),transparent 38%),var(--bg);color:var(--text);font-family:var(--b);padding:22px 14px 42px}.wrap{width:min(460px,100%);margin:auto}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.brand{display:flex;align-items:center;gap:9px;font:700 1rem var(--d)}.brand img{width:34px;height:34px;border-radius:10px}.brand em{font-style:normal;color:var(--cyan)}.back{color:var(--muted);font-size:.68rem;font-weight:800}
+.card{background:rgba(8,19,31,.92);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.32);padding:22px}.hero{padding-bottom:18px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--cyan);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.title{font:700 1.65rem/1.03 var(--d);letter-spacing:-.045em;margin:7px 0}.sub{color:var(--muted);font-size:.72rem;line-height:1.5;margin:0}.price{display:flex;align-items:baseline;gap:5px;margin-top:12px}.price strong{font:700 2rem var(--d)}.price span{color:var(--muted);font-size:.7rem}
+.section{padding-top:19px}.section h2{font:700 .88rem var(--d);margin:0 0 11px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{margin-bottom:9px}.field.full{grid-column:1/-1}.field label{display:block;color:var(--muted);font-size:.58rem;font-weight:800;margin:0 0 5px}.field input{width:100%;height:46px;border:1px solid var(--line);border-radius:11px;background:#050d16;color:var(--text);outline:none;padding:0 11px;font:600 .82rem var(--b)}.field input:focus{border-color:var(--blue)}.card-number{font-family:var(--d)!important;letter-spacing:.05em}.paybox{margin-top:6px;padding:13px;border-radius:14px;background:rgba(22,130,255,.06);border:1px solid rgba(22,130,255,.14)}.payrow{display:flex;justify-content:space-between;gap:10px;font-size:.7rem;color:var(--muted);padding:3px 0}.payrow strong{color:var(--text)}.total{font:700 1rem var(--d)!important}.submit{width:100%;height:52px;border:0;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#00111c;font:800 .78rem var(--b);cursor:pointer;margin-top:12px}.submit:disabled{opacity:.6;cursor:wait}.secure{text-align:center;color:#5f768b;font-size:.58rem;line-height:1.45;margin:10px 0 0}.msg{min-height:18px;color:var(--danger);font-size:.68rem;text-align:center;margin-top:9px}.success{text-align:center;padding:25px 5px}.success-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;margin:0 auto 14px;background:rgba(63,227,173,.1);color:var(--green);font:800 1.4rem var(--d)}.success h2{font:700 1.55rem var(--d);margin:0 0 8px}.success p{color:var(--muted);font-size:.76rem;line-height:1.55;margin:0 auto;max-width:330px}.success a{display:inline-flex;margin-top:18px;padding:11px 17px;border-radius:11px;background:var(--blue);color:#fff;font-size:.7rem;font-weight:800;text-decoration:none}
+.note{color:#657b8f;font-size:.58rem;line-height:1.45;margin-top:13px;text-align:center}@media(max-width:430px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.card{padding:19px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a class="brand" href="../"><img src="../images/motobolso-app-icon.svg" alt=""><span>Moto<em>Bolso</em></span></a><a class="back" href="../">← Voltar</a></div>
+<div class="card" id="checkoutCard">
+<div class="hero"><div class="eyebrow">MotoBolso PRO</div><h1 class="title">Seu corre sob controle.</h1><p class="sub">Uma assinatura simples. Sem criar conta antes da compra.</p><div class="price"><strong>R$ 6,90</strong><span>/mês</span></div></div>
+<form id="checkoutForm">
+<div class="section"><h2>Seus dados</h2><div class="grid">
+<div class="field full"><label>NOME COMPLETO</label><input id="name" autocomplete="name" required></div>
+<div class="field full"><label>E-MAIL</label><input id="email" type="email" autocomplete="email" required></div>
+<div class="field"><label>CPF</label><input id="cpf" inputmode="numeric" autocomplete="off" maxlength="14" required></div>
+<div class="field"><label>CEP</label><input id="cep" inputmode="numeric" autocomplete="postal-code" maxlength="9" required></div>
+<div class="field full"><label>NÚMERO DO ENDEREÇO</label><input id="addressNumber" inputmode="numeric" autocomplete="address-line2" required></div>
+</div></div>
+<div class="section"><h2>Cartão</h2><div class="grid">
+<div class="field full"><label>NOME NO CARTÃO</label><input id="holderName" autocomplete="cc-name" required></div>
+<div class="field full"><label>NÚMERO DO CARTÃO</label><input id="number" class="card-number" inputmode="numeric" autocomplete="cc-number" maxlength="23" required></div>
+<div class="field"><label>VALIDADE</label><input id="expiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" required></div>
+<div class="field"><label>CVV</label><input id="ccv" inputmode="numeric" autocomplete="cc-csc" maxlength="4" required></div>
+</div></div>
+<div class="paybox"><div class="payrow"><span>MotoBolso PRO</span><strong>R$ 6,90</strong></div><div class="payrow"><span>Recorrência</span><strong>Mensal</strong></div><div class="payrow total"><span>Total hoje</span><strong>R$ 6,90</strong></div></div>
+<button class="submit" id="submit" type="submit">Assinar por R$ 6,90</button>
+<div class="secure">Pagamento processado pelo Asaas · conexão segura HTTPS</div><div class="msg" id="msg"></div>
+</form>
+<div class="note">Você não precisa criar senha agora. Após a confirmação do pagamento, o acesso será criado automaticamente e enviado para este e-mail.</div>
+</div>
+</div>
+<script>
+const SUPABASE_URL="https://lrsuuxgufmgowrstqubs.supabase.co";
+const SUPABASE_KEY="sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh";
+const form=document.getElementById("checkoutForm"),msg=document.getElementById("msg"),submit=document.getElementById("submit");
+const $=id=>document.getElementById(id);
+function onlyDigits(v){return String(v||"").replace(/\D/g,"")}
+$("cpf").addEventListener("input",e=>{let v=onlyDigits(e.target.value).slice(0,11);e.target.value=v.replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2")});
+$("cep").addEventListener("input",e=>{let v=onlyDigits(e.target.value).slice(0,8);e.target.value=v.length>5?v.slice(0,5)+"-"+v.slice(5):v});
+$("number").addEventListener("input",e=>{e.target.value=onlyDigits(e.target.value).slice(0,19).replace(/(.{4})/g,"$1 ").trim()});
+$("expiry").addEventListener("input",e=>{let v=onlyDigits(e.target.value).slice(0,4);e.target.value=v.length>2?v.slice(0,2)+"/"+v.slice(2):v});
+$("ccv").addEventListener("input",e=>e.target.value=onlyDigits(e.target.value).slice(0,4));
+form.addEventListener("submit",async e=>{
+ e.preventDefault();msg.textContent="";submit.disabled=true;submit.textContent="Processando pagamento…";
+ try{
+  const expiry=$("expiry").value.split("/");
+  if(expiry.length!==2) throw new Error("Confira a validade do cartão.");
+  const response=await fetch(SUPABASE_URL+"/functions/v1/create-asaas-subscription",{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({
+   name:$("name").value.trim(),email:$("email").value.trim(),cpfCnpj:onlyDigits($("cpf").value),postalCode:onlyDigits($("cep").value),addressNumber:$("addressNumber").value.trim(),holderName:$("holderName").value.trim(),number:onlyDigits($("number").value),expiryMonth:expiry[0],expiryYear:"20"+expiry[1],ccv:$("ccv").value
+  })});
+  const data=await response.json();
+  if(!response.ok) throw new Error(data?.error||"Não foi possível processar o pagamento.");
+  document.getElementById("checkoutCard").innerHTML='<div class="success"><div class="success-icon">✓</div><h2>Pedido recebido 🎉</h2><p>Sua assinatura foi criada e a confirmação do pagamento será processada automaticamente. Assim que o pagamento for confirmado, enviaremos seu primeiro acesso para <strong>'+String($("email").value).replace(/</g,"&lt;")+'</strong>.</p><a href="../">Voltar para o MotoBolso</a></div>';
+ }catch(err){msg.textContent=err?.message||"Não foi possível processar agora. Tente novamente.";submit.disabled=false;submit.textContent="Assinar por R$ 6,90";}
+});
+</script>
+</body>
+</html>
