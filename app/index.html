@@ -575,6 +575,7 @@
     document.getElementById('loginCard').style.display = '';
     document.getElementById('appContent').style.display = 'none';
     document.getElementById('heroCard').style.display = 'none';
+    document.getElementById('paywall').style.display = 'none';
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
   }
 
@@ -1350,7 +1351,7 @@
         if(!supabaseClient){msg.textContent='Serviço de login ainda não carregou. Tente novamente.';return;}
         const emailValue=String(email.value||'').trim().toLowerCase(),passwordValue=String(password.value||'');
         if(!emailValue||!email.checkValidity()){email.focus();msg.textContent='Digite um e-mail válido.';return;}
-        if(passwordValue.length<6){password.focus();msg.textContent='A senha precisa ter pelo menos 6 caracteres.';return;}
+        if(passwordValue.length<8){password.focus();msg.textContent='A senha precisa ter pelo menos 8 caracteres.';return;}
         msg.textContent=authMode==='signup'?'Criando conta…':'Entrando…';
         try{
           if(authMode==='signup'){
@@ -1390,7 +1391,7 @@
       });
       updateBtn.addEventListener('click',async()=>{
         const newPassword=String(document.getElementById('newPassword').value||'');
-        if(newPassword.length<6){msg.textContent='A senha precisa ter pelo menos 6 caracteres.';return;}
+        if(newPassword.length<8){msg.textContent='A senha precisa ter pelo menos 8 caracteres.';return;}
         try{msg.textContent='Salvando…';const {error}=await supabaseClient.auth.updateUser({password:newPassword});if(error)throw error;msg.textContent='Senha atualizada. Entrando…';setTimeout(()=>window.location.href=appRedirectUrl(),500);}catch(err){console.error(err);msg.textContent='Não foi possível atualizar a senha. Tente novamente.';}
       });
       renderAuthMode();
