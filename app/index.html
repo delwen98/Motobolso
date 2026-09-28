@@ -39,6 +39,12 @@
   .wrap { max-width: 620px; margin: 0 auto; }
   #appContent.app-visible { display: block !important; }
   .auth-shell.auth-hidden { display:none !important; }
+  .paywall { position:fixed; inset:0; z-index:45; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 18px; background:var(--bg); }
+  .paywall-card { width:100%; max-width:390px; padding:30px 24px 24px; border-radius:24px; background:var(--card-bg); border:1px solid var(--border); box-shadow:0 18px 50px rgba(32,31,28,.08); text-align:center; }
+  .paywall-icon { width:58px; height:58px; margin:0 auto 16px; display:grid; place-items:center; border-radius:18px; background:var(--accent-soft); color:var(--accent); font:800 1.4rem var(--font-display); }
+  .paywall-card h2 { font:700 1.55rem/1.12 var(--font-display); letter-spacing:-.04em; margin:7px 0 9px; }
+  .paywall-card p { color:var(--text-muted); font-size:.82rem; line-height:1.5; margin:0 auto 18px; max-width:300px; }
+  .paywall-logout { margin-top:11px; width:auto; min-height:auto; padding:4px; border:0; background:none; color:var(--text-muted); font:600 .7rem var(--font-body); cursor:pointer; }
   .auth-shell { position:fixed; inset:0; z-index:50; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 18px; overflow:auto; background:var(--bg); }
   .auth-shell::before { content:""; position:absolute; width:320px; height:320px; top:-150px; right:-120px; border-radius:50%; background:var(--accent-soft); filter:blur(10px); opacity:.7; pointer-events:none; }
   .auth-card { position:relative; z-index:1; width:100%; max-width:390px; padding:30px 24px 22px; border-radius:24px; background:var(--card-bg); border:1px solid var(--border); box-shadow:0 18px 50px rgba(32,31,28,.08); color:var(--text); }
@@ -324,8 +330,8 @@
     <div class="auth-card" id="loginCard" style="display:none;">
       <div class="auth-brand"><div class="auth-logo"><img src="../images/motobolso-app-icon.svg" alt="MotoBolso"></div><div><div class="auth-brand-name">Moto<span class="accent">Bolso</span></div><div class="auth-brand-sub">Seu corre em números.</div></div></div>
       <h2 class="auth-title" id="authTitle">Entrar</h2><p class="auth-copy" id="authCopy">Você faz o corre. A gente faz as contas.</p>
-      <form class="auth-form" id="authForm" novalidate><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="seu@email.com" required><label for="authPassword">Senha</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Sua senha" minlength="6" required><button class="auth-submit" id="authSubmitBtn" type="submit">Entrar</button></form>
-      <div class="auth-switch" id="authSwitch"><span>Ainda não tem acesso?</span><a class="auth-link" href="../#assinatura">Assine o MotoBolso →</a></div>
+      <form class="auth-form" id="authForm" novalidate><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="seu@email.com" required><label for="authPassword">Senha</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Sua senha" minlength="8" required><button class="auth-submit" id="authSubmitBtn" type="submit">Entrar</button></form>
+      <div class="auth-switch" id="authSwitch"><span id="authSwitchText">Ainda não tem conta?</span><button class="auth-link" id="authModeToggle" type="button">Criar conta →</button></div>
       <div class="auth-link-wrap" id="forgotWrap"><button id="forgotPasswordBtn" type="button">Esqueci minha senha</button></div>
       <div id="resetPasswordWrap" style="display:none;"><label for="newPassword">Nova senha</label><input id="newPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Nova senha"><button id="updatePasswordBtn" type="button">Salvar nova senha</button></div>
       
@@ -333,7 +339,19 @@
     </div>
   </div>
 
-  <div id="appContent" style="display:none;">
+  <div class="paywall" id="paywall" style="display:none;">
+  <div class="paywall-card">
+    <div class="paywall-icon">₿</div>
+    <span class="eyebrow">ACESSO MOTO BOLSO</span>
+    <h2 id="paywallTitle">Seu acesso completo começa aqui.</h2>
+    <p id="paywallCopy">Assine por R$ 6,90/mês para liberar o MotoBolso completo.</p>
+    <button class="auth-submit" id="paywallCheckout" type="button">Assinar por R$ 6,90/mês →</button>
+    <button class="paywall-logout" id="paywallLogout" type="button">Sair da conta</button>
+    <div class="sub" id="paywallMsg" style="text-align:center;margin-top:10px;" aria-live="polite"></div>
+  </div>
+</div>
+
+<div id="appContent" style="display:none;">
     <main id="sectionInicio" class="app-section active-section">
         <div class="card hero-card day-board" id="heroCard">
   <div class="hero-kicker">SEU CORRE · HOJE</div>
@@ -481,6 +499,8 @@
   let settings = { invest: 20, reserva: 20, metaDiaria: 120, diasTrabalhados: 26 };
 
   let supabaseClient = null, currentUser = null, cloudReady = false;
+  let authMode = 'login';
+  let checkoutStarting = false;
 
   function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); const dark = theme === 'dark'; document.getElementById('themeIcon').textContent = dark ? '☀️' : '🌙'; document.getElementById('themeText').textContent = dark ? 'Claro' : 'Escuro'; document.getElementById('themeToggle').setAttribute('aria-label', dark ? 'Ativar modo claro' : 'Ativar modo escuro'); document.getElementById('themeToggle').title = dark ? 'Modo claro' : 'Modo escuro'; }
 
@@ -558,7 +578,79 @@
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
   }
 
+  async function getAccessStatus() {
+    if (!currentUser || !supabaseClient) return { allowed:false, status:'inactive', plan:'free', graceUntil:null };
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('plan, subscription_status, current_period_end, grace_until')
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
+    if (error) {
+      console.error('Subscription lookup error:', error);
+      return { allowed:false, status:'error', plan:'free', graceUntil:null };
+    }
+    const now = Date.now();
+    const graceUntil = data?.grace_until ? new Date(data.grace_until).getTime() : 0;
+    const active = data?.plan === 'pro' && data?.subscription_status === 'active';
+    const grace = data?.plan === 'pro' && data?.subscription_status === 'past_due' && graceUntil > now;
+    return { allowed: !!(active || grace), status:data?.subscription_status || 'inactive', plan:data?.plan || 'free', graceUntil:data?.grace_until || null };
+  }
+
+  function showPaywall(access) {
+    document.querySelector('.auth-shell').classList.add('auth-hidden');
+    document.querySelector('.auth-shell').style.display='none';
+    document.querySelector('.topbar').style.display='none';
+    document.getElementById('syncStatus').style.display='none';
+    document.getElementById('appContent').style.display='none';
+    const paywall=document.getElementById('paywall');
+    paywall.style.display='flex';
+    const title=document.getElementById('paywallTitle');
+    const copy=document.getElementById('paywallCopy');
+    if (access?.status === 'past_due') {
+      title.textContent='Seu pagamento precisa de atenção.';
+      copy.textContent='Você ainda está dentro do período de tolerância. Atualize o pagamento para manter o acesso.';
+    } else {
+      title.textContent='Seu acesso completo começa aqui.';
+      copy.textContent='Assine o MotoBolso por R$ 6,90/mês para liberar o app completo.';
+    }
+  }
+
+  function hidePaywall() {
+    document.getElementById('paywall').style.display='none';
+  }
+
+  async function startCheckout() {
+    if (checkoutStarting || !supabaseClient || !currentUser) return;
+    checkoutStarting=true;
+    const btn=document.getElementById('paywallCheckout');
+    const msg=document.getElementById('paywallMsg');
+    if(btn){btn.disabled=true;btn.textContent='Abrindo checkout…';}
+    if(msg) msg.textContent='';
+    try {
+      const { data, error } = await supabaseClient.functions.invoke('create-asaas-checkout', { body:{} });
+      if(error) throw error;
+      if(!data?.checkoutUrl) throw new Error(data?.error || 'Não foi possível abrir o checkout.');
+      window.location.href=data.checkoutUrl;
+    } catch(err) {
+      console.error('Checkout error:',err);
+      if(msg) msg.textContent=err?.message || 'Não foi possível abrir o checkout agora.';
+      if(btn){btn.disabled=false;btn.textContent='Assinar por R$ 6,90/mês →';}
+      checkoutStarting=false;
+    }
+  }
+
   async function onAuthed(user) {
+    currentUser = user;
+    const access = await getAccessStatus();
+    if (!access.allowed) {
+      showPaywall(access);
+      const wantsCheckout = new URLSearchParams(location.search).get('checkout') === '1';
+      if (wantsCheckout && access.status !== 'past_due') {
+        await startCheckout();
+      }
+      return;
+    }
+    hidePaywall();
     document.querySelector('.auth-shell').classList.add('auth-hidden');
     document.querySelector('.auth-shell').style.display = 'none';
     document.getElementById('appContent').classList.add('app-visible');
@@ -1228,32 +1320,55 @@
     };
     document.getElementById('logoutTop')?.addEventListener('click', logout);
 
-    function appRedirectUrl(){
-      return window.location.hostname === 'delwen98.github.io'
+    function appRedirectUrl(keepCheckout=false){
+      const base = window.location.hostname === 'delwen98.github.io'
         ? 'https://delwen98.github.io/Motobolso/app/'
         : 'https://www.motobolso.com.br/app/';
+      return keepCheckout && new URLSearchParams(location.search).get('checkout') === '1'
+        ? base + '?checkout=1'
+        : base;
     }
 
     function initAuthUI(){
       const form=document.getElementById('authForm'),forgotBtn=document.getElementById('forgotPasswordBtn'),updateBtn=document.getElementById('updatePasswordBtn'),msg=document.getElementById('loginMsg'),email=document.getElementById('authEmail'),password=document.getElementById('authPassword'),switchBtn=document.getElementById('authSwitchBtn'),switchText=document.getElementById('authSwitchText'),submitBtn=document.getElementById('authSubmitBtn'),title=document.getElementById('authTitle'),copy=document.getElementById('authCopy'),forgotWrap=document.getElementById('forgotWrap');
+      const modeToggle=document.getElementById('authModeToggle'), switchText=document.getElementById('authSwitchText');
       function renderAuthMode(){
-        title.textContent='Entrar';
-        copy.textContent='Seu dinheiro, sob controle.';
-        submitBtn.textContent='Entrar';
-        forgotWrap.style.display='block';
-        password.autocomplete='current-password';
+        const signup=authMode==='signup';
+        title.textContent=signup?'Criar sua conta':'Entrar';
+        copy.textContent=signup?'Crie sua conta e libere seu acesso ao MotoBolso.':'Seu dinheiro, sob controle.';
+        submitBtn.textContent=signup?'Criar conta':'Entrar';
+        forgotWrap.style.display=signup?'none':'block';
+        password.autocomplete=signup?'new-password':'current-password';
+        password.minLength=8;
+        switchText.textContent=signup?'Já tem uma conta?':'Ainda não tem conta?';
+        modeToggle.textContent=signup?'Entrar →':'Criar conta →';
         msg.textContent='';
       }
+      modeToggle.addEventListener('click',()=>{authMode=authMode==='login'?'signup':'login';renderAuthMode();});
       form.addEventListener('submit',async(e)=>{
         e.preventDefault();
         if(!supabaseClient){msg.textContent='Serviço de login ainda não carregou. Tente novamente.';return;}
         const emailValue=String(email.value||'').trim().toLowerCase(),passwordValue=String(password.value||'');
         if(!emailValue||!email.checkValidity()){email.focus();msg.textContent='Digite um e-mail válido.';return;}
         if(passwordValue.length<6){password.focus();msg.textContent='A senha precisa ter pelo menos 6 caracteres.';return;}
-        msg.textContent='Entrando…';
+        msg.textContent=authMode==='signup'?'Criando conta…':'Entrando…';
         try{
-          const {error}=await supabaseClient.auth.signInWithPassword({email:emailValue,password:passwordValue});
-          if(error)throw error;
+          if(authMode==='signup'){
+            const {data,error}=await supabaseClient.auth.signUp({
+              email:emailValue,
+              password:passwordValue,
+              options:{emailRedirectTo:appRedirectUrl(true)}
+            });
+            if(error)throw error;
+            if(data?.session){
+              msg.textContent='Conta criada. Carregando…';
+            } else {
+              msg.textContent='Conta criada. Confirme seu e-mail e depois entre para continuar.';
+            }
+          } else {
+            const {error}=await supabaseClient.auth.signInWithPassword({email:emailValue,password:passwordValue});
+            if(error)throw error;
+          }
         }catch(err){
           console.error('Auth error:', {name:err?.name,message:err?.message,status:err?.status,code:err?.code,details:err?.details,hint:err?.hint,cause:err?.cause});
           const message=String(err?.message||'');
@@ -1280,6 +1395,8 @@
       });
       renderAuthMode();
     }
+    document.getElementById('paywallCheckout')?.addEventListener('click',startCheckout);
+    document.getElementById('paywallLogout')?.addEventListener('click',logout);
     initAuthUI();
     await initCloud();
   }
