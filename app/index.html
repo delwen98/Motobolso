@@ -232,7 +232,7 @@
     .auth-title { font-size:1.7rem; }
   }
 
-  .brand{display:flex;align-items:center;gap:8px}
+  .brand{display:flex;align-items:center;gap:8px}.brand h1 span{color:var(--accent)}.brand small{display:block;color:var(--text-muted);font-size:.52rem;font-weight:800;letter-spacing:.12em;margin-top:2px}
   .price-card{border-color:color-mix(in srgb,var(--accent) 24%,var(--border));background:linear-gradient(145deg,var(--card-bg),color-mix(in srgb,var(--accent-soft) 35%,var(--card-bg)))}.price-card p{margin:5px 0 0;color:var(--text-muted);font-size:.78rem;line-height:1.45}.price-value{display:flex;align-items:baseline;gap:5px;margin:10px 0 0}.price-value strong{font:700 1.7rem var(--font-display)}.price-value span{color:var(--text-muted);font-size:.75rem}
   .real-profit-card{border-color:color-mix(in srgb,var(--accent) 24%,var(--border))}.feature-copy{margin:0 0 12px;color:var(--text-muted);font-size:.76rem;line-height:1.45}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}.mini-grid label{display:block;color:var(--text-muted);font-size:.68rem;font-weight:700;margin-bottom:5px}.mini-grid input{width:100%;min-height:44px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:11px;padding:10px;font:600 .85rem var(--font-body)}.real-profit-result{margin-top:10px;padding:12px;border-radius:12px;background:var(--ganho-soft);color:var(--text);font-size:.76rem;line-height:1.55}.real-profit-result b{color:var(--ganho);font-family:var(--font-display)}.real-profit-result .rp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.real-profit-result .rp-grid div{padding:8px;background:color-mix(in srgb,var(--card-bg) 70%,transparent);border-radius:9px}.real-profit-result small{display:block;color:var(--text-muted);font-size:.61rem}.real-profit-result strong{display:block;font-size:.76rem;margin-top:2px}@media(max-width:480px){.mini-grid{grid-template-columns:1fr}.real-profit-result .rp-grid{grid-template-columns:1fr 1fr}}  .continue-card{border-color:color-mix(in srgb,var(--accent) 28%,var(--border));background:linear-gradient(145deg,var(--card-bg),color-mix(in srgb,var(--accent-soft) 42%,var(--card-bg)));padding:13px}.continue-status{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.continue-status h2{margin:2px 0 0}.continue-status>span{font-size:.58rem;font-weight:900;letter-spacing:.08em;padding:4px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}.continue-main{padding:12px;border:1px solid var(--border);border-radius:11px;background:var(--bg);margin-bottom:7px}.continue-main .label{font-size:.66rem;color:var(--text-muted);margin-bottom:3px}.continue-main .value{font:700 1.5rem var(--font-display);letter-spacing:-.04em}.continue-main .value.done{color:var(--ganho)}.continue-main .value.warn{color:var(--gasolina)}.continue-note{margin:8px 0 0;color:var(--text-muted);font-size:.68rem;line-height:1.4}
 
@@ -317,13 +317,13 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><div class="brand"><h1>🏍️ Moto Bolso</h1></div><div class="top-actions"><button class="logout-top" id="logoutTop" type="button" aria-label="Sair" title="Sair">↪</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
+  <div class="topbar"><div class="brand"><div><h1>Moto<span>Bolso</span></h1><small>SEU CORRE EM NÚMEROS</small></div></div><div class="top-actions"><button class="logout-top" id="logoutTop" type="button" aria-label="Sair" title="Sair">↪</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Modo escuro"><span id="themeIcon">🌙</span><span id="themeText">Escuro</span></button></div></div>
   <div class="sub" id="syncStatus" style="display:none;">Conectando…</div>
 
   <div class="auth-shell">
     <div class="auth-card" id="loginCard" style="display:none;">
-      <div class="auth-brand"><div class="auth-logo"><img src="../images/motobolso-app-icon.svg" alt="MotoBolso"></div><div><div class="auth-brand-name">Moto<span class="accent">Bolso</span></div><div class="auth-brand-sub">Controle seu corre em poucos toques.</div></div></div>
-      <h2 class="auth-title" id="authTitle">Entrar</h2><p class="auth-copy" id="authCopy">Seu dinheiro, sob controle.</p>
+      <div class="auth-brand"><div class="auth-logo"><img src="../images/motobolso-app-icon.svg" alt="MotoBolso"></div><div><div class="auth-brand-name">Moto<span class="accent">Bolso</span></div><div class="auth-brand-sub">Seu corre em números.</div></div></div>
+      <h2 class="auth-title" id="authTitle">Entrar</h2><p class="auth-copy" id="authCopy">Você faz o corre. A gente faz as contas.</p>
       <form class="auth-form" id="authForm" novalidate><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="seu@email.com" required><label for="authPassword">Senha</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Sua senha" minlength="6" required><button class="auth-submit" id="authSubmitBtn" type="submit">Entrar</button></form>
       <div class="auth-switch" id="authSwitch"><span>Ainda não tem acesso?</span><a class="auth-link" href="../#assinatura">Assine o MotoBolso →</a></div>
       <div class="auth-link-wrap" id="forgotWrap"><button id="forgotPasswordBtn" type="button">Esqueci minha senha</button></div>
@@ -411,11 +411,11 @@
     </main>
 
     <main id="sectionResumo" class="app-section">
-      <div class="page-title"><span class="eyebrow">VISÃO GERAL</span><h2>Resumo</h2><p>O que está acontecendo com seu dinheiro.</p></div>
+      <div class="page-title"><span class="eyebrow">VISÃO GERAL</span><h2>Como foi o corre</h2><p>O que entrou, o que custou e o que ficou.</p></div>
       <div class="card">
         <div class="section-heading"><div><span class="eyebrow">META</span><h2>Progresso do mês</h2></div><strong id="progressPct">0%</strong></div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-        <div class="liquido-box"><div class="label">Lucro líquido do mês</div><div class="value pos" id="liquidoMes">R$ 0</div></div>
+        <div class="liquido-box"><div class="label">O que ficou no bolso este mês</div><div class="value pos" id="liquidoMes">R$ 0</div></div>
         <div class="totals-grid">
           <div class="total-box box-ganho"><div class="label">Ganhos</div><div class="value" id="totGanho">R$ 0</div></div>
           <div class="total-box box-gasolina"><div class="label">Gasolina</div><div class="value" id="totGasolina">R$ 0</div></div>
@@ -425,8 +425,8 @@
       </div>
       <div class="card" id="divisionCard">
         <div class="section-heading"><div><span class="eyebrow">LUCRO LÍQUIDO</span><h2>Divisão</h2></div></div>
-        <div class="slider-group"><div class="slider-label"><span>Investimento</span><span id="lblInvest">20%</span></div><input type="range" id="sliderInvest" min="0" max="100" value="20"></div>
-        <div class="slider-group" style="margin-bottom:6px;"><div class="slider-label"><span>Reserva</span><span id="lblReserva">20%</span></div><input type="range" id="sliderReserva" min="0" max="100" value="20"></div>
+        <div class="slider-group"><div class="slider-label"><span>Investir</span><span id="lblInvest">20%</span></div><input type="range" id="sliderInvest" min="0" max="100" value="20"></div>
+        <div class="slider-group" style="margin-bottom:6px;"><div class="slider-label"><span>Guardar</span><span id="lblReserva">20%</span></div><input type="range" id="sliderReserva" min="0" max="100" value="20"></div>
         <div class="totals-grid">
           <div class="total-box box-invest"><div class="label">Investir</div><div class="value" id="valInvest">R$ 0</div></div>
           <div class="total-box box-reserva"><div class="label">Reservar</div><div class="value" id="valReserva">R$ 0</div></div>
@@ -436,7 +436,7 @@
     </main>
 
     <main id="sectionConfig" class="app-section">
-      <div class="page-title"><span class="eyebrow">CONFIGURAÇÃO</span><h2>Mais</h2><p>Deixe o Moto Bolso do seu jeito.</p></div>
+      <div class="page-title"><span class="eyebrow">SEU CORRE</span><h2>Configurações</h2><p>Deixe o MotoBolso do seu jeito.</p></div>
       <div class="card">
         <h2>Meta diária</h2>
         <label for="metaDiaria">Quanto quer ganhar líquido por dia?</label>
