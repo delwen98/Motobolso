@@ -133,38 +133,11 @@ function calc(){
 inputs.forEach(i=>i.addEventListener('input',calc));
 calc();
 
-const SUPABASE_URL='https://lrsuuxgufmgowrstqubs.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY='sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
-const CHECKOUT_FUNCTION=SUPABASE_URL+'/functions/v1/create-asaas-checkout';
-
-async function openCheckout(button){
- if(button.dataset.loading==='1') return;
- button.dataset.loading='1';
- const original=button.textContent;
- button.textContent='Abrindo checkout…';
- button.disabled=true;
- try{
-   const response=await fetch(CHECKOUT_FUNCTION,{
-     method:'POST',
-     headers:{
-       'Content-Type':'application/json',
-       'apikey':SUPABASE_PUBLISHABLE_KEY
-     },
-     body:'{}'
-   });
-   const data=await response.json().catch(()=>({}));
-   if(!response.ok || !data.checkoutUrl) throw new Error(data.error||'Não foi possível abrir o checkout.');
-   window.location.href=data.checkoutUrl;
- }catch(error){
-   console.error(error);
-   alert(error.message||'Não foi possível abrir o checkout agora. Tente novamente.');
-   button.textContent=original;
-   button.disabled=false;
-   button.dataset.loading='0';
- }
+function openCheckout(){
+  window.location.href='https://www.motobolso.com.br/app/?checkout=1';
 }
 document.querySelectorAll('.checkout-trigger').forEach(button=>{
- button.addEventListener('click',()=>openCheckout(button));
+  button.addEventListener('click',openCheckout);
 });
 
 const p=new URLSearchParams(location.search),c=p.get('utm_campaign');if(c)document.documentElement.dataset.campaign=c;
