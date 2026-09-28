@@ -540,6 +540,15 @@
       if (session) {
         await onAuthed(session.user);
       } else {
+        const params = new URLSearchParams(location.search);
+        if (params.get('checkout') === '1') {
+          await startPublicCheckout();
+          return;
+        }
+        if (params.get('checkout') === 'success') {
+          showCheckoutSuccess();
+          return;
+        }
         loadLocal();
         showLogin();
 
@@ -638,6 +647,36 @@
       if(btn){btn.disabled=false;btn.textContent='Assinar por R$ 6,90/mês →';}
       checkoutStarting=false;
     }
+  }
+
+  async function startPublicCheckout() {
+    if (!supabaseClient || checkoutStarting) return;
+    checkoutStarting = true;
+    try {
+      const { data, error } = await supabaseClient.functions.invoke('create-asaas-checkout', { body:{} });
+      if (error) throw error;
+      if (!data?.checkoutUrl) throw new Error(data?.error || 'Não foi possível abrir o checkout.');
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      console.error('Public checkout error:', err);
+      checkoutStarting = false;
+      const msg = document.getElementById('loginMsg');
+      if (msg) msg.textContent = err?.message || 'Não foi possível abrir o checkout agora.';
+    }
+  }
+
+  function showCheckoutSuccess() {
+    const auth = document.querySelector('.auth-shell');
+    if (!auth) return;
+    auth.classList.remove('auth-hidden');
+    auth.style.display = 'flex';
+    auth.innerHTML = `
+      <div class="auth-card" style="text-align:center">
+        <div class="paywall-icon" style="margin:0 auto 18px">✓</div>
+        <h1 class="auth-title">Pagamento confirmado! 🎉</h1>
+        <p class="auth-copy">Seu MotoBolso PRO está sendo ativado. Se esta foi sua primeira compra, enviaremos seu link de primeiro acesso para o e-mail informado no pagamento.</p>
+        <p style="color:var(--text-muted);font-size:.72rem;line-height:1.5;margin:18px 0 0">O acesso é liberado automaticamente após a confirmação do pagamento.</p>
+      </div>`;
   }
 
   async function onAuthed(user) {
