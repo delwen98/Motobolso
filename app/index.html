@@ -740,14 +740,19 @@
     };
 
     const events = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') checkInactivity();
+    };
+    const handleFocus = () => checkInactivity();
+
     events.forEach(event => window.addEventListener(event, touch, { passive: true }));
-    window.addEventListener('visibilitychange', touch);
-    window.addEventListener('focus', touch);
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', handleFocus);
 
     inactivityCleanup = () => {
       events.forEach(event => window.removeEventListener(event, touch));
-      window.removeEventListener('visibilitychange', touch);
-      window.removeEventListener('focus', touch);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', handleFocus);
     };
 
     inactivityTimer = setTimeout(checkInactivity, INACTIVITY_TIMEOUT_MS);
