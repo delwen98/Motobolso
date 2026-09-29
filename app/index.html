@@ -331,7 +331,7 @@
       <div class="auth-brand"><div class="auth-logo"><img src="../images/motobolso-app-icon.svg" alt="MotoBolso"></div><div><div class="auth-brand-name">Moto<span class="accent">Bolso</span></div><div class="auth-brand-sub">Seu corre em números.</div></div></div>
       <h2 class="auth-title" id="authTitle">Entrar</h2><p class="auth-copy" id="authCopy">Você faz o corre. A gente faz as contas.</p>
       <form class="auth-form" id="authForm" novalidate><label for="authEmail">E-mail</label><input id="authEmail" type="email" autocomplete="email" inputmode="email" placeholder="seu@email.com" required><label for="authPassword">Senha</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Sua senha" minlength="8" required><button class="auth-submit" id="authSubmitBtn" type="submit">Entrar</button></form>
-      <div class="auth-switch" id="authSwitch"><span id="authSwitchText">Ainda não tem conta?</span><button class="auth-link" id="authModeToggle" type="button">Criar conta →</button></div>
+      <div class="auth-switch" id="authSwitch" style="display:none;"></div>
       <div class="auth-link-wrap" id="forgotWrap"><button id="forgotPasswordBtn" type="button">Esqueci minha senha</button></div>
       <div id="resetPasswordWrap" style="display:none;"><label for="newPassword">Nova senha</label><input id="newPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Nova senha"><button id="updatePasswordBtn" type="button">Salvar nova senha</button></div>
       
@@ -1373,18 +1373,16 @@
       const form=document.getElementById('authForm'),forgotBtn=document.getElementById('forgotPasswordBtn'),updateBtn=document.getElementById('updatePasswordBtn'),msg=document.getElementById('loginMsg'),email=document.getElementById('authEmail'),password=document.getElementById('authPassword'),submitBtn=document.getElementById('authSubmitBtn'),title=document.getElementById('authTitle'),copy=document.getElementById('authCopy'),forgotWrap=document.getElementById('forgotWrap');
       const modeToggle=document.getElementById('authModeToggle'), switchText=document.getElementById('authSwitchText');
       function renderAuthMode(){
-        const signup=authMode==='signup';
-        title.textContent=signup?'Criar sua conta':'Entrar';
-        copy.textContent=signup?'Crie sua conta e libere seu acesso ao MotoBolso.':'Seu dinheiro, sob controle.';
-        submitBtn.textContent=signup?'Criar conta':'Entrar';
-        forgotWrap.style.display=signup?'none':'block';
-        password.autocomplete=signup?'new-password':'current-password';
+        authMode='login';
+        title.textContent='Entrar';
+        copy.textContent='O MotoBolso está em beta fechado. O acesso é liberado apenas para contas autorizadas.';
+        submitBtn.textContent='Entrar';
+        forgotWrap.style.display='block';
+        password.autocomplete='current-password';
         password.minLength=8;
-        switchText.textContent=signup?'Já tem uma conta?':'Ainda não tem conta?';
-        modeToggle.textContent=signup?'Entrar →':'Criar conta →';
         msg.textContent='';
       }
-      modeToggle.addEventListener('click',()=>{authMode=authMode==='login'?'signup':'login';renderAuthMode();});
+      modeToggle?.addEventListener('click',()=>{ /* cadastro desativado durante o beta fechado */ });
       form.addEventListener('submit',async(e)=>{
         e.preventDefault();
         if(!supabaseClient){msg.textContent='Serviço de login ainda não carregou. Tente novamente.';return;}
@@ -1394,17 +1392,8 @@
         msg.textContent=authMode==='signup'?'Criando conta…':'Entrando…';
         try{
           if(authMode==='signup'){
-            const {data,error}=await supabaseClient.auth.signUp({
-              email:emailValue,
-              password:passwordValue,
-              options:{emailRedirectTo:appRedirectUrl(true)}
-            });
-            if(error)throw error;
-            if(data?.session){
-              msg.textContent='Conta criada. Carregando…';
-            } else {
-              msg.textContent='Conta criada. Confirme seu e-mail e depois entre para continuar.';
-            }
+            msg.textContent='O beta está fechado no momento. Use uma conta autorizada.';
+            return;
           } else {
             const {error}=await supabaseClient.auth.signInWithPassword({email:emailValue,password:passwordValue});
             if(error)throw error;
