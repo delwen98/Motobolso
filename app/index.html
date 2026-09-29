@@ -502,6 +502,14 @@
   let authMode = 'login';
   let checkoutStarting = false;
 
+  // Sessão: encerra a sessão local após 30 min sem interação.
+  // O timeout do Supabase pode ser configurado no painel para reforçar isso no servidor.
+  const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
+  let inactivityTimer = null;
+  let inactivityLastActivity = 0;
+  let inactivityCleanup = null;
+  let decisionRefreshSeq = 0;
+
   function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); const dark = theme === 'dark'; document.getElementById('themeIcon').textContent = dark ? '☀️' : '🌙'; document.getElementById('themeText').textContent = dark ? 'Claro' : 'Escuro'; document.getElementById('themeToggle').setAttribute('aria-label', dark ? 'Ativar modo claro' : 'Ativar modo escuro'); document.getElementById('themeToggle').title = dark ? 'Modo claro' : 'Modo escuro'; }
 
   function initTheme() { const saved = localStorage.getItem('motobolso_theme'); applyTheme(saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')); }
@@ -559,6 +567,7 @@
         if (session) {
           onAuthed(session.user).catch(e => console.error(e));
         } else {
+          clearInactivityWatch();
           cloudReady = false;
           currentUser = null;
           state = { entries: [] };
@@ -576,6 +585,7 @@
   }
 
   function showLogin() {
+    clearInactivityWatch();
     document.getElementById('appContent').classList.remove('app-visible');
     document.querySelector('.auth-shell').classList.remove('auth-hidden');
     document.querySelector('.auth-shell').style.display = '';
@@ -586,6 +596,13 @@
     document.getElementById('heroCard').style.display = 'none';
     document.getElementById('paywall').style.display = 'none';
     document.getElementById('syncStatus').textContent = configured() ? '🔒 Entre para sincronizar seus dados' : document.getElementById('syncStatus').textContent;
+    try {
+      if (sessionStorage.getItem('motobolso_inactivity_logout') === '1') {
+        sessionStorage.removeItem('motobolso_inactivity_logout');
+        const msg = document.getElementById('loginMsg');
+        if (msg) msg.textContent = 'Sua sessão foi encerrada por 30 minutos de inatividade. Entre novamente.';
+      }
+    } catch (e) {}
   }
 
   async function getAccessStatus() {
@@ -679,6 +696,63 @@
       </div>`;
   }
 
+  function clearInactivityWatch() {
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = null;
+    }
+    if (inactivityCleanup) {
+      inactivityCleanup();
+      inactivityCleanup = null;
+    }
+  }
+
+  function startInactivityWatch() {
+    clearInactivityWatch();
+    if (!currentUser || !supabaseClient) return;
+
+    inactivityLastActivity = Date.now();
+
+    const touch = () => {
+      if (!currentUser) return;
+      inactivityLastActivity = Date.now();
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(checkInactivity, INACTIVITY_TIMEOUT_MS);
+    };
+
+    const checkInactivity = async () => {
+      if (!currentUser || !supabaseClient) return;
+      const idleFor = Date.now() - inactivityLastActivity;
+      if (idleFor >= INACTIVITY_TIMEOUT_MS) {
+        clearInactivityWatch();
+        try {
+          sessionStorage.setItem('motobolso_inactivity_logout', '1');
+        } catch (e) {}
+        try {
+          await supabaseClient.auth.signOut({ scope: 'local' });
+        } catch (e) {
+          console.error('Inactivity logout error:', e);
+          showLogin();
+        }
+        return;
+      }
+      inactivityTimer = setTimeout(checkInactivity, Math.max(1000, INACTIVITY_TIMEOUT_MS - idleFor));
+    };
+
+    const events = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+    events.forEach(event => window.addEventListener(event, touch, { passive: true }));
+    window.addEventListener('visibilitychange', touch);
+    window.addEventListener('focus', touch);
+
+    inactivityCleanup = () => {
+      events.forEach(event => window.removeEventListener(event, touch));
+      window.removeEventListener('visibilitychange', touch);
+      window.removeEventListener('focus', touch);
+    };
+
+    inactivityTimer = setTimeout(checkInactivity, INACTIVITY_TIMEOUT_MS);
+  }
+
   async function onAuthed(user) {
     currentUser = user;
     const access = await getAccessStatus();
@@ -727,6 +801,7 @@
       if (retryLink) retryLink.addEventListener('click', () => onAuthed(currentUser));
     }
     renderAll();
+    startInactivityWatch();
   }
 
   async function loadFromSupabase(isRetry) {
@@ -992,13 +1067,71 @@
     return data||[];
   }
 
-  function renderContinueDecision(days){
-    const target=Math.max(0,Number(settings.metaDiaria)||0),today=todayISO(),day=days.find(d=>d.date===today),entries=state.entries.filter(e=>e.date===today);
-    const ganho=entries.filter(e=>e.type==='ganho').reduce((s,e)=>s+(Number(e.total)||0),0),gas=gasolineEntryTotal(today),fuel=gas>0?gas:(day?workDayFuelCost(day):0),other=entries.filter(e=>e.type==='despesa'&&e.category!=='gasolina').reduce((s,e)=>s+(Number(e.total)||0),0),net=ganho-fuel-other,hours=day?Math.max(0,Number(day.hours)||0):0,remaining=Math.max(0,target-net),hourly=hours>0?net/hours:0;
-    const value=document.getElementById('continueValue'),title=document.getElementById('continueTitle'),label=document.getElementById('continueLabel'),note=document.getElementById('continueNote'),badge=document.getElementById('continueBadge');if(!value)return;
-    if(target<=0){title.textContent='Defina sua meta diária';badge.textContent='META';label.textContent='Meta líquida do dia';value.textContent='R$ 0,00';value.className='value warn';note.textContent='Em Configurações, defina quanto você quer colocar no bolso por dia.';return;}
-    if(net>=target){title.textContent='Meta do dia atingida';badge.textContent='FECHOU';label.textContent='Você já passou da meta';value.textContent=fmt(net-target);value.className='value done';note.textContent='Você já colocou '+fmt(net)+' no bolso hoje. Se quiser, pode encerrar o corre.';return;}
-    title.textContent='Ainda falta um pouco';badge.textContent='CORRE';label.textContent='Faltam para sua meta líquida';value.textContent=fmt(remaining);value.className='value warn';if(hourly>0){const mins=Math.ceil((remaining/hourly)*60),h=Math.floor(mins/60),m=mins%60;note.textContent='No ritmo atual, cerca de '+(h?h+'h ':'')+m+'min de corre para chegar na meta.';}else note.textContent='Registre suas horas de hoje para estimar quanto tempo falta.';
+  function renderContinueDecision(days) {
+    const target = Math.max(0, Number(settings.metaDiaria) || 0);
+    const today = todayISO();
+    const day = Array.isArray(days) ? days.find(d => d.date === today) : null;
+    const entries = state.entries.filter(e => e.date === today);
+
+    const ganho = entries
+      .filter(e => e.type === 'ganho')
+      .reduce((s, e) => s + (Number(e.total) || 0), 0);
+
+    const gasolinaLancada = gasolineEntryTotal(today);
+    const gasolinaFechamento = day ? workDayFuelCost(day) : 0;
+    const fuel = gasolinaLancada > 0 ? gasolinaLancada : gasolinaFechamento;
+
+    const other = entries
+      .filter(e => e.type === 'despesa' && e.category !== 'gasolina')
+      .reduce((s, e) => s + (Number(e.total) || 0), 0);
+
+    const net = ganho - fuel - other;
+    const hours = day ? Math.max(0, Number(day.hours) || 0) : 0;
+    const remaining = Math.max(0, target - net);
+    const hourly = hours > 0 ? net / hours : 0;
+
+    const value = document.getElementById('continueValue');
+    const title = document.querySelector('#continueCard h2');
+    const label = document.getElementById('continueLabel');
+    const note = document.getElementById('continueNote');
+    const badge = document.getElementById('continueBadge');
+
+    if (!value || !title || !label || !note || !badge) return;
+
+    if (target <= 0) {
+      title.textContent = 'Defina sua meta diária';
+      badge.textContent = 'META';
+      label.textContent = 'Meta líquida do dia';
+      value.textContent = 'R$ 0,00';
+      value.className = 'value warn';
+      note.textContent = 'Em Configurações, defina quanto você quer colocar no bolso por dia.';
+      return;
+    }
+
+    if (net >= target) {
+      title.textContent = 'Meta do dia atingida';
+      badge.textContent = 'FECHOU';
+      label.textContent = 'Você já passou da meta';
+      value.textContent = fmt(net - target);
+      value.className = 'value done';
+      note.textContent = 'Você já colocou ' + fmt(net) + ' no bolso hoje. Se quiser, pode encerrar o corre.';
+      return;
+    }
+
+    title.textContent = 'Ainda falta um pouco';
+    badge.textContent = 'CORRE';
+    label.textContent = 'Faltam para sua meta líquida';
+    value.textContent = fmt(remaining);
+    value.className = 'value warn';
+
+    if (hourly > 0) {
+      const mins = Math.ceil((remaining / hourly) * 60);
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      note.textContent = 'No ritmo atual, cerca de ' + (h ? h + 'h ' : '') + m + 'min de corre para chegar na meta.';
+    } else {
+      note.textContent = 'Registre suas horas de hoje para estimar quanto tempo falta.';
+    }
   }
 
   function gasolineEntryTotal(dateStr){
@@ -1013,8 +1146,8 @@
     return Math.max(0, Number(day.fuel_liters || 0)) * Math.max(0, Number(day.fuel_price || 0));
   }
 
-  async function renderRealProfit(){
-    const days=await getWorkDays();
+  async function renderRealProfit(days){
+    if (!Array.isArray(days)) days = await getWorkDays();
     const month=days.filter(d=>isThisMonth(d.date));
     const monthFuel=month.reduce((s,d)=>s+workDayFuelCost(d),0);
     const monthTotals=computeTotals();
@@ -1059,9 +1192,11 @@
 
   async function refreshDecisionCards() {
     if (!currentUser || !cloudReady) return;
+    const refreshId = ++decisionRefreshSeq;
     const days = await getWorkDays();
+    if (refreshId !== decisionRefreshSeq || !currentUser || !cloudReady) return;
     renderContinueDecision(days);
-    await renderRealProfit();
+    await renderRealProfit(days);
   }
 
   function renderAll() {
@@ -1356,7 +1491,8 @@
     document.getElementById('tourSkip').addEventListener('click', finishTour);
 
     const logout = async () => {
-      if (supabaseClient) await supabaseClient.auth.signOut();
+      clearInactivityWatch();
+      if (supabaseClient) await supabaseClient.auth.signOut({ scope: 'local' });
     };
     document.getElementById('logoutTop')?.addEventListener('click', logout);
 
