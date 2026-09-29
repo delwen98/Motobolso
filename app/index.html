@@ -502,9 +502,9 @@
   let authMode = 'login';
   let checkoutStarting = false;
 
-  // Sessão: encerra a sessão local após 30 min sem interação.
+  // Sessão: encerra a sessão local após 10 min sem interação.
   // O timeout do Supabase pode ser configurado no painel para reforçar isso no servidor.
-  const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
+  const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000;
   let inactivityTimer = null;
   let inactivityLastActivity = 0;
   let inactivityCleanup = null;
@@ -600,7 +600,7 @@
       if (sessionStorage.getItem('motobolso_inactivity_logout') === '1') {
         sessionStorage.removeItem('motobolso_inactivity_logout');
         const msg = document.getElementById('loginMsg');
-        if (msg) msg.textContent = 'Sua sessão foi encerrada por 30 minutos de inatividade. Entre novamente.';
+        if (msg) msg.textContent = 'Sua sessão foi encerrada por 10 minutos de inatividade. Entre novamente.';
       }
     } catch (e) {}
   }
