@@ -124,7 +124,7 @@ async function init(){
       initialization: {
         amount: 6.90,
         payer: {
-          email: session.user.email || ''
+          email: session?.user?.email || ''
         }
       },
       customization: {
