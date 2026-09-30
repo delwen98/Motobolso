@@ -5,39 +5,39 @@
 <title>MotoBolso — Teste Mercado Pago</title>
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 <style>
-body{margin:0;background:#03070d;color:#f5f9ff;font-family:Arial,sans-serif;padding:20px}.box{max-width:520px;margin:auto;background:#08131f;border:1px solid #17314a;border-radius:20px;padding:22px}.warn{background:#2b1f05;border:1px solid #6d5312;padding:12px;border-radius:12px;font-size:13px;margin-bottom:18px}.field{margin-bottom:16px}label{display:block;font-size:12px;color:#8ca0b4;margin-bottom:7px}input{width:100%;box-sizing:border-box;height:46px;border-radius:10px;border:1px solid #29445d;background:#0b1723;color:#fff;padding:0 12px}.btn{margin-top:14px;width:100%;height:48px;border:0;border-radius:11px;background:#1682ff;color:#fff;font-weight:700}.status{margin-top:16px;padding:12px;border-radius:10px;background:#101d2a;white-space:pre-wrap;font-size:13px}small{color:#71879b}.title{margin-top:0}.hide{display:none}
+body{margin:0;background:#03070d;color:#f5f9ff;font-family:Arial,sans-serif;padding:20px}.box{max-width:520px;margin:auto;background:#08131f;border:1px solid #17314a;border-radius:20px;padding:22px}.warn{background:#2b1f05;border:1px solid #6d5312;padding:12px;border-radius:12px;font-size:13px;margin-bottom:18px}.status{margin-top:16px;padding:12px;border-radius:10px;background:#101d2a;white-space:pre-wrap;font-size:13px}small{color:#71879b;line-height:1.5}.title{margin-top:0}.data{background:#0b1723;border:1px solid #17314a;border-radius:12px;padding:12px;margin-bottom:16px;font-size:12px;line-height:1.7}.data b{color:#51caff}.ok{color:#3fe3ad}
 </style>
 </head>
 <body><div class="box">
 <h2 class="title">MotoBolso — Checkout de teste</h2>
-<div class="warn">⚠️ Página descartável. Este checkout usa apenas credenciais de teste do Mercado Pago e não altera o checkout principal.</div>
-<div class="field"><label>E-MAIL DE TESTE</label><input id="email" value="testuser123456789@testuser.com"></div>
+<div class="warn">⚠️ Ambiente descartável. Usa somente a credencial de teste do Mercado Pago e não altera o checkout principal.</div>
+<div class="data">
+<div><b>Dados do comprador:</b> pré-preenchidos automaticamente.</div>
+<div><b>Dados do cartão de teste:</b> exibidos abaixo pelo próprio Mercado Pago.</div>
+</div>
 <div id="brick"></div>
-<div id="status" class="status">Carregando checkout de teste…</div>
-<small>Cartão de teste Mastercard: 5480 8328 0103 3311 · CVV 123 · validade 11/30 · titular APRO · CPF 12345678909</small>
+<div id="status" class="status">Carregando o formulário de teste…</div>
+<small>O Mercado Pago permite inicializar automaticamente e-mail e documento no Card Payment Brick, mas mantém número do cartão, validade e CVV sob controle do próprio componente por segurança.</small>
 </div>
 <script>
 const MP_PUBLIC_KEY='APP_USR-4681b52e-99dd-4598-8d8f-28a9f6056ff7';
 const TEST_FUNCTION='https://lrsuuxgufmgowrstqubs.supabase.co/functions/v1/mp-test';
+const TEST_EMAIL='testuser123456789@testuser.com';
+const TEST_CPF='12345678909';
 const status=document.getElementById('status');
 function msg(x){status.textContent=typeof x==='string'?x:JSON.stringify(x,null,2)}
 async function init(){
  try{
   const mp=new MercadoPago(MP_PUBLIC_KEY,{locale:'pt-BR'});
   const builder=mp.bricks();
-  await builder.create('cardPayment','brick',{
-   initialization:{amount:6.90,payer:{email:document.getElementById('email').value}},
+  window.testBrickController=await builder.create('cardPayment','brick',{
+   initialization:{amount:6.90,payer:{email:TEST_EMAIL,identification:{type:'CPF',number:TEST_CPF}}},
    customization:{visual:{style:{theme:'dark'}}},
    callbacks:{
-    onReady:()=>msg('Pronto. Use os dados de cartão de teste exibidos abaixo.'),
+    onReady:()=>msg('Pronto. Os dados do comprador já foram preenchidos. Preencha apenas os campos do cartão de teste e toque em Pagar.'),
     onSubmit:async(formData)=>{
-     msg('Enviando teste…');
-     const r=await fetch(TEST_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      email:document.getElementById('email').value.trim(),
-      card_token:formData.token,
-      payment_method_id:formData.payment_method_id,
-      installments:Number(formData.installments||1)
-     })});
+     msg('Enviando teste para o Mercado Pago…');
+     const r=await fetch(TEST_FUNCTION,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:TEST_EMAIL,card_token:formData.token,payment_method_id:formData.payment_method_id,installments:Number(formData.installments||1)})});
      const data=await r.json().catch(()=>({}));
      msg(data);
      if(!r.ok) throw new Error(data?.message||data?.error||'Falha no teste');
