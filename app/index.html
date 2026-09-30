@@ -647,39 +647,15 @@
   }
 
   async function startCheckout() {
-    if (checkoutStarting || !supabaseClient || !currentUser) return;
+    if (checkoutStarting) return;
     checkoutStarting=true;
-    const btn=document.getElementById('paywallCheckout');
-    const msg=document.getElementById('paywallMsg');
-    if(btn){btn.disabled=true;btn.textContent='Abrindo checkout…';}
-    if(msg) msg.textContent='';
-    try {
-      const { data, error } = await supabaseClient.functions.invoke('create-asaas-checkout', { body:{} });
-      if(error) throw error;
-      if(!data?.checkoutUrl) throw new Error(data?.error || 'Não foi possível abrir o checkout.');
-      window.location.href=data.checkoutUrl;
-    } catch(err) {
-      console.error('Checkout error:',err);
-      if(msg) msg.textContent=err?.message || 'Não foi possível abrir o checkout agora.';
-      if(btn){btn.disabled=false;btn.textContent='Assinar por R$ 6,90/mês →';}
-      checkoutStarting=false;
-    }
+    window.location.href='../checkout/';
   }
 
   async function startPublicCheckout() {
-    if (!supabaseClient || checkoutStarting) return;
-    checkoutStarting = true;
-    try {
-      const { data, error } = await supabaseClient.functions.invoke('create-asaas-checkout', { body:{} });
-      if (error) throw error;
-      if (!data?.checkoutUrl) throw new Error(data?.error || 'Não foi possível abrir o checkout.');
-      window.location.href = data.checkoutUrl;
-    } catch (err) {
-      console.error('Public checkout error:', err);
-      checkoutStarting = false;
-      const msg = document.getElementById('loginMsg');
-      if (msg) msg.textContent = err?.message || 'Não foi possível abrir o checkout agora.';
-    }
+    if (checkoutStarting) return;
+    checkoutStarting=true;
+    window.location.href='../checkout/';
   }
 
   function showCheckoutSuccess() {
