@@ -143,6 +143,18 @@ async function init(){
           hideStatus();
 
           try{
+            const {data: currentSessionData, error: currentSessionError} =
+              await supabase.auth.getSession();
+
+            if(currentSessionError) throw currentSessionError;
+
+            const currentSession = currentSessionData.session;
+
+            if(!currentSession?.access_token){
+              showStatus('Sua sessão expirou. Entre novamente no MotoBolso e tente o pagamento.');
+              throw new Error('Sessão de usuário não enviada.');
+            }
+
             const email = $('payerEmail').value.trim();
 
             if(!email){
@@ -154,9 +166,7 @@ async function init(){
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                ...(session?.access_token
-                  ? { 'Authorization': 'Bearer ' + session.access_token }
-                  : {})
+                'Authorization': 'Bearer ' + currentSession.access_token
               },
               body: JSON.stringify({
                 email: $('payerEmail').value.trim(),
