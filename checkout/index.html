@@ -178,8 +178,13 @@ async function init(){
 
             const result = await response.json().catch(() => ({}));
 
-            if(!response.ok){
-              const message = result?.details?.message || result?.error || 'Não foi possível processar o pagamento.';
+            if(!response.ok || result?.ok === false){
+              const message =
+                result?.mercado_pago?.message ||
+                result?.mercado_pago?.cause?.[0]?.description ||
+                result?.details?.message ||
+                result?.error ||
+                'Não foi possível processar o pagamento.';
               showStatus(message);
               throw new Error(message);
             }
