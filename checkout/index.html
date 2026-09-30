@@ -34,8 +34,11 @@ body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,rgb
 .status{display:none;border-radius:14px;padding:13px 14px;margin-top:14px;font-size:.68rem;line-height:1.45}
 .status.error{display:block;background:rgba(255,90,90,.08);border:1px solid rgba(255,120,120,.18);color:#ffc3c3}
 .status.success{display:block;background:rgba(63,227,173,.08);border:1px solid rgba(63,227,173,.18);color:#b9ffe9}
-.login{display:none;text-align:center;padding:12px 5px 4px}
-.login p{color:var(--muted);font-size:.72rem;line-height:1.5;margin:0 auto 15px;max-width:340px}
+.field{margin-bottom:16px;text-align:left}
+.field label{display:block;color:#71879b;font-size:.57rem;font-weight:800;letter-spacing:.06em;margin:0 0 7px}
+.field input{width:100%;height:48px;border:1px solid rgba(100,180,255,.16);border-radius:12px;background:rgba(255,255,255,.035);color:#fff;outline:0;padding:0 13px;font:600 .78rem var(--b)}
+.field input:focus{border-color:rgba(81,202,255,.5);box-shadow:0 0 0 3px rgba(81,202,255,.06)}
+.field-note{color:#62798d;font-size:.58rem;line-height:1.45;margin-top:7px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#00111c;text-decoration:none;font-size:.72rem;font-weight:800}
 .note{text-align:center;color:#62798d;font-size:.59rem;line-height:1.5;margin:17px auto 0;max-width:380px}
 .loading{text-align:center;color:var(--muted);font-size:.7rem;padding:30px 0}
@@ -61,12 +64,12 @@ body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,rgb
 
     <div id="loading" class="loading">Verificando sua conta…</div>
 
-    <div id="login" class="login">
-      <p>Para assinar o MotoBolso PRO, primeiro entre na sua conta do MotoBolso.</p>
-      <a class="btn" href="../app/">Entrar no MotoBolso</a>
-    </div>
-
-    <div id="checkout" style="display:none">
+    <div id="checkout">
+      <div class="field">
+        <label for="payerEmail">E-MAIL</label>
+        <input id="payerEmail" type="email" autocomplete="email" placeholder="seu@email.com" required>
+        <div class="field-note">Usaremos este e-mail depois do pagamento para criar seu acesso ao MotoBolso PRO.</div>
+      </div>
       <div id="cardPaymentBrick_container"></div>
     </div>
 
@@ -110,12 +113,9 @@ async function init(){
 
     $('loading').style.display = 'none';
 
-    if(!session){
-      $('login').style.display = 'block';
-      return;
+    if(session?.user?.email){
+      $('payerEmail').value = session.user.email;
     }
-
-    $('checkout').style.display = 'block';
 
     const mp = new MercadoPago(MP_PUBLIC_KEY, {locale:'pt-BR'});
     const bricksBuilder = mp.bricks();
@@ -143,20 +143,20 @@ async function init(){
           hideStatus();
 
           try{
-            const {data: freshData, error: freshError} = await supabase.auth.getSession();
+            const email = $('payerEmail').value.trim();
 
-            if(freshError || !freshData.session){
-              showStatus('Sua sessão expirou. Entre novamente no MotoBolso.');
-              throw new Error('Sessão expirada.');
+            if(!email || !email.includes('@')){
+              showStatus('Digite um e-mail válido para continuar.');
+              throw new Error('E-mail inválido.');
             }
 
             const response = await fetch(PAYMENT_FUNCTION, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + freshData.session.access_token
+                'Content-Type': 'application/json'
               },
               body: JSON.stringify({
+                email: $('payerEmail').value.trim(),
                 card_token: formData.token,
                 payment_method_id: formData.payment_method_id,
                 installments: Number(formData.installments || 1)
