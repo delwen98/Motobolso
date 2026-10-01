@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 260">
+<defs>
+ <linearGradient id="bg" x1="0" x2="1"><stop stop-color="#0b1724"/><stop offset="1" stop-color="#07111d"/></linearGradient>
+ <linearGradient id="edge" x1="0" x2="1"><stop stop-color="#1b79ff"/><stop offset=".5" stop-color="#63d2ff"/><stop offset="1" stop-color="#1682ff"/></linearGradient>
+ <linearGradient id="star" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffd95a"/><stop offset="1" stop-color="#ffad16"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<rect x="8" y="8" width="1084" height="244" rx="122" fill="#1682ff" opacity=".12" filter="url(#glow)"/>
+<rect x="10" y="10" width="1080" height="240" rx="120" fill="url(#bg)" stroke="url(#edge)" stroke-width="3"/>
+<!-- rider 1 -->
+<g transform="translate(150 130)">
+ <circle r="68" fill="#050a10" stroke="#1b2e43" stroke-width="8"/>
+ <circle cy="6" r="37" fill="#d88b61"/>
+ <path d="M-45-5 Q0-67 45-5 L39-35 Q0-77-39-35Z" fill="#1f2834" stroke="#5d7185" stroke-width="5"/>
+ <path d="M-28-35 Q0-58 28-35 L25-19 Q0-31-25-19Z" fill="#71c9ff"/>
+ <path d="M-28 16 Q0 38 28 16 L39 58 Q0 78-39 58Z" fill="#182a39"/>
+ <circle cx="-13" cy="4" r="4" fill="#07111d"/><circle cx="13" cy="4" r="4" fill="#07111d"/>
+</g>
+<!-- rider 2 -->
+<g transform="translate(265 130)">
+ <circle r="68" fill="#050a10" stroke="#1b2e43" stroke-width="8"/>
+ <circle cy="6" r="37" fill="#8f563b"/>
+ <path d="M-45-5 Q0-67 45-5 L39-35 Q0-77-39-35Z" fill="#202731" stroke="#65798c" stroke-width="5"/>
+ <path d="M-28-35 Q0-58 28-35 L25-19 Q0-31-25-19Z" fill="#51caff"/>
+ <path d="M-28 16 Q0 38 28 16 L39 58 Q0 78-39 58Z" fill="#193044"/>
+ <circle cx="-13" cy="4" r="4" fill="#07111d"/><circle cx="13" cy="4" r="4" fill="#07111d"/>
+</g>
+<!-- rider 3 -->
+<g transform="translate(380 130)">
+ <circle r="68" fill="#050a10" stroke="#1b2e43" stroke-width="8"/>
+ <circle cy="6" r="37" fill="#c47b54"/>
+ <path d="M-45-5 Q0-67 45-5 L39-35 Q0-77-39-35Z" fill="#242a32" stroke="#71869a" stroke-width="5"/>
+ <path d="M-28-35 Q0-58 28-35 L25-19 Q0-31-25-19Z" fill="#39aaff"/>
+ <path d="M-28 16 Q0 38 28 16 L39 58 Q0 78-39 58Z" fill="#162839"/>
+ <circle cx="-13" cy="4" r="4" fill="#07111d"/><circle cx="13" cy="4" r="4" fill="#07111d"/>
+</g>
+<!-- stars -->
+<g fill="url(#star)" stroke="#ffcc42" stroke-width="2">
+<path d="M53564 l10 27 29 1-23 18 8 28-24-16-24 16 8-28-23-18 29-1z"/><path d="M60564 l10 27 29 1-23 18 8 28-24-16-24 16 8-28-23-18 29-1z"/><path d="M67564 l10 27 29 1-23 18 8 28-24-16-24 16 8-28-23-18 29-1z"/><path d="M74564 l10 27 29 1-23 18 8 28-24-16-24 16 8-28-23-18 29-1z"/><path d="M81564 l10 27 29 1-23 18 8 28-24-16-24 16 8-28-23-18 29-1z"/>
+</g>
+<text x="945" y="156" text-anchor="middle" fill="#f5f9ff" font-family="Inter,Arial,sans-serif" font-size="58" font-weight="800">4,7/5</text>
+</svg>
