@@ -113,9 +113,7 @@ async function init(){
 
     $('loading').style.display = 'none';
 
-    if(session?.user?.email){
-      $('payerEmail').value = session.user.email;
-    }
+    $('payerEmail').value = 'test_payer_123@testuser.com';
 
     const mp = new MercadoPago(MP_PUBLIC_KEY, {locale:'pt-BR'});
     const bricksBuilder = mp.bricks();
@@ -124,7 +122,7 @@ async function init(){
       initialization: {
         amount: 6.90,
         payer: {
-          email: session?.user?.email || ''
+          email: 'test_payer_123@testuser.com'
         }
       },
       customization: {
@@ -169,7 +167,7 @@ async function init(){
                 'Authorization': 'Bearer ' + currentSession.access_token
               },
               body: JSON.stringify({
-                email: formData.payer?.email || $('payerEmail').value.trim(),
+                email: 'test_payer_123@testuser.com',
                 identification: formData.payer?.identification || null,
                 card_token: formData.token,
                 payment_method_id: formData.payment_method_id,
