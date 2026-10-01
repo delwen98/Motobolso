@@ -180,8 +180,12 @@ async function init(){
 
             if(!response.ok || result?.ok === false){
               const message =
+                result?.error_message ||
                 result?.mercado_pago?.message ||
                 result?.mercado_pago?.cause?.[0]?.description ||
+                result?.mercado_pago?.cause?.[0]?.message ||
+                result?.mercado_pago?.errors?.[0]?.message ||
+                result?.mercado_pago?.errors?.[0]?.description ||
                 result?.details?.message ||
                 result?.error ||
                 'Não foi possível processar o pagamento.';
