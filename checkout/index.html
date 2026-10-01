@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MotoBolso PRO</title>
 <meta name="theme-color" content="#03070d">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#03070d;color:#f5f9ff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;padding:18px}.card{width:min(460px,100%);background:#08131f;border:1px solid rgba(100,180,255,.16);border-radius:24px;padding:30px 22px;box-shadow:0 20px 60px #0008;text-align:center}.logo{font-weight:800;font-size:20px;margin-bottom:25px}.logo span{color:#51caff}h1{font-size:26px;margin:0 0 8px}.sub{color:#8ca0b4;font-size:14px;line-height:1.5;margin:0}.price{font-size:26px;font-weight:800;margin:20px 0}.price small{font-size:12px;color:#8ca0b4}.secure{color:#71879b;font-size:11px;margin-top:18px}.btn{display:flex;align-items:center;justify-content:center;width:100%;height:52px;margin-top:24px;border:0;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#00111c;font-weight:800;font-size:15px;text-decoration:none}.msg{display:none;margin-top:18px;padding:13px;border-radius:12px;background:#10202e;color:#b9d7ec;font-size:13px;line-height:1.45}.note{color:#62798d;font-size:11px;line-height:1.5;margin-top:20px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#03070d;color:#f5f9ff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;padding:18px}.card{width:min(460px,100%);background:#08131f;border:1px solid rgba(100,180,255,.16);border-radius:24px;padding:30px 22px;box-shadow:0 20px 60px #0008;text-align:center}.logo{font-weight:800;font-size:20px;margin-bottom:25px}.logo span{color:#51caff}h1{font-size:26px;margin:0 0 8px}.sub{color:#8ca0b4;font-size:14px;line-height:1.5;margin:0}.price{font-size:26px;font-weight:800;margin:20px 0}.price small{font-size:12px;color:#8ca0b4}.secure{color:#71879b;font-size:11px;margin-top:18px}.btn{display:flex;align-items:center;justify-content:center;width:100%;height:52px;margin-top:24px;border:0;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#00111c;font-weight:800;font-size:15px;text-decoration:none}.note{color:#62798d;font-size:11px;line-height:1.5;margin-top:20px}
 </style>
 </head>
 <body><main class="card">
@@ -15,33 +14,7 @@
 <h1>MotoBolso PRO</h1>
 <p class="sub">Seu controle financeiro completo para o corre.</p>
 <div class="price">R$ 6,90 <small>/mês</small></div>
-<a id="pay" class="btn" href="#">Continuar para pagamento</a>
-<div id="msg" class="msg"></div>
-<div class="secure">🔒 Você será redirecionado para o ambiente seguro do Mercado Pago.</div>
-<p class="note">O pagamento é realizado diretamente no Mercado Pago. O MotoBolso não recebe os dados do seu cartão.</p>
-</main>
-<script>
-const SUPABASE_URL='https://lrsuuxgufmgowrstqubs.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
-const FUNCTION_URL=SUPABASE_URL+'/functions/v1/mp-checkout-pro';
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const msg=document.getElementById('msg'),btn=document.getElementById('pay');
-function show(t){msg.textContent=t;msg.style.display='block'}
-(async()=>{
- const status=new URLSearchParams(location.search).get('status');
- if(status==='success') show('Pagamento aprovado. Estamos confirmando seu acesso PRO.');
- if(status==='pending') show('Pagamento pendente. Assim que o Mercado Pago confirmar, seu acesso será atualizado.');
- if(status==='failure') show('O pagamento não foi aprovado. Você pode tentar novamente.');
- const {data,error}=await supabase.auth.getSession();
- if(error||!data.session?.access_token){show('Entre no MotoBolso antes de continuar.');btn.style.display='none';return}
- btn.onclick=async(e)=>{
-   e.preventDefault();btn.style.pointerEvents='none';btn.textContent='Preparando pagamento…';show('Criando seu checkout seguro…');
-   try{
-     const r=await fetch(FUNCTION_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token}});
-     const result=await r.json().catch(()=>({}));
-     if(!r.ok||!result.ok) throw new Error(result.error||'Não foi possível criar o checkout.');
-     location.href=result.checkout_url;
-   }catch(err){btn.style.pointerEvents='auto';btn.textContent='Tentar novamente';show(err.message)}
- };
-})();
-</script></body></html>
+<a class="btn" href="https://pay.hotmart.com/D107841689E">Continuar para pagamento</a>
+<div class="secure">🔒 Você será redirecionado para o checkout seguro da Hotmart.</div>
+<p class="note">O pagamento é realizado diretamente pela Hotmart.</p>
+</main></body></html>
