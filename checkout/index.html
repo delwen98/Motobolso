@@ -2,240 +2,45 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>MotoBolso PRO — Assinatura</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MotoBolso PRO</title>
 <meta name="theme-color" content="#03070d">
-<link rel="icon" href="../images/motobolso-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://sdk.mercadopago.com/js/v2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#03070d;--card:#08131f;--line:rgba(100,180,255,.16);--text:#f5f9ff;--muted:#8ca0b4;--blue:#1682ff;--cyan:#51caff;--green:#3fe3ad;--danger:#ff8b8b;--d:'Space Grotesk',sans-serif;--b:'Manrope',sans-serif}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,rgba(22,130,255,.18),transparent 38%),var(--bg);color:var(--text);font-family:var(--b);padding:18px 14px 42px;display:grid;place-items:center}
-.wrap{width:min(520px,100%)}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.brand{display:flex;align-items:center;gap:9px;font:700 1rem var(--d);text-decoration:none;color:var(--text)}
-.brand img{width:34px;height:34px;border-radius:10px}
-.brand em{font-style:normal;color:var(--cyan)}
-.back{color:var(--muted);font-size:.68rem;font-weight:800;text-decoration:none}
-.card{background:rgba(8,19,31,.94);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.32);padding:25px 20px}
-.head{text-align:center;margin-bottom:20px}
-.icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;margin:0 auto 14px;background:rgba(22,130,255,.1);border:1px solid rgba(81,202,255,.16);color:var(--cyan);font:800 1.25rem var(--d)}
-.eyebrow{color:var(--cyan);font-size:.57rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.title{font:700 1.62rem/1.08 var(--d);letter-spacing:-.045em;margin:8px 0 8px}
-.sub{color:var(--muted);font-size:.74rem;line-height:1.5;margin:0 auto;max-width:380px}
-.price{margin:13px 0 0;font:700 1.28rem var(--d)}
-.price span{color:var(--muted);font:600 .66rem var(--b)}
-.secure{display:flex;justify-content:center;gap:7px;margin-top:9px;color:#668198;font-size:.59rem}
-#checkout{min-height:180px}
-.status{display:none;border-radius:14px;padding:13px 14px;margin-top:14px;font-size:.68rem;line-height:1.45}
-.status.error{display:block;background:rgba(255,90,90,.08);border:1px solid rgba(255,120,120,.18);color:#ffc3c3}
-.status.success{display:block;background:rgba(63,227,173,.08);border:1px solid rgba(63,227,173,.18);color:#b9ffe9}
-.field{margin-bottom:16px;text-align:left}
-.field label{display:block;color:#71879b;font-size:.57rem;font-weight:800;letter-spacing:.06em;margin:0 0 7px}
-.field input{width:100%;height:48px;border:1px solid rgba(100,180,255,.16);border-radius:12px;background:rgba(255,255,255,.035);color:#fff;outline:0;padding:0 13px;font:600 .78rem var(--b)}
-.field input:focus{border-color:rgba(81,202,255,.5);box-shadow:0 0 0 3px rgba(81,202,255,.06)}
-.field-note{color:#62798d;font-size:.58rem;line-height:1.45;margin-top:7px}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#00111c;text-decoration:none;font-size:.72rem;font-weight:800}
-.note{text-align:center;color:#62798d;font-size:.59rem;line-height:1.5;margin:17px auto 0;max-width:380px}
-.loading{text-align:center;color:var(--muted);font-size:.7rem;padding:30px 0}
-#cardPaymentBrick_container{width:100%}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#03070d;color:#f5f9ff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;padding:18px}.card{width:min(460px,100%);background:#08131f;border:1px solid rgba(100,180,255,.16);border-radius:24px;padding:30px 22px;box-shadow:0 20px 60px #0008;text-align:center}.logo{font-weight:800;font-size:20px;margin-bottom:25px}.logo span{color:#51caff}h1{font-size:26px;margin:0 0 8px}.sub{color:#8ca0b4;font-size:14px;line-height:1.5;margin:0}.price{font-size:26px;font-weight:800;margin:20px 0}.price small{font-size:12px;color:#8ca0b4}.secure{color:#71879b;font-size:11px;margin-top:18px}.btn{display:flex;align-items:center;justify-content:center;width:100%;height:52px;margin-top:24px;border:0;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#00111c;font-weight:800;font-size:15px;text-decoration:none}.msg{display:none;margin-top:18px;padding:13px;border-radius:12px;background:#10202e;color:#b9d7ec;font-size:13px;line-height:1.45}.note{color:#62798d;font-size:11px;line-height:1.5;margin-top:20px}
 </style>
 </head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <a class="brand" href="../"><img src="../images/motobolso-app-icon.svg" alt=""><span>Moto<em>Bolso</em></span></a>
-    <a class="back" href="../">← Voltar</a>
-  </div>
-
-  <div class="card">
-    <div class="head">
-      <div class="icon">✓</div>
-      <div class="eyebrow">MotoBolso PRO</div>
-      <h1 class="title">Seu corre sob controle.</h1>
-      <p class="sub">Assine o MotoBolso PRO e tenha seu controle financeiro completo por apenas:</p>
-      <div class="price">R$ 6,90 <span>/mês</span></div>
-      <div class="secure">🔒 Pagamento processado com segurança pelo Mercado Pago</div>
-    </div>
-
-    <div id="loading" class="loading">Verificando sua conta…</div>
-
-    <div id="checkout">
-      <div class="field">
-        <label for="payerEmail">E-MAIL</label>
-        <input id="payerEmail" type="email" autocomplete="email" placeholder="seu@email.com" required>
-        <div class="field-note">Usaremos este e-mail depois do pagamento para criar seu acesso ao MotoBolso PRO.</div>
-      </div>
-      <div id="cardPaymentBrick_container"></div>
-    </div>
-
-    <div id="status" class="status" role="status" aria-live="polite"></div>
-
-    <p class="note">Você será cobrado R$ 6,90 por mês. O cartão é tokenizado pelo Mercado Pago; os dados completos do cartão não passam pelo servidor do MotoBolso.</p>
-  </div>
-</div>
-
+<body><main class="card">
+<div class="logo">Moto<span>Bolso</span></div>
+<h1>MotoBolso PRO</h1>
+<p class="sub">Seu controle financeiro completo para o corre.</p>
+<div class="price">R$ 6,90 <small>/mês</small></div>
+<a id="pay" class="btn" href="#">Continuar para pagamento</a>
+<div id="msg" class="msg"></div>
+<div class="secure">🔒 Você será redirecionado para o ambiente seguro do Mercado Pago.</div>
+<p class="note">O pagamento é realizado diretamente no Mercado Pago. O MotoBolso não recebe os dados do seu cartão.</p>
+</main>
 <script>
-const SUPABASE_URL = 'https://lrsuuxgufmgowrstqubs.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
-const MP_PUBLIC_KEY = 'APP_USR-4681b52e-99dd-4598-8d8f-28a9f6056ff7';
-const PAYMENT_FUNCTION = SUPABASE_URL + '/functions/v1/mp-order-test';
-
-const $ = (id) => document.getElementById(id);
-const statusEl = $('status');
-
-function showStatus(message, type='error'){
-  statusEl.textContent = message;
-  statusEl.className = 'status ' + type;
-}
-
-function hideStatus(){
-  statusEl.className = 'status';
-  statusEl.textContent = '';
-}
-
-async function init(){
-  try{
-    if(!window.supabase || !window.MercadoPago){
-      throw new Error('Não foi possível carregar os componentes do checkout.');
-    }
-
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const {data, error} = await supabase.auth.getSession();
-
-    if(error) throw error;
-
-    const session = data.session;
-
-    $('loading').style.display = 'none';
-
-    if(session?.user?.email){
-      $('payerEmail').value = session.user.email;
-    }
-
-    const mp = new MercadoPago(MP_PUBLIC_KEY, {locale:'pt-BR'});
-    const bricksBuilder = mp.bricks();
-
-    const settings = {
-      initialization: {
-        amount: 6.90,
-        payer: {
-          email: session?.user?.email || ''
-        }
-      },
-      customization: {
-        visual: {
-          style: {
-            theme: 'dark'
-          }
-        }
-      },
-      callbacks: {
-        onReady: () => {
-          $('loading').style.display = 'none';
-        },
-
-        onSubmit: async (formData, additionalData) => {
-          hideStatus();
-
-          try{
-            const {data: currentSessionData, error: currentSessionError} =
-              await supabase.auth.getSession();
-
-            if(currentSessionError) throw currentSessionError;
-
-            const currentSession = currentSessionData.session;
-
-            if(!currentSession?.access_token){
-              showStatus('Sua sessão expirou. Entre novamente no MotoBolso e tente o pagamento.');
-              throw new Error('Sessão de usuário não enviada.');
-            }
-
-            const email = $('payerEmail').value.trim();
-
-            if(!email){
-              showStatus('Digite seu e-mail para continuar.');
-              throw new Error('E-mail não informado.');
-            }
-
-            const response = await fetch(PAYMENT_FUNCTION, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + currentSession.access_token
-              },
-              body: JSON.stringify({
-                email: formData.payer?.email || $('payerEmail').value.trim(),
-                identification: formData.payer?.identification || null,
-                card_token: formData.token,
-                payment_method_id: formData.payment_method_id,
-                payment_type_id: additionalData?.paymentTypeId || 'credit_card',
-                installments: Number(formData.installments || 1)
-              })
-            });
-
-            const result = await response.json().catch(() => ({}));
-
-            if(!response.ok || result?.ok === false){
-              const message =
-                result?.error_message ||
-                result?.mercado_pago?.message ||
-                result?.mercado_pago?.cause?.[0]?.description ||
-                result?.mercado_pago?.cause?.[0]?.message ||
-                result?.mercado_pago?.errors?.[0]?.message ||
-                result?.mercado_pago?.errors?.[0]?.description ||
-                result?.details?.message ||
-                result?.error ||
-                'Não foi possível processar o pagamento.';
-              showStatus(message);
-              throw new Error(message);
-            }
-
-            if(result.status === 'processed'){
-              $('cardPaymentBrick_container').style.display = 'none';
-              showStatus('Pagamento aprovado! Seu acesso PRO está sendo ativado.', 'success');
-            }else{
-              showStatus('Pagamento recebido para processamento. Status: ' + (result.status || 'pendente') + '.', 'success');
-            }
-
-            return;
-          }catch(error){
-            console.error(error);
-            throw error;
-          }
-        },
-
-        onError: (error) => {
-          console.error('Mercado Pago Brick:', error);
-        }
-      }
-    };
-
-    window.cardPaymentBrickController = await bricksBuilder.create(
-      'cardPayment',
-      'cardPaymentBrick_container',
-      settings
-    );
-  }catch(error){
-    console.error(error);
-    $('loading').style.display = 'none';
-    showStatus(error?.message || 'Erro ao carregar o checkout.');
-  }
-}
-
-window.addEventListener('beforeunload', () => {
-  try{
-    if(window.cardPaymentBrickController){
-      window.cardPaymentBrickController.unmount();
-    }
-  }catch(_){}
-});
-
-init();
-</script>
-</body>
-</html>
+const SUPABASE_URL='https://lrsuuxgufmgowrstqubs.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
+const FUNCTION_URL=SUPABASE_URL+'/functions/v1/mp-checkout-pro';
+const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const msg=document.getElementById('msg'),btn=document.getElementById('pay');
+function show(t){msg.textContent=t;msg.style.display='block'}
+(async()=>{
+ const status=new URLSearchParams(location.search).get('status');
+ if(status==='success') show('Pagamento aprovado. Estamos confirmando seu acesso PRO.');
+ if(status==='pending') show('Pagamento pendente. Assim que o Mercado Pago confirmar, seu acesso será atualizado.');
+ if(status==='failure') show('O pagamento não foi aprovado. Você pode tentar novamente.');
+ const {data,error}=await supabase.auth.getSession();
+ if(error||!data.session?.access_token){show('Entre no MotoBolso antes de continuar.');btn.style.display='none';return}
+ btn.onclick=async(e)=>{
+   e.preventDefault();btn.style.pointerEvents='none';btn.textContent='Preparando pagamento…';show('Criando seu checkout seguro…');
+   try{
+     const r=await fetch(FUNCTION_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+data.session.access_token}});
+     const result=await r.json().catch(()=>({}));
+     if(!r.ok||!result.ok) throw new Error(result.error||'Não foi possível criar o checkout.');
+     location.href=result.checkout_url;
+   }catch(err){btn.style.pointerEvents='auto';btn.textContent='Tentar novamente';show(err.message)}
+ };
+})();
+</script></body></html>
