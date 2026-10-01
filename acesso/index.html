@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MotoBolso — Quero testar</title>
+<meta name="description" content="Entre para a lista de teste do MotoBolso e descubra uma forma simples de controlar seus ganhos, gastos e lucro.">
+<meta name="theme-color" content="#03070d">
+<link rel="icon" type="image/png" href="../images/motobolso-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#03070d;--panel:#08131f;--panel2:#0b1a29;--line:rgba(100,180,255,.15);--text:#f5f9ff;--muted:#8ca0b4;--blue:#1682ff;--cyan:#51caff;--green:#3fe3ad;--orange:#ffae63;--d:'Space Grotesk',sans-serif;--b:'Inter',sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--b);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 70% 0,rgba(22,130,255,.19),transparent 30%),linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:auto,44px 44px,44px 44px;mask-image:linear-gradient(#000,transparent 78%)}
+.wrap{width:min(1080px,calc(100% - 28px));margin:auto}a{text-decoration:none;color:inherit}
+header{height:66px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:5}.brand{display:flex;align-items:center;gap:9px;font:700 1rem var(--d)}.brand img{width:34px;height:34px;object-fit:contain;border-radius:10px}.brand em{font-style:normal;color:var(--cyan)}.back{font-size:.7rem;font-weight:800;color:#a7b8c8;padding:9px 12px;border:1px solid var(--line);border-radius:10px}
+.ambient{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1}.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.2}.one{width:420px;height:420px;background:#1682ff;top:-180px;right:-100px}.two{width:300px;height:300px;background:#51caff;left:-180px;top:48%}
+main{padding:38px 0 70px}.layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:46px;align-items:center;min-height:calc(100svh - 130px)}
+.eyebrow{color:#5bcfff;font-size:.6rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.eyebrow:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin:0 7px 1px 0}
+h1{font:700 clamp(3rem,6vw,5.7rem)/.9 var(--d);letter-spacing:-.075em;margin:10px 0 20px}h1 span{color:var(--cyan)}.lead{color:#a9bacb;font-size:1rem;line-height:1.6;max-width:570px}
+.bullets{display:grid;gap:10px;margin-top:24px}.bullet{display:flex;gap:10px;align-items:center;color:#91a6b9;font-size:.75rem}.bullet i{font-style:normal;color:var(--green);font-weight:900}
+.note{margin-top:25px;color:#5f768b;font-size:.63rem;line-height:1.5}
+.card{padding:25px;border:1px solid rgba(81,202,255,.2);border-radius:25px;background:linear-gradient(145deg,rgba(11,28,44,.98),rgba(5,14,23,.98));box-shadow:0 30px 80px rgba(0,0,0,.42),0 0 70px rgba(22,130,255,.08)}
+.card h2{font:700 1.65rem/1 var(--d);letter-spacing:-.04em;margin:0 0 7px}.sub{color:#7890a5;font-size:.7rem;line-height:1.5;margin:0 0 18px}
+.form{display:grid;gap:11px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:#71879b;font-size:.56rem;font-weight:800;letter-spacing:.04em;margin:0 0 6px}.field input,.field select{width:100%;height:46px;border:1px solid rgba(100,180,255,.16);border-radius:12px;background:rgba(255,255,255,.035);color:#fff;padding:0 12px;font:600 .78rem var(--b);outline:none}.field select option{background:#08131f}.field input:focus,.field select:focus{border-color:rgba(81,202,255,.55);box-shadow:0 0 0 3px rgba(81,202,255,.07)}
+.check{display:flex;gap:9px;align-items:flex-start;color:#6f8498;font-size:.58rem;line-height:1.4;margin-top:2px}.check input{margin-top:2px;accent-color:var(--blue)}
+.btn{border:0;min-height:49px;border-radius:13px;background:linear-gradient(135deg,#167cff,#37c1ff);color:#000;text-transform:uppercase;font-size:.75rem;font-weight:800;cursor:pointer;box-shadow:0 14px 38px rgba(22,130,255,.2);transition:.25s}.btn:hover{transform:translateY(-2px);box-shadow:0 18px 45px rgba(22,130,255,.3)}.btn:disabled{opacity:.55;cursor:wait;transform:none}
+.micro{text-align:center;color:#536a7f;font-size:.53rem;margin-top:8px}
+.success{display:none;text-align:center;padding:24px 8px}.success .icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;margin:0 auto 14px;background:rgba(63,227,173,.08);border:1px solid rgba(63,227,173,.2);color:var(--green);font-size:1.5rem}.success h3{font:700 1.55rem var(--d);margin:0 0 8px}.success p{color:#8ca0b4;font-size:.76rem;line-height:1.55;margin:0}
+footer{padding:25px 0 40px;color:#4f6479;font-size:.61rem;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06)}
+@media(max-width:760px){header{height:60px}main{padding:20px 0 50px}.layout{grid-template-columns:1fr;gap:25px;min-height:auto}.hero{text-align:center}.hero .eyebrow{display:inline-block}.lead{margin:auto;font-size:.9rem}.bullets{justify-items:center}.note{max-width:430px;margin:22px auto 0}.card{padding:20px;border-radius:21px}.row{grid-template-columns:1fr}.card h2{font-size:1.4rem}footer{flex-direction:column;gap:7px}}
+</style>
+</head>
+<body>
+<div class="ambient"><div class="orb one"></div><div class="orb two"></div></div>
+<header class="wrap">
+<a class="brand" href="../"><img src="../images/motobolso-app-icon.svg" alt=""><span>Moto<em>Bolso</em></span></a>
+<a class="back" href="../">Voltar →</a>
+</header>
+<main class="wrap">
+<div class="layout">
+<section class="hero">
+<div class="eyebrow">acesso de teste</div>
+<h1>Seu corre merece um <span>controle melhor.</span></h1>
+<p class="lead">Estamos abrindo o MotoBolso para mais motoboys testarem. Deixe seus dados e seja avisado para experimentar o app na prática.</p>
+<div class="bullets">
+<div class="bullet"><i>✓</i> Controle de ganhos e gastos em poucos toques</div>
+<div class="bullet"><i>✓</i> Veja quanto realmente sobra do seu corre</div>
+<div class="bullet"><i>✓</i> Feito para usar direto pelo celular</div>
+</div>
+<p class="note">Sem planilha complicada. A ideia é simples: você faz o corre, o MotoBolso organiza as contas.</p>
+</section>
+<section class="card">
+<div id="formBox">
+<h2>Quero testar o MotoBolso</h2>
+<p class="sub">Preencha rapidinho. Vamos usar essas informações para entender quem está entrando no teste.</p>
+<form class="form" id="accessForm">
+<div class="row">
+<div class="field"><label>NOME</label><input id="name" name="name" type="text" placeholder="Seu nome" autocomplete="name" required></div>
+<div class="field"><label>WHATSAPP</label><input id="whatsapp" name="whatsapp" type="tel" placeholder="(11) 99999-9999" autocomplete="tel" required></div>
+</div>
+<div class="field"><label>E-MAIL</label><input id="email" name="email" type="email" placeholder="voce@email.com" autocomplete="email" required></div>
+<div class="row">
+<div class="field"><label>VOCÊ TRABALHA COM</label><select id="appUsed" name="app_used" required><option value="" selected disabled>Selecione</option><option>iFood</option><option>99</option><option>Uber</option><option>Mais de um app</option><option>Outro</option></select></div>
+<div class="field"><label>HORAS POR DIA</label><select id="workHours" name="work_hours" required><option value="" selected disabled>Selecione</option><option>Até 4h</option><option>4–6h</option><option>6–8h</option><option>8–10h</option><option>Mais de 10h</option></select></div>
+</div>
+<div class="field"><label>O QUE VOCÊ MAIS QUER CONTROLAR?</label><select id="mainGoal" name="main_goal" required><option value="" selected disabled>Escolha uma opção</option><option>Quanto realmente sobra</option><option>Gastos com combustível</option><option>Manutenção da moto</option><option>Ganhos por dia</option><option>Tudo isso</option></select></div>
+<label class="check"><input id="consent" type="checkbox" required><span>Concordo em receber informações sobre o teste e o MotoBolso pelo WhatsApp ou e-mail.</span></label>
+<button class="btn" id="submitBtn" type="submit">QUERO TESTAR O MOTOBOLSO →</button>
+<div class="micro">Seus dados são usados somente para o contato relacionado ao acesso/teste.</div>
+</form>
+</div>
+<div class="success" id="successBox">
+<div class="icon">✓</div>
+<h3>Cadastro recebido.</h3>
+<p>Perfeito. Seus dados entraram na lista de acesso. Quando o próximo grupo de testes estiver disponível, entraremos em contato.</p>
+</div>
+</section>
+</div>
+</main>
+<footer class="wrap"><span>© 2026 MotoBolso</span><span>Controle financeiro feito por motoboy, para motoboy.</span></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://lrsuuxgufmgowrstqubs.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_LzDc9Xv33qMtA81Pzf8kpQ_k7D8W0uh';
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const form=document.getElementById('accessForm'),btn=document.getElementById('submitBtn');
+const params=new URLSearchParams(location.search);
+form.addEventListener('submit',async(e)=>{
+ e.preventDefault();
+ btn.disabled=true;btn.textContent='ENVIANDO...';
+ const payload={name:document.getElementById('name').value.trim(),email:document.getElementById('email').value.trim().toLowerCase(),whatsapp:document.getElementById('whatsapp').value.trim(),app_used:document.getElementById('appUsed').value,work_hours:document.getElementById('workHours').value,main_goal:document.getElementById('mainGoal').value,source:params.get('utm_source')?'acesso_'+params.get('utm_source'):'acesso_page',consent:true};
+ const {error}=await client.from('leads').insert(payload);
+ if(error){console.error(error);btn.disabled=false;btn.textContent='QUERO TESTAR O MOTOBOLSO →';alert('Não foi possível enviar agora. Tente novamente em alguns segundos.');return;}
+ document.getElementById('formBox').style.display='none';document.getElementById('successBox').style.display='block';
+});
+</script>
+</body>
+</html>
