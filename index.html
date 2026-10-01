@@ -118,6 +118,23 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:20;back
 .hero .float-card{display:none}
 .title{font-size:clamp(2.5rem,12vw,3.5rem)}
 }
+
+/* Compact calculator */
+.hero .calc-card{padding:16px;border-radius:21px;max-width:500px}
+.calc-title{font-size:1.28rem;margin:6px 0 3px}
+.calc-sub{font-size:.63rem}
+.fields{margin-top:10px;gap:7px}
+.field label{margin-bottom:5px;font-size:.53rem}
+.input-wrap{height:43px;padding:0 10px}
+.result{margin-top:8px;padding:11px}
+.result strong{font-size:clamp(2rem,5vw,2.8rem);margin:3px 0}
+.result-note{font-size:.58rem}
+.calc-cta{margin-top:8px}
+.calc-cta .btn{min-height:43px;font-size:.7rem}
+@media(max-width:760px){
+.hero .calc-card{width:min(470px,100%);padding:15px}
+.calc-title{font-size:1.18rem}
+}
 </style>
 </head>
 <body>
@@ -140,15 +157,15 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:20;back
 <div class="float-card a">Hoje você lucrou <b>R$ 187,40</b></div>
 <div class="float-card b">Gastos sob controle ✓</div>
 <div class="calc-card" id="calculadora">
-<div class="calc-head"><div class="eyebrow">descubra agora · veja para onde está indo</div><h2 class="calc-title">Para onde está indo o seu dinheiro?</h2><p class="calc-sub">Coloque um dia típico do seu corre. Veja quanto realmente sobra.</p></div>
+<div class="calc-head"><div class="eyebrow">descubra agora · veja para onde está indo</div><h2 class="calc-title">Quanto sobra do seu corre?</h2><p class="calc-sub">Digite seus ganhos e gastos.</p></div>
 <div class="fields">
 <div class="field"><label>QUANTO FATUROU</label><div class="input-wrap"><span>R$</span><input id="ganhos" inputmode="decimal" value="300" aria-label="Quanto faturou"></div></div>
 <div class="field"><label>GASOLINA</label><div class="input-wrap"><span>R$</span><input id="gasolina" inputmode="decimal" value="50" aria-label="Gasto com gasolina"></div></div>
 <div class="field"><label>OUTROS GASTOS</label><div class="input-wrap"><span>R$</span><input id="outros" inputmode="decimal" value="20" aria-label="Outros gastos"></div></div>
 </div>
-<div class="result"><div class="result-label">SOBRA DEPOIS DOS GASTOS</div><strong id="resultado">R$ 230,00</strong><div class="result-note">Isso significa que <b id="percentual">76,7%</b> do que entrou realmente ficou.</div></div>
-<div class="breakdown"><span>Faturou <b id="r-g">R$ 300,00</b></span><span>Gastos <b id="r-d">− R$ 70,00</b></span></div>
-<div class="calc-cta"><button class="btn checkout-trigger" type="button">Assinar por R$ 7,90/mês →</button><div class="micro">Pagamento seguro · acesso completo.</div></div>
+<div class="result"><div class="result-label">SOBRA</div><strong id="resultado">R$ 230,00</strong><div class="result-note"><b id="percentual">76,7%</b> ficou com você.</div></div>
+
+<div class="calc-cta"><button class="btn checkout-trigger" type="button">Assinar por R$ 7,90/mês →</button></div>
 </div>
 </section>
 <div class="scroll-line"></div>
