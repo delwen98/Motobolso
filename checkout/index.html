@@ -139,7 +139,7 @@ async function init(){
           $('loading').style.display = 'none';
         },
 
-        onSubmit: async (formData) => {
+        onSubmit: async (formData, additionalData) => {
           hideStatus();
 
           try{
@@ -172,6 +172,7 @@ async function init(){
                 email: formData.payer?.email || $('payerEmail').value.trim(),
                 card_token: formData.token,
                 payment_method_id: formData.payment_method_id,
+                payment_type_id: additionalData?.paymentTypeId || 'credit_card',
                 installments: Number(formData.installments || 1)
               })
             });
