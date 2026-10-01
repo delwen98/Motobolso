@@ -222,8 +222,6 @@ const inputs=[document.getElementById('ganhos'),document.getElementById('gasolin
 function calc(){
  const g=money(inputs[0].value),ga=money(inputs[1].value),o=money(inputs[2].value),r=Math.max(0,g-ga-o);
  document.getElementById('resultado').textContent=brl(r);
- document.getElementById('r-g').textContent=brl(g);
- document.getElementById('r-d').textContent='− '+brl(ga+o);
  document.getElementById('percentual').textContent=(g?((r/g)*100).toFixed(1).replace('.',','):'0')+'%';
 }
 inputs.forEach(i=>i.addEventListener('input',calc));
