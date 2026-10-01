@@ -170,6 +170,7 @@ async function init(){
               },
               body: JSON.stringify({
                 email: formData.payer?.email || $('payerEmail').value.trim(),
+                identification: formData.payer?.identification || null,
                 card_token: formData.token,
                 payment_method_id: formData.payment_method_id,
                 payment_type_id: additionalData?.paymentTypeId || 'credit_card',
