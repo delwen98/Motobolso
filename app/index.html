@@ -1115,12 +1115,28 @@
     const pct = metaMensal > 0 ? Math.min(100, Math.round((t.liquido / metaMensal) * 100)) : 0;
     document.getElementById('progressPct').textContent = pct + '%';
     document.getElementById('progressFill').style.width = Math.max(pct,0) + '%';
+    // O cartão "SEU CORRE · HOJE" deve mostrar apenas os lançamentos de hoje,
+    // não o acumulado do mês. O resumo mensal continua usando computeTotals().
+    const todayEntries = getTodayEntries();
+    const todayGanho = todayEntries
+      .filter(e => e.type === 'ganho')
+      .reduce((sum, e) => sum + (Number(e.total) || 0), 0);
+    const todayDespesa = todayEntries
+      .filter(e => e.type === 'despesa')
+      .reduce((sum, e) => sum + (Number(e.total) || 0), 0);
+    const todayNet = todayGanho - todayDespesa;
+    const dailyTarget = Math.max(0, Number(settings.metaDiaria) || 0);
+    const dailyPct = dailyTarget > 0
+      ? Math.round((todayNet / dailyTarget) * 100)
+      : 0;
     const hero = document.getElementById('heroLiquido');
     if (hero) {
-      hero.textContent = fmt(t.liquido);
-      hero.className = 'hero-value ' + (t.liquido >= 0 ? 'pos' : 'neg');
-      document.getElementById('heroPct').textContent = pct + '%';
-      document.getElementById('heroMeta').textContent = fmt(metaMensal);
+      hero.textContent = fmt(todayNet);
+      hero.className = 'hero-value ' + (todayNet >= 0 ? 'pos' : 'neg');
+      const heroPct = document.getElementById('heroPct');
+      const heroMeta = document.getElementById('heroMeta');
+      if (heroPct) heroPct.textContent = dailyPct + '%';
+      if (heroMeta) heroMeta.textContent = fmt(dailyTarget);
     }
 
     const liquidoPositivo = Math.max(t.liquido, 0);
