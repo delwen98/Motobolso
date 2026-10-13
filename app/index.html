@@ -998,19 +998,32 @@
 
   function fmt(n) { return 'R$ ' + (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function formatDate(iso) { const [y,m,d] = iso.split('-'); return `${d}/${m}/${y}`; }
-  function todayISO() { const d = new Date(); const tz = d.getTimezoneOffset()*60000; return new Date(d-tz).toISOString().slice(0,10); }
+  function todayISO() {
+    const d = new Date();
+    const tz = d.getTimezoneOffset() * 60000;
+    return new Date(d - tz).toISOString().slice(0, 10);
+  }
   function currentMonthKey() { return todayISO().slice(0,7); }
 
-  // Relógio em tempo real: detecta a virada do dia no fuso local do dispositivo.
-  // Ao mudar a data, recalcula os indicadores diários sem reutilizar o dia anterior.
+  // Normaliza a data sem converter YYYY-MM-DD para UTC, evitando deslocamento de dia.
+  function entryDateKey(entry) {
+    const raw = entry && entry.date != null ? String(entry.date).trim() : '';
+    const match = raw.match(/^(\\d{4}-\\d{2}-\\d{2})/);
+    if (match) return match[1];
+    if (!raw) return '';
+    const parsed = new Date(raw);
+    if (Number.isNaN(parsed.getTime())) return '';
+    const tz = parsed.getTimezoneOffset() * 60000;
+    return new Date(parsed.getTime() - tz).toISOString().slice(0, 10);
+  }
+  function getTodayEntries() {
+    const today = todayISO();
+    return state.entries.filter(e => entryDateKey(e) === today);
+  }
+
+  // Atualiza os indicadores quando o dia muda e também ao voltar do segundo plano.
   let lastObservedDay = todayISO();
   function updateAppClock() {
-    const now = new Date();
-    const timeEl = document.getElementById('clockTime');
-    const dateEl = document.getElementById('clockDate');
-    if (timeEl) timeEl.textContent = now.toLocaleTimeString('pt-BR', { hour12:false });
-    if (dateEl) dateEl.textContent = now.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
-
     const currentDay = todayISO();
     if (currentDay !== lastObservedDay) {
       lastObservedDay = currentDay;
@@ -1023,8 +1036,16 @@
       }
     }
   }
+  function refreshWhenAppReturns() {
+    updateAppClock();
+    if (currentUser && document.getElementById('appContent')?.classList.contains('app-visible')) renderAll();
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refreshWhenAppReturns();
+  });
+  window.addEventListener('focus', refreshWhenAppReturns);
   updateAppClock();
-  setInterval(updateAppClock, 1000);
+  setInterval(updateAppClock, 30000);
 
   function isThisMonth(dateStr) { return dateStr && dateStr.slice(0,7) === currentMonthKey(); }
 
@@ -1055,7 +1076,7 @@
   function renderTodayGoalNote() {
     const goalNote = document.getElementById('dayGoalNote');
     if (!goalNote) return;
-    const todayEntries = state.entries.filter(e => e.date === todayISO());
+    const todayEntries = getTodayEntries();
     const todayGanho = todayEntries
       .filter(e => e.type === 'ganho')
       .reduce((s, e) => s + (Number(e.total) || 0), 0);
@@ -1137,7 +1158,7 @@
     const target = Math.max(0, Number(settings.metaDiaria) || 0);
     const today = todayISO();
     const day = Array.isArray(days) ? days.find(d => d.date === today) : null;
-    const entries = state.entries.filter(e => e.date === today);
+    const entries = getTodayEntries();
 
     const ganho = entries
       .filter(e => e.type === 'ganho')
@@ -1322,9 +1343,9 @@
 
   function renderAll() {
 
-    const todayEntries = state.entries.filter(e => e.date === todayISO());
-    const todayGanho = todayEntries.filter(e => e.type === 'ganho').reduce((s,e) => s + e.total, 0);
-    const todayDespesa = todayEntries.filter(e => e.type === 'despesa').reduce((s,e) => s + e.total, 0);
+    const todayEntries = getTodayEntries();
+    const todayGanho = todayEntries.filter(e => e.type === 'ganho').reduce((s,e) => s + (Number(e.total) || 0), 0);
+    const todayDespesa = todayEntries.filter(e => e.type === 'despesa').reduce((s,e) => s + (Number(e.total) || 0), 0);
     const tg = document.getElementById('todayGanho'), td = document.getElementById('todayDespesa'), tl = document.getElementById('todayLiquido');
     if (tg) tg.textContent = fmt(todayGanho);
     if (td) td.textContent = fmt(todayDespesa);
