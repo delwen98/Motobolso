@@ -1126,17 +1126,15 @@
       .reduce((sum, e) => sum + (Number(e.total) || 0), 0);
     const todayNet = todayGanho - todayDespesa;
     const dailyTarget = Math.max(0, Number(settings.metaDiaria) || 0);
-    const dailyPct = dailyTarget > 0
-      ? Math.round((todayNet / dailyTarget) * 100)
-      : 0;
+    // Mantém a meta e a porcentagem mensal como eram; corrige somente o saldo diário.
     const hero = document.getElementById('heroLiquido');
     if (hero) {
       hero.textContent = fmt(todayNet);
       hero.className = 'hero-value ' + (todayNet >= 0 ? 'pos' : 'neg');
       const heroPct = document.getElementById('heroPct');
       const heroMeta = document.getElementById('heroMeta');
-      if (heroPct) heroPct.textContent = dailyPct + '%';
-      if (heroMeta) heroMeta.textContent = fmt(dailyTarget);
+      if (heroPct) heroPct.textContent = pct + '%';
+      if (heroMeta) heroMeta.textContent = fmt(metaMensal);
     }
 
     const liquidoPositivo = Math.max(t.liquido, 0);
