@@ -1008,7 +1008,7 @@
   // Normaliza a data sem converter YYYY-MM-DD para UTC, evitando deslocamento de dia.
   function entryDateKey(entry) {
     const raw = entry && entry.date != null ? String(entry.date).trim() : '';
-    const match = raw.match(/^(\\d{4}-\\d{2}-\\d{2})/);
+    const match = raw.match(/^(\d{4}-\d{2}-\d{2})/);
     if (match) return match[1];
     if (!raw) return '';
     const parsed = new Date(raw);
