@@ -1,0 +1,20 @@
+{
+  "name": "MotoBolso + OpenCode",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "forwardPorts": [
+    4096
+  ],
+  "portsAttributes": {
+    "4096": {
+      "label": "OpenCode Web",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "curl -fsSL https://opencode.ai/install | bash",
+  "remoteUser": "vscode"
+}
